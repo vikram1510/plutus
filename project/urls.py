@@ -20,5 +20,6 @@ urlpatterns = [
     path('django-admin/', admin.site.urls),
     path('admin/', include('rest_framework.urls')),
     path('api/', include('jwt_auth.urls')),
+    path('api/', include('expenses.urls')),
     path('', include('frontend.urls')),
 ]
