@@ -1,16 +1,6 @@
-@import './normalize';
-@import './variables';
+@import './styles/normalize';
+@import './styles/variables';
+@import './styles/global';
+@import './styles/form';
+
 @import './components/common/navbar';
-
-* {
-  box-sizing: border-box;
-  font-family: Kano, sans-serif;
-}
-
-html {
-  font-size: 62.5%;
-}
-
-// h1 {
-//   font-size: 2rem;
-// }
