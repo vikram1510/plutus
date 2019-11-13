@@ -34,34 +34,26 @@ export default class Register extends React.Component {
   render() {
     return (
       <section>
-        <div>
-          <form onSubmit={this.onSubmit}>
-            <h2>Register</h2>
-            <div className='form-field'>
-              <input id='username' placeholder=' ' onChange={this.onChange}/>
-              <label htmlFor='username'>Username</label>
-            </div>
-            <div className='form-field'>
-              <div>
-                <input id='email' placeholder=' ' onChange={this.onChange}/>
-                <label htmlFor='email'>Email</label>
-              </div>
-            </div>
-            <div className='form-field'>
-              <div>
-                <input id='password' type='password' placeholder=' ' onChange={this.onChange}/>
-                <label htmlFor='password'>Password</label>
-              </div>
-            </div>
-            <div className='form-field'>
-              <div>
-                <input id='password_confirmation' type='password' placeholder=' ' onChange={this.onChange}/>
-                <label htmlFor='password_confirmation'>Password Confirmation</label>
-              </div>
-            </div>
-            <button type='submit'>Register</button>
-          </form>
-        </div>
+        <form onSubmit={this.onSubmit}>
+          <h2>Register</h2>
+          <div>
+            <input id='username' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='username'>Username</label>
+          </div>
+          <div>
+            <input id='email' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='email'>Email</label>
+          </div>
+          <div>
+            <input id='password' type='password' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='password'>Password</label>
+          </div>
+          <div>
+            <input id='password_confirmation' type='password' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='password_confirmation'>Password Confirmation</label>
+          </div>
+          <button type='submit'>Register</button>
+        </form>
       </section>
     )
   }
