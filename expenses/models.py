@@ -18,7 +18,7 @@ class Expense(models.Model):
 
     # we don't want the default int as id from our models - so uuid is pseudo unique enough I think
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    amount = models.FloatField()
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
     creator = models.ForeignKey(User, related_name='created_expenses', on_delete=models.DO_NOTHING)
     payer = models.ForeignKey(User, related_name='paid_expenses', on_delete=models.DO_NOTHING)
     description = models.CharField(max_length=50)
@@ -35,12 +35,13 @@ class Expense(models.Model):
 # This is the split bills from the expense
 class Split(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    amount = models.FloatField() # this is the split amount
+    amount = models.DecimalField(max_digits=6, decimal_places=2) # this is the split amount
     # CASCADE - When the referenced object is deleted, also delete the objects that have references to it
     expense = models.ForeignKey(Expense, related_name='splits', on_delete=models.CASCADE)
     debtor = models.ForeignKey(User, related_name='splits', on_delete=models.DO_NOTHING)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.amount} - {self.debtor}'
