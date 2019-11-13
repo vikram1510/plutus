@@ -18,8 +18,8 @@ export default class Register extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onChange({ target: { name, value } }) {
-    const data = { ...this.state.data, [name]: value }
+  onChange({ target: { id, value } }) {
+    const data = { ...this.state.data, [id]: value }
     this.setState({ data })
   }
 
@@ -34,54 +34,26 @@ export default class Register extends React.Component {
   render() {
     return (
       <section>
-        <div>
-          <form onSubmit={this.onSubmit}>
-            <h2>Register</h2>
-            <div>
-              <label>Username</label>
-              <div>
-                <input
-                  name='username'
-                  placeholder='Username'
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-            <div>
-              <label>Email</label>
-              <div>
-                <input
-                  name='email'
-                  placeholder='Email'
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-            <div>
-              <label>Password</label>
-              <div>
-                <input
-                  name='password'
-                  type='password'
-                  placeholder='Password'
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-            <div>
-              <label>Password Confirmation</label>
-              <div>
-                <input
-                  name='password_confirmation'
-                  type='password'
-                  placeholder='Password Confirmation'
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-            <button type='submit'>Register</button>
-          </form>
-        </div>
+        <form onSubmit={this.onSubmit}>
+          <h2>Register</h2>
+          <div>
+            <input id='username' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='username'>Username</label>
+          </div>
+          <div>
+            <input id='email' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='email'>Email</label>
+          </div>
+          <div>
+            <input id='password' type='password' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='password'>Password</label>
+          </div>
+          <div>
+            <input id='password_confirmation' type='password' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='password_confirmation'>Password Confirmation</label>
+          </div>
+          <button type='submit'>Register</button>
+        </form>
       </section>
     )
   }

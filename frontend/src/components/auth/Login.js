@@ -17,10 +17,9 @@ export default class Login extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onChange({ target: { name, value } }) {
-    const data = { ...this.state.data, [name]: value }
+  onChange({ target: { id, value } }) {
+    const data = { ...this.state.data, [id]: value }
     this.setState({ data })
-    console.log(data)
   }
 
   onSubmit(e) {
@@ -35,34 +34,18 @@ export default class Login extends React.Component {
   render() {
     return (
       <section>
-        <div>
-          <form onSubmit={this.onSubmit}>
-            <h2>Login</h2>
-            <div>
-              <label>Email</label>
-              <div>
-                <input
-                  name='email'
-                  placeholder='Email'
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label>Password</label>
-              <div>
-                <input
-                  type='password'
-                  name='password'
-                  placeholder='Password'
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-            <button type='submit'>Login</button>
-          </form>
-        </div>
+        <form onSubmit={this.onSubmit}>
+          <h2>Login</h2>
+          <div>
+            <input id='email' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='email'>Email</label>
+          </div>
+          <div>
+            <input id='password' type='password' placeholder=' ' onChange={this.onChange}/>
+            <label htmlFor='password'>Password</label>
+          </div>
+          <button type='submit'>Login</button>
+        </form>
       </section>
     )
   }
