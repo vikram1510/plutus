@@ -1,12 +1,14 @@
 # pylint: disable=no-member,arguments-differ
 from rest_framework.serializers import ModelSerializer as MS
-from django.contrib.auth import get_user_model
 
+# ensure this import from other app is before our own .models import
+from jwt_auth.serializers import UserSerializer
 from .models import Expense
 
-User = get_user_model()
-
 class ExpenseSerializer(MS):
+
+    payer = UserSerializer()
+    creator = UserSerializer()
 
     class Meta:
         model = Expense
