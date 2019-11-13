@@ -44,6 +44,3 @@ class GroupIndexCreate(ListCreateAPIView):
     serializer_class = GroupSerializer
     def get_queryset(self):
         return self.request.user.groups.all()
-
-# class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
-#     serializers
