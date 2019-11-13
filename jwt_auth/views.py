@@ -1,4 +1,4 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
@@ -67,7 +67,7 @@ class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
         return self.request.user.admin_groups.all()
 
 
-class FriendShowDelete(RetrieveUpdateDestroyAPIView):
+class FriendShowDelete(RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = FriendSerializer
     def get_queryset(self):
