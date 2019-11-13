@@ -8,6 +8,7 @@ from django.conf import settings
 import jwt
 from .serializers import UserSerializer, GroupSerializer
 from rest_framework import serializers
+import json
 
 User = get_user_model()
 
@@ -31,13 +32,12 @@ class LoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-
         user = self.get_user(email)
-
+        
         if not user.check_password(password):
             raise PermissionDenied({'message': 'Invalid Credentials'})
 
-        token = jwt.encode({'sub': user.id}, settings.SECRET_KEY, algorithm='HS256')
+        token = jwt.encode({'sub': str(user.id)}, settings.SECRET_KEY, algorithm='HS256')
         return Response({'token': token, 'message': f'Welcome back {user.username}'})
 
 class GroupIndexCreate(ListCreateAPIView):

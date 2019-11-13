@@ -24,7 +24,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     password_confirmation = serializers.CharField(write_only=True)
-    groups = GroupSerializer(many=True)
+    groups = GroupSerializer(many=True, required=False)
 
     def validate(self, data):
         password = data.pop('password')
@@ -44,4 +44,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'password_confirmation', 'groups')
+        fields = ('id', 'username', 'email', 'password', 'password_confirmation', 'groups')
