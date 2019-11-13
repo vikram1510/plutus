@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 pyjwt = "*"
 djangorestframework = "*"
 django-environ = "*"
+pusher = "*"
 
 [requires]
 python_version = "3.7"
