@@ -7,9 +7,24 @@ from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
+class GroupSerializer(serializers.ModelSerializer):
+
+    def create(self, data):
+        group = Group(**data)
+        user = self.context['request'].user
+        group.admin = user.id
+        group.save()
+        group.user_set.add(user)
+        return group
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'admin')
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     password_confirmation = serializers.CharField(write_only=True)
+    groups = GroupSerializer(many=True)
 
     def validate(self, data):
         password = data.pop('password')
@@ -29,10 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'password_confirmation')
+        fields = ('username', 'email', 'password', 'password_confirmation', 'groups')
 
 
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ('name', )
+

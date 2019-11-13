@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView, View
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 import jwt
 from .serializers import UserSerializer, GroupSerializer
+from rest_framework import serializers
 
 User = get_user_model()
 
@@ -39,15 +40,10 @@ class LoginView(APIView):
         token = jwt.encode({'sub': user.id}, settings.SECRET_KEY, algorithm='HS256')
         return Response({'token': token, 'message': f'Welcome back {user.username}'})
 
-
-class NewGroup(APIView):
-    def post(self, request):
-        serializer = GroupSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message': 'Group Created'})
-        return Response(serializer.errors, status=422)
-
-class ViewGroup(ListAPIView):
-    queryset = Group.objects.all()
+class GroupIndexCreate(ListCreateAPIView):
     serializer_class = GroupSerializer
+    def get_queryset(self):
+        return self.request.user.groups.all()
+
+# class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
+#     serializers
