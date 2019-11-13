@@ -1,4 +1,4 @@
-# pylint: disable=no-member
+# pylint: disable=no-member,arguments-differ
 from rest_framework import serializers
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
@@ -23,12 +23,23 @@ class GroupSerializer(serializers.ModelSerializer):
     def create(self, data):
         users_data = data.pop('user_set')
         group = Group(**data)
+        group.admin = self.context['request'].user
+        group.save()
+        users = [User.objects.get(**user_data) for user_data in users_data]
+        group.user_set.set(users)
+        return group
+
+    def update(self, group, data):
+        users_data = data.pop('user_set')
+        group.admin = User.objects.get(**data.get('admin'))
+        group.name = data.get('name', group.name)
         group.save()
         users = [User.objects.get(**user_data) for user_data in users_data]
         group.user_set.set(users)
         return group
 
     user_set = NestedUserSerializer(many=True)
+    admin = NestedUserSerializer(required=False)
 
     class Meta:
         model = Group
@@ -57,4 +68,5 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'password_confirmation', 'groups')
+        fields = ('id', 'username', 'email', 'password', 'password_confirmation', 'groups', 'admin_groups')
+        extra_kwargs = {'admin_groups': {'required': False}}
