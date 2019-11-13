@@ -1,0 +1,8 @@
+@import './normalize';
+@import './variables';
+@import './components/common/navbar';
+
+* {
+  box-sizing: border-box;
+  font-family: Kano, sans-serif;
+}
