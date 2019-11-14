@@ -35,6 +35,27 @@ a {
   border-radius: 3px;
 }
 
+figure.placeholder-figure {
+  margin: 0;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: $grey;
+  }
+
+  &.circle::after {
+    border-radius: 100%;
+  }
+}
+
+
 // dropdown
 /*
   <div className='dropdown'>
