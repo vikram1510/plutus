@@ -23,6 +23,13 @@ button {
   }
 }
 
+.container {
+  margin: 8px 16px;
+  background-color: #fff;
+  border: 1px solid $grey;
+  border-radius: 3px;
+}
+
 // dropdown
 /*
   <div className='dropdown'>
