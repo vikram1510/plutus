@@ -2,6 +2,8 @@ nav {
   display: flex;
   justify-content: space-between;
   background-color: $blue;
+  color: #fff;
+  font-size: 1.6rem;
 
   a {
     display: inline-block;
@@ -15,5 +17,15 @@ nav {
       color: $yellow;
       background-color: $dark-blue;
     }
+  }
+}
+
+.nav-menu {
+  div:first-of-type {
+    padding: 8px 16px;
+  }
+
+  div:last-of-type {
+    background-color: $blue;
   }
 }

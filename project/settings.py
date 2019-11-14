@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import environ
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env(env_file='.env')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +27,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u0(af_7*(ilakdgg%ci^u68c-81v+6g_ai#t)9q@cu6+_(@x)%'
+SECRET_KEY = env('SECRET_KEY')
+PUSHER_APP_ID = env('PUSHER_APP_ID')
+PUSHER_APP_KEY = env('PUSHER_APP_KEY')
+PUSHER_APP_SECRET = env('PUSHER_APP_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,7 +90,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django-plutus',
+        'NAME': env('DB_NAME'),
         'HOST': 'localhost',
         'PORT': 5432
     }

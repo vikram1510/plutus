@@ -1,14 +1,15 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.views import APIView, View
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.urls import resolve
 import jwt
-from .serializers import UserSerializer, GroupSerializer
-from rest_framework import serializers
-import json
+
+from .serializers import UserSerializer, GroupSerializer, NestedUserSerializer, FriendSerializer
 
 User = get_user_model()
 
@@ -33,21 +34,30 @@ class LoginView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         user = self.get_user(email)
-        
+
         if not user.check_password(password):
             raise PermissionDenied({'message': 'Invalid Credentials'})
 
-        token = jwt.encode({'sub': str(user.id)}, settings.SECRET_KEY, algorithm='HS256')
+        token = jwt.encode({'sub': str(user.id), 'username': user.username}, settings.SECRET_KEY, algorithm='HS256')
         return Response({'token': token, 'message': f'Welcome back {user.username}'})
 
-class GroupIndexCreate(ListCreateAPIView):
-    serializer_class = GroupSerializer
+class GroupFriendsIndexCreate(ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+
     def get_queryset(self):
-        return self.request.user.groups.all()
+        url_name = resolve(self.request.path_info).url_name
+        if url_name == 'groups_index':  return self.request.user.groups.all()
+        elif url_name == 'friends_index':   return self.request.user.friends.all()
+
+    def get_serializer_class(self):
+        url_name = resolve(self.request.path_info).url_name
+        if url_name == 'groups_index':  return GroupSerializer
+        elif url_name == 'friends_index':   return FriendSerializer
 
 class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
-    
+
     def retrieve(self, request, *args, **kwargs):
         queryset = Group.objects.get(pk=kwargs.get('pk'))
         serializer = GroupSerializer(queryset)
@@ -55,3 +65,10 @@ class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return self.request.user.admin_groups.all()
+
+
+class FriendShowDelete(RetrieveDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = FriendSerializer
+    def get_queryset(self):
+        return self.request.user.friends.all()

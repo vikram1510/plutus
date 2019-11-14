@@ -19,6 +19,23 @@ class NestedUserSerializer(serializers.ModelSerializer):
             'username': {'validators': []},
         }
 
+class FriendSerializer(serializers.ModelSerializer):
+
+    def create(self, friends_data):
+        user = self.context['request'].user
+        friend = User.objects.get(**friends_data)
+        if user == friend:
+            raise serializers.ValidationError({'message': 'You can\'t be friends with yourself'})
+        user.friends.add(friend)
+        return user
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email',)
+        extra_kwargs = {
+            'username': {'validators': []},
+        }
+
 
 class GroupSerializer(serializers.ModelSerializer):
 
