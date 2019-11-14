@@ -6,7 +6,7 @@ from django.db import transaction, IntegrityError
 
 # ensure this import from other app is before our own .models import
 from jwt_auth.serializers import NestedUserSerializer
-from .models import Expense, Split
+from .models import Expense, Split, Ledger
 
 User = get_user_model()
 
@@ -184,3 +184,8 @@ class ExpenseSerializer(serializers.ModelSerializer):
         and validate whether the request is correct or not.
         '''
         return self._upsert_expense(data)
+
+class LedgerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ledger
+        fields = '__all__'

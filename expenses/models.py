@@ -57,3 +57,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.user}: {self.text}'
+
+class Ledger(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    payment_from = models.ForeignKey(User, related_name='payments_made', on_delete=models.DO_NOTHING)
+    payment_to = models.ForeignKey(User, related_name='payments_owed', on_delete=models.DO_NOTHING)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
