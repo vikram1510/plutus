@@ -1,0 +1,78 @@
+[
+{
+  "model": "expenses.expense",
+  "pk": "49eb8e77-0daa-45bd-83c0-213f29e57fc1",
+  "fields": {
+    "amount": "20.00",
+    "creator": "753ab5e3-f1d7-47a2-a814-fb12ab6f5def",
+    "payer": "753ab5e3-f1d7-47a2-a814-fb12ab6f5def",
+    "description": "Jamaican Curry",
+    "split_type": "unequal",
+    "date_created": "2019-11-14T01:50:27.146Z",
+    "date_updated": "2019-11-14T01:50:27.146Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.expense",
+  "pk": "51c174d3-a290-4b25-b4df-8b06103a76ab",
+  "fields": {
+    "amount": "12.00",
+    "creator": "f1f9712c-114b-413c-aca6-29ce6af8eea4",
+    "payer": "f1f9712c-114b-413c-aca6-29ce6af8eea4",
+    "description": "Food Market",
+    "split_type": "equal",
+    "date_created": "2019-11-14T01:52:12.656Z",
+    "date_updated": "2019-11-14T01:52:12.656Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "03931129-d9dd-4445-9c88-f056c7064631",
+  "fields": {
+    "amount": "4.00",
+    "expense": "51c174d3-a290-4b25-b4df-8b06103a76ab",
+    "debtor": "37b0dacc-af2b-4487-ab7d-3ecec789984b",
+    "date_created": "2019-11-14T01:52:42.721Z",
+    "date_updated": "2019-11-14T01:52:42.721Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "81c67528-3365-4e4a-8578-e89da040cbea",
+  "fields": {
+    "amount": "4.00",
+    "expense": "51c174d3-a290-4b25-b4df-8b06103a76ab",
+    "debtor": "5bfef92e-910c-4ad8-a1a9-67f841456640",
+    "date_created": "2019-11-14T01:52:36.700Z",
+    "date_updated": "2019-11-14T01:52:36.700Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "bef031c5-4cc8-4c01-9632-f6bf91c62e78",
+  "fields": {
+    "amount": "5.00",
+    "expense": "49eb8e77-0daa-45bd-83c0-213f29e57fc1",
+    "debtor": "5bfef92e-910c-4ad8-a1a9-67f841456640",
+    "date_created": "2019-11-14T01:51:15.111Z",
+    "date_updated": "2019-11-14T01:51:15.111Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "cba3db00-950e-48ef-8ba2-69d66b54766e",
+  "fields": {
+    "amount": "10.00",
+    "expense": "49eb8e77-0daa-45bd-83c0-213f29e57fc1",
+    "debtor": "37b0dacc-af2b-4487-ab7d-3ecec789984b",
+    "date_created": "2019-11-14T01:51:06.895Z",
+    "date_updated": "2019-11-14T01:51:06.895Z",
+    "is_deleted": false
+  }
+}
+]
