@@ -1,0 +1,166 @@
+// Expenses Index
+.expense-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid $grey;
+  transition: all 0.2s;
+
+  &:last-of-type {
+    border: none;
+  }
+
+  &:hover {
+    background-color: $grey;
+  }
+
+  .summary-div, .lent-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .summary-div {
+    flex-grow: 1;
+    padding-left: 12px;
+
+    > div:first-of-type {
+      font-size: 1.6rem;
+    }
+
+    > div:last-of-type {
+      color: $dark-grey;
+      font-size: 1.2rem;
+    }
+  }
+
+  .lent-div {
+    color: $blue;
+    text-align: right;
+
+    > div:first-of-type {
+      font-size: 1.2rem;
+    }
+
+    > div:last-of-type {
+      font-size: 1.6rem;
+    }
+  }
+}
+
+// Expenses Show
+.expense-header {
+  position: relative;
+  display: flex;
+  padding: 1.2rem 2.4rem;
+  color: #fff;
+  background-color: $light-blue;
+
+  > button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateY(50%);
+    height: 5rem;
+    width: 5rem;
+    padding: 0;
+    margin-right: 2.4rem;
+    border-radius: 100%;
+  }
+
+  > div:first-of-type {
+    > button {
+      padding: 0;
+      border: none;
+      color: inherit;
+      font-size: 4rem;
+      height: 10px;
+      background-color: transparent;
+    }
+
+    > figure {
+      position: relative;
+      // transform: translateY(50%);
+    }
+  }
+
+  > div:last-of-type {
+    margin: 0;
+    margin-left: 2.4rem;
+
+    h2 {
+      margin: 0;
+      font-size: 3.2rem;
+      font-weight: 400;
+    }
+
+    h3 {
+      margin: 0;
+      margin-bottom: 1rem;
+      font-size: 1.6rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.expense-splits {
+  padding: 0 2.4rem 1.2rem;
+  font-size: 1.6rem;
+  border-bottom: 1px solid $grey;
+
+  > div {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-of-type) {
+      margin-bottom: 1.2rem;
+    }
+
+    > p {
+      padding-left: 1.2rem;
+      margin: 0;
+      height: 100%;
+    }
+
+    span {
+      font-weight: 700;
+    }
+  }
+}
+
+.expense-comments {
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
+
+  form {
+    margin: 0;
+  }
+
+  .comments {
+    padding: 1.2rem 0;
+  }
+
+  .comment {
+    display: flex;
+    padding-top: 1.2rem;
+
+    > div {
+      padding-left: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    .username {
+      color: $dark-grey;
+      text-transform: uppercase;
+    }
+  }
+}
