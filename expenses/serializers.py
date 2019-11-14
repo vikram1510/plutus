@@ -21,6 +21,7 @@ class NestedExpenseSerializer(serializers.ModelSerializer):
 
 class NestedSplitSerializer(serializers.ModelSerializer):
 
+    id = serializers.CharField(read_only=True)
     debtor = NestedUserSerializer()
 
     class Meta:
@@ -52,82 +53,134 @@ class ExpenseSerializer(serializers.ModelSerializer):
         fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits')
 
 
-    def _create_split(self, split_data, expense):
+    def _bulk_query_users(self, data):
+
+        # gather all the user ids that have been references on the expense and splits
+        user_ids = set()
+
+        payer_data = data.get('payer')
+        if payer_data and payer_data.get('id'):
+            user_ids.add(payer_data.get('id'))
+
+        creator_data = data.get('creator')
+        if creator_data and creator_data.get('id'):
+            user_ids.add(creator_data.get('id'))
+
+        split_data_list = data.get('splits')
+        if split_data_list:
+            for split_data in split_data_list:
+                debtor_data = split_data.get('debtor')
+                if debtor_data.get('id'):
+                    user_ids.add(debtor_data['id'])
+
+        # Bulk query all the possible users and map them by id on the dictionary
+        users = User.objects.filter(pk__in=list(user_ids))
+
+        user_dict = {}
+        for user in users:
+            user_dict[str(user.id)] = user
+
+        return user_dict
+
+
+    def _upsert_split(self, split_data_list, user_dict, expense, is_update):
         '''
+        UPSERT means Update/Insert
         Create split data, populate debtor and return the splits as list.
         It also validates whether the split amount was equal or the expense amount or not.
         '''
-        split_list = []
 
-        expense_inst = Expense.objects.get(pk=str(expense.id))
+        expense_inst = Expense.objects.get(pk=expense.id)
 
-        total_split_amount = 0
-        for split in split_data:
-            debtor_data = split.pop('debtor')
-            split = Split(**split)
-            total_split_amount += split.amount
+        splits_create_list = []
+        splits_update_dict = {}
+
+        for split_data in split_data_list:
+            debtor_data = split_data.pop('debtor')
+
+            # because id is uuid on Split object, 'Split(**split)' won't capture id because it's string from json
+            split = Split(**split_data)
+            split.debtor = user_dict.get(debtor_data.get('id')) # get the instance from already queried object
+
             split.expense = expense_inst
-            split.debtor = User.objects.get(**debtor_data)
-            split_list.append(split)
 
-        if total_split_amount != expense_inst.amount:
-            raise IntegrityError(f'Total split bill amount: ({total_split_amount}) was not equal to expense amount: ({expense_inst.amount})')
+            if split_data.get('id') is None:
+                splits_create_list.append(split)
+            else:
+                splits_update_dict[split_data.get('id')] = split_data
 
-        Split.objects.bulk_create(split_list)
-        return split_list
+        splits = []
+        if len(splits_create_list) > 0:
+            Split.objects.bulk_create(splits_create_list)
+            splits.append(splits_create_list)
+
+        if is_update and len(splits_update_dict.keys()) > 0:
+            for (key, split) in splits_update_dict.items():
+                # split_inst = Split.objects.get(pk=key).update(split_data)
+                split_inst = Split.objects.get(pk=key)
+                split_inst.amount = split.get('amount')
+                split_inst.save()
+                splits.append(split_inst)
+
+        expense_inst.splits.set(splits)
+
+        return splits_create_list
 
 
-    def _create_update_expense(self, data, expense=None):
+    def _upsert_expense(self, data, expense=None, is_update=False):
+        '''
+        UPSERT means Update/Insert
+        Creates or updates the expense depending on the context
+        '''
+
+        user_dict = self._bulk_query_users(data)
 
         payer_data = data.pop('payer')
         creator_data = data.pop('creator')
         splits_data = data.pop('splits') if 'splits' in data else []
 
         # if expense is None then we want to create a new one else we use to existing one and do the update operation
-        expense_inst = Expense(**data) if expense is None else expense
+        expense_inst = expense if is_update else Expense(**data)
 
+        # is_new = expense is None
         is_splits_required = not expense_inst.split_type == 'settlement'
 
         # Creating a transaction savepoint as we might need to rollback to this point because to create split object, we need expense_inst to be saved but
         # 'Split.objects.bulk_create' might fail down the line 🤓
-        sid = transaction.savepoint()
+        tnx_sp = transaction.savepoint()
 
         try:
-            expense_inst.payer = User.objects.get(**payer_data)
-            expense_inst.creator = User.objects.get(**creator_data)
+            with transaction.atomic():
+                expense_inst.payer = user_dict[payer_data.get('id')]
+                expense_inst.creator = user_dict[creator_data.get('id')]
 
-            expense_inst.save()
+                expense_inst.save()
 
-            if is_splits_required:
-                if len(splits_data) == 0:
-                    raise ValidationError({'splits': 'missing split details'})
+                if is_splits_required:
+                    if len(splits_data) == 0:
+                        raise ValidationError({'splits': 'missing split details'})
 
-                # this is bulk create
-                splits = self._create_split(splits_data, expense_inst)
+                    # this is bulk create/update
+                    self._upsert_split(splits_data, user_dict, expense_inst, is_update)
 
-            if is_splits_required:
-                expense_inst.splits.set(splits)
-
-            return expense_inst
+                return expense_inst
 
         except (IntegrityError, User.DoesNotExist) as err:
             # rollback and throw the exception
-            transaction.savepoint_rollback(sid)
+            transaction.savepoint_rollback(tnx_sp)
             raise ValidationError({'errors': list(err.args)})
 
 
-    @transaction.atomic
     def update(self, expense, new_data):
         '''
         Need to update the transaction including the splits
         '''
-        return self._create_update_expense(new_data, expense)
+        return self._upsert_expense(new_data, expense=expense, is_update=True)
 
 
-    @transaction.atomic
     def create(self, data):
         '''
         Upon the creation of expense, it is resonsible for creating the Split record as well depending on the split_type
         and validate whether the request is correct or not.
         '''
-        return self._create_update_expense(data)
+        return self._upsert_expense(data)
