@@ -12,7 +12,7 @@ html {
 button {
   padding: 8px 16px;
   border: 1px solid $blue;
-  border-radius: 5px;
+  border-radius: 3px;
   color: $blue;
   font-size: 1.6rem;
   transition: all 0.2s;
@@ -22,6 +22,39 @@ button {
     color: $yellow;
   }
 }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  margin: 8px 16px;
+  background-color: #fff;
+  border: 1px solid $grey;
+  border-radius: 3px;
+}
+
+figure.placeholder-figure {
+  margin: 0;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: $grey;
+  }
+
+  &.circle::after {
+    border-radius: 100%;
+  }
+}
+
 
 // dropdown
 /*

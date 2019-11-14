@@ -41,18 +41,23 @@ class LoginView(APIView):
         token = jwt.encode({'sub': str(user.id), 'username': user.username}, settings.SECRET_KEY, algorithm='HS256')
         return Response({'token': token, 'message': f'Welcome back {user.username}'})
 
+
 class GroupFriendsIndexCreate(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         url_name = resolve(self.request.path_info).url_name
-        if url_name == 'groups_index':  return self.request.user.groups.all()
-        elif url_name == 'friends_index':   return self.request.user.friends.all()
+        if url_name == 'groups_index':
+            return self.request.user.groups.all()
+        elif url_name == 'friends_index':
+            return self.request.user.friends.all()
 
     def get_serializer_class(self):
         url_name = resolve(self.request.path_info).url_name
-        if url_name == 'groups_index':  return GroupSerializer
-        elif url_name == 'friends_index':   return FriendSerializer
+        if url_name == 'groups_index':
+            return GroupSerializer
+        elif url_name == 'friends_index':
+            return FriendSerializer
 
 class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)

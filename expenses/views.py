@@ -1,4 +1,4 @@
-#pylint: disable=no-member
+#pylint: disable=no-member,arguments-differ
 import uuid
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
@@ -7,19 +7,31 @@ from rest_framework.exceptions import NotFound, NotAcceptable
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from .models import Expense, Ledger
-from .serializers import ExpenseSerializer
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer
 
 User = get_user_model()
 
 # this is the list view for the expense
 class ExpenseView(ListCreateAPIView):
     queryset = Expense.objects.all()
-    serializer_class = ExpenseSerializer
+    # serializer_class = ExpenseSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ListExpenseSerializer
+
+        return CreateUpdateExpenseSerializer
+
 
 # we want to only update the expense - we will never ever delete the expense object - EVER!!!
 class ExpenseDetailView(RetrieveUpdateAPIView):
     queryset = Expense.objects.all()
-    serializer_class = ExpenseSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ListExpenseSerializer
+
+        return CreateUpdateExpenseSerializer
 
 class TotalView(APIView):
     def get(self, request):
@@ -101,3 +113,5 @@ class TotalView(APIView):
         total = total_to - total_from
 
         return {'id': friend_id, 'total': total}
+
+

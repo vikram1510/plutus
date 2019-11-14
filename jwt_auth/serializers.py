@@ -16,8 +16,19 @@ class NestedUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'email')
         extra_kwargs = {
-            'username': {'validators': []},
+            'username': {'validators': [], 'required': False},
         }
+
+
+# we only need to care about the id of the user when we want to reference the user from other places
+class ReferenceUserSerializer(serializers.ModelSerializer):
+
+    id = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ('id',)
+
 
 class FriendSerializer(serializers.ModelSerializer):
 
