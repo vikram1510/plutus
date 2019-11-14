@@ -1,14 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const lentAmount = (amount, splits) => (
   amount - splits.reduce((sum, split) => sum + Number(split.amount), 0)
 )
 
-const ExpensesIndexItem = ({ payer, amount, splits, description }) => (
-  <div className='expense-item'>
-    <figure className='placeholder-figure'>
-      <div></div>
-    </figure>
+const ExpensesIndexItem = ({ id, payer, amount, splits, description }) => (
+  <Link to={`/expenses/${id}`} className='expense-item'>
+    <figure className='placeholder-figure'></figure>
     <div className='summary-div'>
       <div>{description}</div>
       <div>{payer.username} paid £{amount}</div>
@@ -17,7 +16,7 @@ const ExpensesIndexItem = ({ payer, amount, splits, description }) => (
       <div>{payer.username} lent</div>
       <div>£{lentAmount(amount, splits)}</div>
     </div>
-  </div>
+  </Link>
 )
 
 export default ExpensesIndexItem
