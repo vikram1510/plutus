@@ -12,25 +12,61 @@ THIS ONLY WORKS IF WE USE THE save.() METHOD ON MODEL
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
+from notifications.views import Broadcaster
 from .models import Expense, UserInvolvedActivity
 
 User = get_user_model()
 
 
-def _create_user_involved_activity(activity, expense):
+def _broadcast_activites(involved_activities, **kwargs):
+    broadcast_data = {}
+    activity = involved_activities[0].activity
+
+    broadcast_data['email_channels'] = []
+    [broadcast_data['email_channels'].append(ia.related_user.email) for ia in involved_activities]
+    broadcast_data['event_name'] = 'update'
+
+    message = {
+        'event_type': kwargs.get('event_type'),
+        'model_name': kwargs.get('model_name'),
+        'event_creator': {
+            'id' : str(activity.creator.id),
+            'username' : activity.creator.username,
+            'email' : activity.creator.email
+        },
+        'model_ref': str(activity.record_ref)
+    }
+
+    broadcast_data['message'] = message
+
+    broadcaster = Broadcaster(broadcast_data)
+    broadcaster.push()
+
+
+def _create_user_involved_activity(activity, **kwargs):
     '''
     This function populates the UserInvolvedActivity table to record all the users
     and expense affected by the Activity creation.
     '''
 
-    involved_activities = []
-    for split in expense.splits.all():
-        uia = UserInvolvedActivity()
-        uia.activity = activity
-        uia.related_user = split.debtor
-        involved_activities.append(uia)
+    expense = kwargs.get('expense', None)
+    created = kwargs.get('created', False)
+    event_type = ''
 
-    UserInvolvedActivity.objects.bulk_create(involved_activities)
+    involved_activities = []
+    if expense:
+        model_name = 'expense'
+        event_type = f'{model_name}_created' if created else f'{model_name}_updated'
+        for split in expense.splits.all():
+            uia = UserInvolvedActivity()
+            uia.activity = activity
+            uia.related_user = split.debtor
+            involved_activities.append(uia)
+
+    if len(involved_activities) > 0:
+        UserInvolvedActivity.objects.bulk_create(involved_activities)
+        _broadcast_activites(involved_activities, created=created, event_type=event_type, model_name=model_name)
+
 
 
 @receiver(post_save, sender='expenses.activity')
@@ -49,4 +85,4 @@ def handle_new_activity(**kwargs):
         print(f'helloooooo {kwargs}\n\n')
 
         expense = Expense.objects.get(pk=activity.record_ref)
-        _create_user_involved_activity(activity, expense)
+        _create_user_involved_activity(activity, expense=expense, created=True)
