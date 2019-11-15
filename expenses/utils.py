@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from django.db import transaction, IntegrityError
 from django.contrib.auth import get_user_model
-from .models import Expense, Split, Activity
+from .models import Expense, Split, Activity, Ledger
 
 User = get_user_model()
 
@@ -66,7 +66,7 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
 
         split.expense = expense_inst
 
-        print('\33[33m' + f'split_data:: {split}' + '\033[0m')
+        # print('\33[33m' + f'split_data:: {split}' + '\033[0m')
 
         if split_data.get('id', None) is None:
             splits_create_list.append(split)
@@ -87,7 +87,7 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
         all_splits += splits_update_list
 
 
-    print('\33[33m' + f'splitssplitssplitssplits:: {all_splits}' + '\033[0m')
+    # print('\33[33m' + f'splitssplitssplitssplits:: {all_splits}' + '\033[0m')
 
     expense_inst.splits.set(all_splits)
     return splits_create_list
@@ -120,7 +120,6 @@ def upsert_expense(data, expense=None, is_update=False):
     expense_inst.is_deleted = data.get('is_deleted', False)
 
     # is_new = expense is None
-    is_splits_required = not expense_inst.split_type == 'settlement'
 
     # Creating a transaction savepoint as we might need to rollback to this point because to create split object, we need expense_inst to be saved but
     # 'Split.objects.bulk_create' might fail down the line 🤓
@@ -130,12 +129,13 @@ def upsert_expense(data, expense=None, is_update=False):
         with transaction.atomic():
             expense_inst.save()
 
-            if is_splits_required:
-                if len(splits_data) == 0:
-                    raise ValidationError({'splits': 'missing split details'})
+            if len(splits_data) == 0:
+                raise ValidationError({'splits': 'missing split details'})
 
-                # this is bulk create/update
-                _upsert_split(splits_data, user_dict, expense_inst, is_update)
+            # this is bulk create/update
+            _upsert_split(splits_data, user_dict, expense_inst, is_update)
+
+            update_ledger(expense_inst, is_update)
 
             activity = Activity()
             activity.activity_type = 'expense_updated' if is_update else 'expense_created'
@@ -151,3 +151,24 @@ def upsert_expense(data, expense=None, is_update=False):
         # rollback and throw the exception
         transaction.savepoint_rollback(tnx_sp)
         raise ValidationError({'errors': e})
+
+
+def update_ledger(expense, is_update):
+
+    if is_update:
+        expense.ledgers.all().delete()
+        if expense.is_deleted:
+            return
+        add_ledger_entries(expense)
+    
+    else:
+        add_ledger_entries(expense)
+
+def add_ledger_entries(expense):
+    for split in expense.splits.exclude(debtor=expense.payer):
+        Ledger.objects.create(
+            payment_from=expense.payer,
+            payment_to=split.debtor,
+            amount=split.amount,
+            expense=expense
+        )

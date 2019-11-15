@@ -65,6 +65,10 @@ class Ledger(models.Model):
     payment_from = models.ForeignKey(User, related_name='payments_made', on_delete=models.DO_NOTHING)
     payment_to = models.ForeignKey(User, related_name='payments_owed', on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
+    expense = models.ForeignKey(Expense, related_name='ledgers', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.payment_to} owes {self.payment_from}  £{self.amount} ------ {self.expense}'
 
 class ActivityType(Enum):
     expense_created = 'expense_created'

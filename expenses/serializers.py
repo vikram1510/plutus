@@ -65,7 +65,6 @@ class CreateUpdateExpenseSerializer(serializers.ModelSerializer):
         Upon the creation of expense, it is resonsible for creating the Split record as well depending on the split_type
         and validate whether the request is correct or not.
         '''
-        print(f'testing............. {data}')
         return upsert_expense(data)
 
 

@@ -5,7 +5,7 @@
   "fields": {
     "password": "pbkdf2_sha256$150000$OzQQ0m5TuAnB$J93SfaWbJ74tuQbKzIxutOS3aOx1ZFsvdetUupidoyA=",
     "last_login": null,
-    "is_superuser": false,
+    "is_superuser": true,
     "username": "buklau",
     "first_name": "",
     "last_name": "",
@@ -29,7 +29,7 @@
   "fields": {
     "password": "pbkdf2_sha256$150000$OzQQ0m5TuAnB$J93SfaWbJ74tuQbKzIxutOS3aOx1ZFsvdetUupidoyA=",
     "last_login": null,
-    "is_superuser": false,
+    "is_superuser": true,
     "username": "rakesh",
     "first_name": "",
     "last_name": "",
@@ -42,6 +42,7 @@
     "user_permissions": [],
     "friends": [
       "37b0dacc-af2b-4487-ab7d-3ecec789984b",
+      "753ab5e3-f1d7-47a2-a814-fb12ab6f5def",
       "f1f9712c-114b-413c-aca6-29ce6af8eea4"
     ]
   }
@@ -52,7 +53,7 @@
   "fields": {
     "password": "pbkdf2_sha256$150000$OzQQ0m5TuAnB$J93SfaWbJ74tuQbKzIxutOS3aOx1ZFsvdetUupidoyA=",
     "last_login": null,
-    "is_superuser": false,
+    "is_superuser": true,
     "username": "tyler",
     "first_name": "",
     "last_name": "",
@@ -65,6 +66,7 @@
     "user_permissions": [],
     "friends": [
       "37b0dacc-af2b-4487-ab7d-3ecec789984b",
+      "5bfef92e-910c-4ad8-a1a9-67f841456640",
       "f1f9712c-114b-413c-aca6-29ce6af8eea4"
     ]
   }
@@ -74,7 +76,7 @@
   "pk": "f1f9712c-114b-413c-aca6-29ce6af8eea4",
   "fields": {
     "password": "pbkdf2_sha256$150000$OzQQ0m5TuAnB$J93SfaWbJ74tuQbKzIxutOS3aOx1ZFsvdetUupidoyA=",
-    "last_login": "2019-11-14T17:39:00.156Z",
+    "last_login": "2019-11-15T15:29:33.466Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
