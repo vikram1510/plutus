@@ -19,6 +19,9 @@ class NestedExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted')
+        extra_kwargs = {
+            'creator': {'validators': [], 'required': False},
+        }
 
 
 class NestedSplitSerializer(serializers.ModelSerializer):
@@ -81,10 +84,17 @@ class ListExpenseSerializer(serializers.ModelSerializer):
         model = Expense
         fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits')
 
-class CommentSerializer(serializers.ModelSerializer):
+class ListCommentSerializer(serializers.ModelSerializer):
 
     creator = NestedUserSerializer()
+    expense = NestedExpenseSerializer()
 
     class Meta:
         model = Comment
-        fields = ('id', 'text', 'creator')
+        fields = ('id', 'text', 'creator', 'expense')
+
+class CreateCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'text', 'creator', 'expense')

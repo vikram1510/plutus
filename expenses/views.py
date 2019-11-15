@@ -8,7 +8,7 @@ from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from .models import Expense, Comment, Ledger
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, CommentSerializer
+from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
 
 User = get_user_model()
 
@@ -33,12 +33,19 @@ class ExpenseDetailView(RetrieveUpdateAPIView):
 
         return CreateUpdateExpenseSerializer
 
+
 class CommentListView(ListCreateAPIView):
-    serializer_class = CommentSerializer
 
     def get_queryset(self):
         expense = Expense.objects.get(pk=self.kwargs['pk'])
         return expense.comments.all()
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ListCommentSerializer
+
+        return CreateCommentSerializer
+
 
 class TotalView(APIView):
     def get(self, request):
