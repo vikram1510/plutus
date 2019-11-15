@@ -10,7 +10,8 @@ export default class Login extends React.Component {
       data: {
         email: '',
         password: ''
-      }
+      },
+      errors: {}
     }
 
     this.onChange = this.onChange.bind(this)
@@ -19,7 +20,8 @@ export default class Login extends React.Component {
 
   onChange({ target: { id, value } }) {
     const data = { ...this.state.data, [id]: value }
-    this.setState({ data })
+    const errors = {}
+    this.setState({ data, errors })
   }
 
   onSubmit(e) {
@@ -28,10 +30,11 @@ export default class Login extends React.Component {
     axios.post('/api/login', this.state.data)
       .then(res => Auth.setToken(res.data.token))
       .then(() => this.props.history.push('/'))
-      .catch(err => console.log(err))
+      .catch(err => this.setState({ errors: err.response.data }))
   }
 
   render() {
+    const { errors } = this.state
     return (
       <section>
         <form onSubmit={this.onSubmit}>
@@ -43,6 +46,7 @@ export default class Login extends React.Component {
           <div>
             <input id='password' type='password' placeholder=' ' onChange={this.onChange}/>
             <label htmlFor='password'>Password</label>
+            {errors.message && <div className='error-message'>{errors.message}</div>}
           </div>
           <button type='submit'>Login</button>
         </form>

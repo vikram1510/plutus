@@ -9,7 +9,8 @@ export default class ExpensesShow extends React.Component {
 
     this.state = {
       expense: null,
-      data: null
+      data: null,
+      errors: {}
     }
 
     this.onChange = this.onChange.bind(this)
@@ -28,7 +29,8 @@ export default class ExpensesShow extends React.Component {
 
   onChange({ target: { id, value } }) {
     const data = { ...this.state.data, [id]: value }
-    this.setState({ data })
+    const errors = { ...this.state.errors, [id]: '' }
+    this.setState({ data, errors })
   }
 
   submitComment(e) {
@@ -40,11 +42,11 @@ export default class ExpensesShow extends React.Component {
 
     axios.post(`/api/expenses/${expense}/comments`, data)
       .then(() => this.getExpense())
-      .catch(err => console.log(err.response.data))
+      .catch(err => this.setState({ errors: err.response.data }))
   }
 
   render() {
-    const { expense } = this.state
+    const { expense, errors } = this.state
     return expense &&
       <section>
         <div className='expense-header'>
@@ -73,6 +75,7 @@ export default class ExpensesShow extends React.Component {
             <div>
               <input id='text' placeholder=' ' onChange={this.onChange}/>
               <label htmlFor='text'>Comment</label>
+              {errors.text && <div className='error-message'>{errors.text}</div>}
             </div>
             <button type='submit'>Add Comment</button>
           </form>
