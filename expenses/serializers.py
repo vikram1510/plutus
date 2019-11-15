@@ -11,6 +11,13 @@ from .models import Expense, Split, Comment
 
 User = get_user_model()
 
+
+class ActivitySerializer(serializers.Serializer):
+
+    latest_activity_id = serializers.CharField(required=True)
+
+
+
 class NestedExpenseSerializer(serializers.ModelSerializer):
 
     creator = NestedUserSerializer()
@@ -19,9 +26,6 @@ class NestedExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted')
-        extra_kwargs = {
-            'creator': {'validators': [], 'required': False},
-        }
 
 
 class NestedSplitSerializer(serializers.ModelSerializer):
@@ -32,15 +36,6 @@ class NestedSplitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Split
         fields = ('id', 'amount', 'debtor', 'date_created', 'date_updated', 'is_deleted')
-
-
-class NestedListCommentSerializer(serializers.ModelSerializer):
-
-    creator = NestedUserSerializer()
-
-    class Meta:
-        model = Comment
-        fields = ('id', 'text', 'creator')
 
 
 class CreateUpdateSplitSerializer(serializers.ModelSerializer):
@@ -88,11 +83,10 @@ class ListExpenseSerializer(serializers.ModelSerializer):
     splits = NestedSplitSerializer(many=True, required=False)
     creator = NestedUserSerializer()
     payer = NestedUserSerializer()
-    comments = NestedListCommentSerializer(many=True)
 
     class Meta:
         model = Expense
-        fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits', 'comments')
+        fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits')
 
 class ListCommentSerializer(serializers.ModelSerializer):
 
