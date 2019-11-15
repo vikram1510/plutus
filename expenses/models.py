@@ -1,3 +1,5 @@
+# pylint: disable=wrong-import-position
+
 import uuid
 from enum import Enum
 from django.db import models
@@ -58,6 +60,7 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.user}: {self.text}'
 
+
 class ActivityType(Enum):
     expense_created = 'expense_created'
     expense_updated = 'expense_updated'
@@ -96,5 +99,8 @@ class UserInvolvedActivity(models.Model):
     activity = models.ForeignKey(Activity, related_name='related_activities', on_delete=models.CASCADE)
     related_user = models.ForeignKey(User, related_name='related_activities', on_delete=models.CASCADE)
 
-# this import is intentional
-from .signals import *
+# This import is intentionally here - it's supposed to be on apps.py def ready() function but doesn't work
+# The reason this is at the bottom is that we want the signals uses some of the model so can't have it at the top
+# of this file.
+# But we want to register of model signals as soon as we have loaded our models.
+from . import signals
