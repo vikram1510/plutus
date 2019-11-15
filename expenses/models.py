@@ -55,10 +55,11 @@ class Comment(models.Model):
     text = models.CharField(max_length=200) # the actual user comment text
     # CASCADE - When the referenced object is deleted, also delete the objects that have references to it
     expense = models.ForeignKey(Expense, related_name='comments', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='comments', on_delete=models.DO_NOTHING)
+    creator = models.ForeignKey(User, related_name='comments', on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return f'{self.user}: {self.text}'
+        return f'{self.creator}: {self.text}'
+
 
 class Ledger(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
