@@ -133,17 +133,26 @@
   }
 }
 
-.expense-comments {
+.expense-comment-form {
   padding: 1.2rem 2.4rem;
   font-size: 1.6rem;
+  border-bottom: 1px solid $grey;
 
   form {
     margin: 0;
-  }
+    padding: 2.4rem 0;
+    border: none;
+    background-color: inherit;
 
-  .comments {
-    padding: 1.2rem 0;
+    input {
+      background-color: inherit;
+    }
   }
+}
+
+.expense-comments {
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
 
   .comment {
     display: flex;
@@ -156,10 +165,12 @@
 
     p {
       margin-top: 0;
+      font-weight: 100;
     }
 
     .username {
       color: $dark-grey;
+      // font-weight: 700;
       text-transform: uppercase;
     }
   }

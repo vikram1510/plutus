@@ -70,26 +70,25 @@ export default class ExpensesShow extends React.Component {
             </div>
           ))}
         </div>
-        <div className='expense-comments'>
-          <p>COMMENTS</p>
+        <div className='expense-comment-form'>
           <form>
             <div>
               <input id='exp-comment' placeholder=' '/>
-              <label htmlFor='exp-comment'>Add a Comment</label>
+              <label htmlFor='exp-comment'>Comment</label>
             </div>
             <button type='submit'>Add Comment</button>
           </form>
-          <div className='comments'>
-            {placeholderComments && placeholderComments.map(({ username, comment }) => (
-              <div key={username + comment} className='comment'>
-                <figure className='placeholder-figure circle'></figure>
-                <div>
-                  <p className='username'>{username}</p>
-                  <p>{comment}</p>
-                </div>
+        </div>
+        <div className='expense-comments'>
+          {placeholderComments && placeholderComments.map(({ username, comment }) => (
+            <div key={username + comment} className='comment'>
+              <figure className='placeholder-figure circle'></figure>
+              <div>
+                <p className='username'>{username}</p>
+                <p>{comment}</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
   }
