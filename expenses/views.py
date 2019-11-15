@@ -3,12 +3,14 @@ import uuid
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, NotAcceptable
+from rest_framework.exceptions import NotFound, NotAcceptable, NotAuthenticated
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from .models import Expense, Comment, Ledger
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
+from jwt_auth.serializers import NestedUserSerializer
+from . import totals_utils
 
 User = get_user_model()
 
@@ -50,21 +52,26 @@ class CommentListView(ListCreateAPIView):
 class TotalView(APIView):
     def get(self, request):
         params = request.GET
-        user_id = request.user.id
+        if not request.user.is_authenticated:
+            raise NotAuthenticated(detail='Not Authenticated')
 
         if not params:
-            response = self.get_all_friends_total(user_id, request.user.friends)
+            response = totals_utils.get_all_friends_total(request.user)
 
         elif params.get('filter') == 'current_user':
-            response = self.get_current_user_total(user_id)
+            response = totals_utils.get_current_user_total(request.user)
 
         elif params.get('friend_id'):
             friend_id = params.get('friend_id')
             try:
-                User.objects.get(pk=uuid.UUID(friend_id))
+                friend = User.objects.get(pk=uuid.UUID(friend_id))
             except:
-                raise NotFound(detail='User not found')
-            response = self.get_friend_total(user_id, friend_id)
+                raise NotFound(detail='Friend ID given is incorrect')
+
+            if request.user == friend:
+                raise NotAcceptable(detail='Friend ID given is equal to Current User ID')
+
+            response = totals_utils.get_friend_total(request.user, friend)
 
         else:
             raise NotAcceptable(detail='Invalid query')
