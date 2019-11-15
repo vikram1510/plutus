@@ -1,52 +1,50 @@
 import React from 'react'
 import axios from 'axios'
 import moment from 'moment'
-
-const placeholderComments = [
-  {
-    username: 'user1',
-    comment: 'dummy comment 1'
-  },
-  {
-    username: 'user2',
-    comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-  },
-  {
-    username: 'user1',
-    comment: 'dummy comment 3'
-  },
-  {
-    username: 'user1',
-    comment: 'dummy comment 4'
-  },
-  {
-    username: 'user1',
-    comment: 'dummy comment 5'
-  },
-  {
-    username: 'user1',
-    comment: 'dummy comment 6'
-  }
-]
+import Auth from '../../lib/auth'
 
 export default class ExpensesShow extends React.Component {
   constructor() {
     super()
 
     this.state = {
-      expense: null
+      expense: null,
+      data: null
     }
+
+    this.onChange = this.onChange.bind(this)
+    this.submitComment = this.submitComment.bind(this)
   }
 
   componentDidMount() {
+    this.getExpense()
+  }
+
+  getExpense() {
     axios.get(`/api/expenses/${this.props.match.params.id}`)
       .then(res => this.setState({ expense: res.data }))
       .catch(err => console.log(err))
   }
 
+  onChange({ target: { id, value } }) {
+    const data = { ...this.state.data, [id]: value }
+    this.setState({ data })
+  }
+
+  submitComment(e) {
+    e.preventDefault()
+
+    const creator = Auth.getPayload().sub
+    const expense = this.props.match.params.id
+    const data = { ...this.state.data, creator, expense  }
+
+    axios.post(`/api/expenses/${expense}/comments`, data)
+      .then(() => this.getExpense())
+      .catch(err => console.log(err.response.data))
+  }
+
   render() {
     const { expense } = this.state
-    console.log(expense)
     return expense &&
       <section>
         <div className='expense-header'>
@@ -71,21 +69,21 @@ export default class ExpensesShow extends React.Component {
           ))}
         </div>
         <div className='expense-comment-form'>
-          <form>
+          <form onSubmit={this.submitComment}>
             <div>
-              <input id='exp-comment' placeholder=' '/>
-              <label htmlFor='exp-comment'>Comment</label>
+              <input id='text' placeholder=' ' onChange={this.onChange}/>
+              <label htmlFor='text'>Comment</label>
             </div>
             <button type='submit'>Add Comment</button>
           </form>
         </div>
         <div className='expense-comments'>
-          {placeholderComments && placeholderComments.map(({ username, comment }) => (
-            <div key={username + comment} className='comment'>
+          {expense.comments && expense.comments.map(({ id, creator, text }) => (
+            <div key={id} className='comment'>
               <figure className='placeholder-figure circle'></figure>
               <div>
-                <p className='username'>{username}</p>
-                <p>{comment}</p>
+                <p className='username'>{creator.username}</p>
+                <p>{text}</p>
               </div>
             </div>
           ))}

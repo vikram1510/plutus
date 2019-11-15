@@ -34,6 +34,15 @@ class NestedSplitSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount', 'debtor', 'date_created', 'date_updated', 'is_deleted')
 
 
+class NestedListCommentSerializer(serializers.ModelSerializer):
+
+    creator = NestedUserSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'text', 'creator')
+
+
 class CreateUpdateSplitSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField(required=False)
@@ -79,10 +88,11 @@ class ListExpenseSerializer(serializers.ModelSerializer):
     splits = NestedSplitSerializer(many=True, required=False)
     creator = NestedUserSerializer()
     payer = NestedUserSerializer()
+    comments = NestedListCommentSerializer(many=True)
 
     class Meta:
         model = Expense
-        fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits')
+        fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits', 'comments')
 
 class ListCommentSerializer(serializers.ModelSerializer):
 
