@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from django.db import transaction, IntegrityError
 from django.contrib.auth import get_user_model
-from .models import Expense, Split
+from .models import Expense, Split, Activity
 
 User = get_user_model()
 
@@ -46,7 +46,6 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
 
     splits_create_list = []
     splits_update_list = []
-    # splits_update_dict = {}
 
     total_split_amount = 0
 
@@ -73,7 +72,6 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
             splits_create_list.append(split)
         else:
             splits_update_list.append(split)
-            # splits_update_dict[split_data.get('id')] = split
 
 
     if expense_inst.amount != total_split_amount:
@@ -88,15 +86,6 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
         [split_inst.save() for split_inst in splits_update_list]
         all_splits += splits_update_list
 
-
-    # if is_update and len(splits_update_dict.keys()) > 0:
-    #     for (key, split_data) in splits_update_dict.items():
-    #         # split_inst = Split.objects.get(pk=key).update(split_data)
-    #         split_inst = Split.objects.get(pk=key)
-    #         split_inst.amount = split_data.get('amount')
-    #         split_inst.is_deleted = split_data.get('is_deleted', False)
-    #         split_inst.save()
-    #         splits.append(split_inst)
 
     print('\33[33m' + f'splitssplitssplitssplits:: {all_splits}' + '\033[0m')
 
@@ -147,6 +136,14 @@ def upsert_expense(data, expense=None, is_update=False):
 
                 # this is bulk create/update
                 _upsert_split(splits_data, user_dict, expense_inst, is_update)
+
+            activity = Activity()
+            activity.activity_type = 'expense_updated' if is_update else 'expense_created'
+            activity.record_ref = expense_inst.id
+            activity.creator = expense_inst.creator
+
+            # this should send a signal to run and save activity fields
+            activity.save()
 
             return expense_inst
 
