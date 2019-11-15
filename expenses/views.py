@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAcceptable, NotAuthenticated
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
-from .models import Expense, Comment, Ledger
+from .models import Expense, Comment, Ledger, Activity, UserInvolvedActivity
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
 from jwt_auth.serializers import NestedUserSerializer
@@ -14,10 +14,33 @@ from . import totals_utils
 
 User = get_user_model()
 
+# this is the endpoint to query the list of activity
+class ActivityListView(APIView):
+
+    def get(self, request):
+        params = request.GET
+
+        if not request.user.is_authenticated:
+            raise NotAuthenticated(detail='Not Authenticated')
+
+        current_user = request.user
+
+        filter_param = {'related_activities__related_user': current_user}
+
+        # if 'activity_after' is not provided then get the whole history - maybe need to limit the size
+        if params and params.get('activity_after', None):
+            filter_param['pk__gt'] = params.get('activity_after')
+
+        activities = Activity.objects.filter(**filter_param).order_by('-pk')
+
+        print(f'activities::: {activities}')
+        return Response(len(activities))
+
+
+
 # this is the list view for the expense
 class ExpenseView(ListCreateAPIView):
     queryset = Expense.objects.all()
-    # serializer_class = ExpenseSerializer
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

@@ -28,7 +28,6 @@ class Broadcaster:
                 ssl=True
             )
             channels_client.trigger(serializer.data['email_channels'], serializer.data['event_name'], {**serializer.data['message']})
-            print(f'...........attempted!! {self.data}')
 
         else:
             raise Exception('Not valid json')

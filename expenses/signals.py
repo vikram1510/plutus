@@ -23,9 +23,12 @@ def _broadcast_activites(involved_activities, **kwargs):
     activity = involved_activities[0].activity
 
     broadcast_data['email_channels'] = []
-    [broadcast_data['email_channels'].append(ia.related_user.email) for ia in involved_activities]
+    emails = set()
+    [emails.add(ia.related_user.email) for ia in involved_activities]
+    broadcast_data['email_channels'] = list(emails)
     broadcast_data['event_name'] = 'update'
 
+    # FIXME: Need to make this generic enough to work for all the types of the activty and model ref
     message = {
         'event_type': kwargs.get('event_type'),
         'model_name': kwargs.get('model_name'),
@@ -34,7 +37,8 @@ def _broadcast_activites(involved_activities, **kwargs):
             'username' : activity.creator.username,
             'email' : activity.creator.email
         },
-        'model_ref': str(activity.record_ref)
+        'model_ref': str(activity.record_ref),
+        'activity_ref': str(activity.id)
     }
 
     broadcast_data['message'] = message
