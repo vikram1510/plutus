@@ -1,17 +1,26 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.conf import settings
 import pusher
+from django.conf import settings
 
-# Create your views here.
+from .serializers import BroadcastSerializer
+
+class Broadcaster(APIView):
+
+    def post(self, request):
+        serializer = BroadcastSerializer(data=request.data)
+        print(f'\n\nSerializers::: {serializer}')
+        return Response({'message': 'Broadcasted!!!'})
+
+
+
 class PusherView(APIView):
 
     def post(self, request):
         channels_client = pusher.Pusher(
-            app_id = settings.PUSHER_APP_ID,
-            key = settings.PUSHER_APP_KEY,
-            secret= settings.PUSHER_APP_SECRET,
+            app_id=settings.PUSHER_APP_ID,
+            key=settings.PUSHER_APP_KEY,
+            secret=settings.PUSHER_APP_SECRET,
             cluster='eu',
             ssl=True
         )
