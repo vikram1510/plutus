@@ -7,7 +7,7 @@ from .utils import upsert_expense
 
 # ensure this import from other app is before our own .models import
 from jwt_auth.serializers import NestedUserSerializer, ReferenceUserSerializer
-from .models import Expense, Split
+from .models import Expense, Split, Comment
 
 User = get_user_model()
 
@@ -80,3 +80,11 @@ class ListExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits')
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    creator = NestedUserSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'text', 'creator')
