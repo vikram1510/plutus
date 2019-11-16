@@ -44,7 +44,7 @@ class ExpenseView(ListCreateAPIView):
     def get_queryset(self):
         params = self.request.GET
         if not params:
-            return Expense.objects.all()
+            return Expense.objects.filter(splits__debtor=self.request.user)
         
         friend_id = params.get('friend_id')
         return Expense.objects.filter(splits__debtor=self.request.user).filter(splits__debtor=friend_id).distinct()
