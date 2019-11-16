@@ -4,11 +4,11 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAcceptable, NotAuthenticated
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.contrib.auth import get_user_model
-from .models import Expense, Comment, Ledger, Activity, UserInvolvedActivity
+from .models import Expense, Comment, Ledger, Activity, UserInvolvedActivity, Split
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
+from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer, NestedSplitSerializer, NestedExpenseSerializer
 from jwt_auth.serializers import NestedUserSerializer
 from . import totals_utils
 
@@ -40,7 +40,14 @@ class ActivityListView(APIView):
 
 # this is the list view for the expense
 class ExpenseView(ListCreateAPIView):
-    queryset = Expense.objects.all()
+
+    def get_queryset(self):
+        params = self.request.GET
+        if not params:
+            return Expense.objects.all()
+        
+        friend_id = params.get('friend_id')
+        return Expense.objects.filter(splits__debtor=self.request.user).filter(splits__debtor=friend_id).distinct()
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -100,60 +107,3 @@ class TotalView(APIView):
             raise NotAcceptable(detail='Invalid query')
 
         return Response(response)
-
-    def get_current_user_total(self, user_id):
-        key = 'amount__sum'
-        payments_to = Ledger.objects.filter(payment_to=user_id).aggregate(Sum('amount'))
-        payments_from = Ledger.objects.filter(payment_from=user_id).aggregate(Sum('amount'))
-        total_from = 0 if not payments_from[key] else payments_from[key]
-        total_to = 0 if not payments_to[key] else payments_to[key]
-        total = total_from - total_to
-        return {'id': user_id, 'total': total}
-
-    def get_all_friends_total(self, user_id, friends):
-        totals = {}
-        friend_totals = []
-        tally = {}
-
-        payments_to = Ledger.objects.values('payment_to').annotate(sum=Sum('amount')).filter(payment_from=user_id)
-        payments_from = Ledger.objects.values('payment_from').annotate(sum=Sum('amount')).filter(payment_to=user_id)
-        friend_ids = [str(friend.id) for friend in friends.all()]
-
-        tally['user'] = 0
-
-        for payment in payments_from:
-            key = str(payment['payment_from'])
-            tally['user'] -= float(payment['sum'])
-            tally[key] = -float(payment['sum'])
-
-        for payment in payments_to:
-            key = str(payment['payment_to'])
-            if key not in tally:
-                tally[key] = 0
-            tally[key] += float(payment['sum'])
-            tally['user'] += float(payment['sum'])
-
-        for friend_id in friend_ids:
-            total = {'id': friend_id}
-            if friend_id in tally:
-                total['total'] = tally[friend_id]
-            else:
-                total['total'] = 0
-            friend_totals.append(total)
-
-        totals['friends'] = friend_totals
-        totals['user'] = {'id': user_id, 'total': tally['user']}
-
-        return totals
-
-    def get_friend_total(self, user_id, friend_id):
-        key = 'amount__sum'
-
-        payments_to = Ledger.objects.filter(payment_to=friend_id).filter(payment_from=user_id).aggregate(Sum('amount'))
-        payments_from = Ledger.objects.filter(payment_from=friend_id).filter(payment_to=user_id).aggregate(Sum('amount'))
-
-        total_from = 0 if not payments_from[key] else payments_from[key]
-        total_to = 0 if not payments_to[key] else payments_to[key]
-        total = total_to - total_from
-
-        return {'id': friend_id, 'total': total}

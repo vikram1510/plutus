@@ -8,8 +8,12 @@ import Home from './components/common/Home'
 import Navbar from './components/common/Navbar'
 import Register from './components/auth/Register'
 import Login from './components/auth/Login'
+
 import ExpensesIndex from './components/expenses/ExpensesIndex'
 import ExpensesShow from './components/expenses/ExpensesShow'
+
+import FriendsIndex from './components/friends/FriendsIndex'
+import FriendShow from './components/friends/FriendShow'
 
 const App = () => (
   <BrowserRouter>
@@ -21,6 +25,8 @@ const App = () => (
         <Route path='/login' component={Login} />
         <Route path='/expenses/:id' component={ExpensesShow} />
         <Route path='/expenses' component={ExpensesIndex} />
+        <Route path='/friends/:id' component={FriendShow} />
+        <Route path='/friends' component={FriendsIndex} />
       </Switch>
     </>
   </BrowserRouter>

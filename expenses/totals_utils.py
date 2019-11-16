@@ -2,6 +2,7 @@
 from django.db.models import Sum
 from jwt_auth.serializers import NestedUserSerializer
 from .models import Ledger
+from decimal import Decimal
 
 
 def get_current_user_total(user):
@@ -30,23 +31,23 @@ def get_all_friends_total(user):
 
     for payment in payments_from:
         friend_id = str(payment['payment_from'])
-        tally['user'] -= float(payment['sum'])
-        tally[friend_id] = -float(payment['sum'])
+        tally['user'] -= Decimal(payment['sum'])
+        tally[friend_id] = -Decimal(payment['sum'])
 
     for payment in payments_to:
         friend_id = str(payment['payment_to'])
         if friend_id not in tally:
             tally[friend_id] = 0
-        tally[friend_id] += float(payment['sum'])
-        tally['user'] += float(payment['sum'])
+        tally[friend_id] += Decimal(payment['sum'])
+        tally['user'] += Decimal(payment['sum'])
 
     for friend in friends:
         if friend['id'] in tally:
-            friend['total'] = tally[friend['id']]
+            friend['total'] = str(tally[friend['id']])
         else:
-            friend['total'] = 0
+            friend['total'] = '0.00'
 
-    user['total'] = tally['user']
+    user['total'] = str(tally['user'])
 
     response['friends'] = friends
     response['user'] = user
@@ -61,9 +62,9 @@ def get_friend_total(user, friend):
 
     total_from = 0 if not payments_from[key] else payments_from[key]
     total_to = 0 if not payments_to[key] else payments_to[key]
-    total = total_to - total_from
+    total = Decimal(total_to - total_from)
 
     friend = NestedUserSerializer(friend).data
-    friend['total'] = total
+    friend['total'] = str(total)
 
     return friend
