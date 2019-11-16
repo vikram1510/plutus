@@ -1,3 +1,4 @@
+
 // Expenses Index
 .expense-item {
   position: relative;
@@ -11,7 +12,7 @@
     border: none;
   }
 
-  &:hover {
+  &:hover, &:active {
     background-color: $grey;
   }
 
