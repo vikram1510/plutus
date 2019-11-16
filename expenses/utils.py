@@ -1,4 +1,5 @@
 # pylint: disable=no-member, arguments-differ
+import traceback
 from rest_framework.exceptions import ValidationError
 
 from django.db import transaction, IntegrityError
@@ -86,9 +87,6 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
         [split_inst.save() for split_inst in splits_update_list]
         all_splits += splits_update_list
 
-
-    # print('\33[33m' + f'splitssplitssplitssplits:: {all_splits}' + '\033[0m')
-
     expense_inst.splits.set(all_splits)
     return splits_create_list
 
@@ -136,21 +134,31 @@ def upsert_expense(data, expense=None, is_update=False):
             _upsert_split(splits_data, user_dict, expense_inst, is_update)
 
             update_ledger(expense_inst, is_update)
-
-            # activity = Activity()
-            # activity.activity_type = 'expense_updated' if is_update else 'expense_created'
-            # activity.record_ref = expense_inst.id
-            # activity.creator = expense_inst.creator
-
-            # this should send a signal to run and save activity fields
-            # activity.save()
+            record_activity(expense_inst, is_update)
 
             return expense_inst
 
     except Exception as e:
         # rollback and throw the exception
         transaction.savepoint_rollback(tnx_sp)
+        traceback.print_exc()
         raise ValidationError({'errors': e})
+
+
+def record_activity(expense_inst, is_update):
+    activity = Activity()
+
+    activity.record_ref = str(expense_inst.id)
+    activity.model_name = expense_inst.__class__.__name__
+    activity.creator = expense_inst.creator
+
+    # default
+    activity.activity_type = 'created'
+    if is_update:
+        activity.activity_type = 'deleted' if activity.is_deleted else 'updated'
+
+    # this should send a signal to run and save activity fields
+    activity.save()
 
 
 def update_ledger(expense, is_update):

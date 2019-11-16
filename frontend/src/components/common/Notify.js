@@ -32,7 +32,7 @@ export default class Notify extends React.Component {
       cluster: 'eu',
       forceTLS: true
     })
-    this.channel = this.pusher.subscribe('tyler@email.com')
+    this.channel = this.pusher.subscribe('buklau@email.com')
     this.channel.bind('update', function (data) {
       alert(JSON.stringify(data))
     })

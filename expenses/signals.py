@@ -1,4 +1,4 @@
-# pylint: disable=no-member,protected-access
+# pylint: disable=no-member,protected-access,expression-not-assigned
 
 # signals.py - we will create all the triggers in this class
 '''
@@ -14,6 +14,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from notifications.views import Broadcaster
 from .models import Expense, UserInvolvedActivity
+from .activity_utils import human_readable_activities
 
 User = get_user_model()
 
@@ -22,26 +23,22 @@ def _broadcast_activites(involved_activities, **kwargs):
     broadcast_data = {}
     activity = involved_activities[0].activity
 
-    broadcast_data['email_channels'] = []
+    creator_email = activity.creator.email
+
     emails = set()
-    [emails.add(ia.related_user.email) for ia in involved_activities]
+
+    # we don't want to publist to the creator's own channel
+    [emails.add(ia.related_user.email) for ia in involved_activities if ia.related_user.email != creator_email]
+
     broadcast_data['email_channels'] = list(emails)
     broadcast_data['event_name'] = 'update'
 
-    # FIXME: Need to make this generic enough to work for all the types of the activty and model ref
-    message = {
-        'event_type': kwargs.get('event_type'),
-        'model_name': kwargs.get('model_name'),
-        'event_creator': {
-            'id' : str(activity.creator.id),
-            'username' : activity.creator.username,
-            'email' : activity.creator.email
-        },
-        'model_ref': str(activity.record_ref),
-        'activity_ref': str(activity.id)
-    }
+    # there is only going to one ativity that went to parse
+    readable_activities = human_readable_activities([activity])
 
-    broadcast_data['message'] = message
+    broadcast_data['message'] = readable_activities[0]
+
+    print(f'broadcast_data::: {broadcast_data}')
 
     broadcaster = Broadcaster(broadcast_data)
     broadcaster.push()
@@ -54,22 +51,20 @@ def _create_user_involved_activity(activity, **kwargs):
     '''
 
     expense = kwargs.get('expense', None)
-    created = kwargs.get('created', False)
-    event_type = ''
 
+    # this is activities where all the users are involved and need to be notified
     involved_activities = []
     if expense:
-        model_name = 'expense'
-        event_type = f'{model_name}_created' if created else f'{model_name}_updated'
         for split in expense.splits.all():
             uia = UserInvolvedActivity()
             uia.activity = activity
             uia.related_user = split.debtor
+
             involved_activities.append(uia)
 
     if len(involved_activities) > 0:
         UserInvolvedActivity.objects.bulk_create(involved_activities)
-        _broadcast_activites(involved_activities, created=created, event_type=event_type, model_name=model_name)
+        _broadcast_activites(involved_activities)
 
 
 
@@ -84,9 +79,7 @@ def handle_new_activity(**kwargs):
     # created = kwargs['created'] # with
 
     activity = kwargs['instance']
-    if activity.activity_type in ['expense_created', 'expense_updated']:
-        print(f'\n\nhelloooooo {activity.creator}\n\n')
-        print(f'helloooooo {kwargs}\n\n')
 
+    if activity.model_name.lower() == 'expense':
         expense = Expense.objects.get(pk=activity.record_ref)
-        _create_user_involved_activity(activity, expense=expense, created=True)
+        _create_user_involved_activity(activity, expense=expense)

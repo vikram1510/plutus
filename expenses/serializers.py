@@ -6,15 +6,31 @@ from django.contrib.auth import get_user_model
 from .utils import upsert_expense
 
 # ensure this import from other app is before our own .models import
-from jwt_auth.serializers import NestedUserSerializer, ReferenceUserSerializer
-from .models import Expense, Split, Comment
+from jwt_auth.serializers import NestedUserSerializer
+from .models import Expense, Split, Comment, Activity
 
 User = get_user_model()
 
 
-class ActivitySerializer(serializers.Serializer):
+class ActivitySerializer(serializers.ModelSerializer):
 
-    latest_activity_id = serializers.CharField(required=True)
+    creator = NestedUserSerializer()
+
+    class Meta:
+        model = Activity
+        fields = ('id', 'creator', 'record_ref', 'model_name', 'activity_type')
+
+    def to_representation(self, instance):
+        data = super(ActivitySerializer, self).to_representation(instance)
+
+        # now we override some of the value
+        if data['model_name'].lower() == 'expense':
+            expense_serializer = NestedExpenseSerializer(data=Expense.objects.get(pk=data['record_ref']).__dict__)
+            if expense_serializer.is_valid():
+                data['record'] = expense_serializer.data
+            else:
+                print(f'expense_serializer errors: {expense_serializer.errors}')
+        return data
 
 
 
@@ -50,7 +66,7 @@ class NestedListCommentSerializer(serializers.ModelSerializer):
 class CreateUpdateSplitSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField(required=False)
-    debtor = ReferenceUserSerializer()
+    debtor = NestedUserSerializer()
 
     class Meta:
         model = Split

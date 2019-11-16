@@ -1,14 +1,13 @@
 #pylint: disable=no-member,arguments-differ
 import uuid
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAcceptable, NotAuthenticated
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
-from .models import Expense, Comment, Ledger, Activity, UserInvolvedActivity
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
+from .models import Expense, Comment, Ledger, Activity
+from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer, ActivitySerializer
 from jwt_auth.serializers import NestedUserSerializer
 from . import totals_utils
 from .activity_utils import human_readable_activities
@@ -26,7 +25,7 @@ class ActivityListView(APIView):
 
         current_user = request.user
 
-        filter_param = {'related_activities__related_user': current_user}
+        filter_param = {'activities__related_user': current_user}
 
         # if 'activity_after' is not provided then get the whole history - maybe need to limit the size
         if params and params.get('activity_after', None):
