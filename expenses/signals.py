@@ -13,7 +13,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from notifications.views import Broadcaster
-from .models import Expense, UserInvolvedActivity
+from .models import Expense, UserInvolvedActivity, Activity, Comment
 from .activity_utils import human_readable_activities
 
 User = get_user_model()
@@ -34,11 +34,9 @@ def _broadcast_activites(involved_activities, **kwargs):
     broadcast_data['event_name'] = 'update'
 
     # there is only going to one ativity that went to parse
-    readable_activities = human_readable_activities([activity])
+    readable_activity = human_readable_activities([activity], return_single=True)
 
-    broadcast_data['message'] = readable_activities[0]
-
-    print(f'broadcast_data::: {broadcast_data}')
+    broadcast_data['message'] = readable_activity
 
     broadcaster = Broadcaster(broadcast_data)
     broadcaster.push()
@@ -50,17 +48,23 @@ def _create_user_involved_activity(activity, **kwargs):
     and expense affected by the Activity creation.
     '''
 
-    expense = kwargs.get('expense', None)
-
     # this is activities where all the users are involved and need to be notified
-    involved_activities = []
-    if expense:
-        for split in expense.splits.all():
-            uia = UserInvolvedActivity()
-            uia.activity = activity
-            uia.related_user = split.debtor
+    splits = []
+    if activity.model_name.lower() == 'expense':
+        expense = kwargs.get('instance')
+        splits = expense.splits.all()
 
-            involved_activities.append(uia)
+    elif activity.model_name.lower() == 'comment':
+        comment = kwargs.get('instance')
+        splits = comment.expense.splits.all()
+
+    involved_activities = []
+    for split in splits:
+        uia = UserInvolvedActivity()
+        uia.activity = activity
+        uia.related_user = split.debtor
+
+        involved_activities.append(uia)
 
     if len(involved_activities) > 0:
         UserInvolvedActivity.objects.bulk_create(involved_activities)
@@ -82,4 +86,32 @@ def handle_new_activity(**kwargs):
 
     if activity.model_name.lower() == 'expense':
         expense = Expense.objects.get(pk=activity.record_ref)
-        _create_user_involved_activity(activity, expense=expense)
+        _create_user_involved_activity(activity, instance=expense)
+
+    elif activity.model_name.lower() == 'comment':
+        expense = Comment.objects.get(pk=activity.record_ref)
+        _create_user_involved_activity(activity, instance=expense)
+
+
+@receiver(post_save, sender='expenses.comment')
+def handle_new_comment(**kwargs):
+    '''
+    Registering a the post_save hook on comment model so that it creates an activity which in-turn creates
+    User involved activities and broadcast the events
+    '''
+
+    # this is the comment instance after apply the .save()
+    comment_inst = kwargs['instance']
+
+    if kwargs.get('created', False):
+        activity = Activity()
+
+        activity.record_ref = str(comment_inst.id)
+        activity.model_name = comment_inst.__class__.__name__
+        activity.creator = comment_inst.creator
+
+        # default
+        activity.activity_type = 'created'
+
+        # this should send a signal to run and save activity fields
+        activity.save()

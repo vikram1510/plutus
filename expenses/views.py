@@ -7,7 +7,7 @@ from rest_framework.exceptions import NotFound, NotAcceptable, NotAuthenticated
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from .models import Expense, Comment, Ledger, Activity
-from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer, ActivitySerializer
+from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
 from jwt_auth.serializers import NestedUserSerializer
 from . import totals_utils
 from .activity_utils import human_readable_activities
@@ -33,9 +33,21 @@ class ActivityListView(APIView):
 
         activities = Activity.objects.filter(**filter_param).order_by('-pk')
 
-        print(f'activities::: {activities}')
         return Response(human_readable_activities(activities))
 
+
+class ActivityRetrieveView(APIView):
+
+    def get(self, request, pk):
+
+        if not request.user.is_authenticated:
+            raise NotAuthenticated(detail='Not Authenticated')
+
+        try:
+            activity = Activity.objects.get(pk=pk)
+            return Response(human_readable_activities([activity], return_single=True))
+        except Activity.DoesNotExist:
+            return Response({'message': 'activity not found'}, status=404)
 
 
 # this is the list view for the expense
@@ -62,8 +74,11 @@ class ExpenseDetailView(RetrieveUpdateAPIView):
 class CommentListView(ListCreateAPIView):
 
     def get_queryset(self):
-        expense = Expense.objects.get(pk=self.kwargs['pk'])
-        return expense.comments.all()
+        try:
+            expense = Expense.objects.get(pk=self.kwargs['pk'])
+            return expense.comments.all()
+        except Expense.DoesNotExist:
+            raise NotFound(detail='activity not found')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

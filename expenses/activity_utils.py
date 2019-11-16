@@ -20,7 +20,7 @@ def _get_bulk_records(activities):
     for activity in activities:
         if activity.model_name.lower() == 'expense':
             expense_set.add(activity.record_ref)
-        elif activity.activity_type.lower() == 'comment':
+        elif activity.model_name.lower() == 'comment':
             comment_set.add(activity.record_ref)
         else:
             # more things later
@@ -30,11 +30,13 @@ def _get_bulk_records(activities):
     comment_dict = {}
 
     # doing a bulk query
-    for expense in Expense.objects.filter(pk__in=list(expense_set)):
-        expense_dict[str(expense.id)] = expense
+    if len(expense_set) > 0:
+        for expense in Expense.objects.filter(pk__in=list(expense_set)):
+            expense_dict[str(expense.id)] = expense
 
-    for comment in Comment.objects.filter(pk__in=list(comment_set)):
-        comment_dict[str(comment.id)] = comment
+    if len(comment_set) > 0:
+        for comment in Comment.objects.filter(pk__in=list(comment_set)):
+            comment_dict[str(comment.id)] = comment
 
     # there must a shorter syntax of doing this
     return {
@@ -63,7 +65,7 @@ def _to_dictionary(instance_name, ref_id, record_dict):
     return record_detail
 
 
-def human_readable_activities(activities):
+def human_readable_activities(activities, return_single=False):
     '''
     This is to help the front end and create useful human readable info for each activity
     '''
@@ -85,4 +87,4 @@ def human_readable_activities(activities):
 
         all_activities.append(readable_activity)
 
-    return all_activities
+    return all_activities[0] if return_single and len(all_activities) == 1 else all_activities
