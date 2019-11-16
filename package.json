@@ -7,7 +7,9 @@
     "build": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve:front": "webpack-dev-server --mode=development",
-    "serve:back": "python manage.py runserver"
+    "serve:back": "python manage.py runserver",
+    "migrate": "python manage.py migrate",
+    "makemigrations": "python manage.py makemigrations"
   },
   "author": "",
   "license": "ISC",
