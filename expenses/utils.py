@@ -137,13 +137,13 @@ def upsert_expense(data, expense=None, is_update=False):
 
             update_ledger(expense_inst, is_update)
 
-            activity = Activity()
-            activity.activity_type = 'expense_updated' if is_update else 'expense_created'
-            activity.record_ref = expense_inst.id
-            activity.creator = expense_inst.creator
+            # activity = Activity()
+            # activity.activity_type = 'expense_updated' if is_update else 'expense_created'
+            # activity.record_ref = expense_inst.id
+            # activity.creator = expense_inst.creator
 
             # this should send a signal to run and save activity fields
-            activity.save()
+            # activity.save()
 
             return expense_inst
 
