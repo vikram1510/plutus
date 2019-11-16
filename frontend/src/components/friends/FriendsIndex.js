@@ -1,7 +1,9 @@
 import React from 'react'
 import axios from 'axios'
 import auth from '../../lib/auth'
-import FriendCard from '../expenses/ListCard'
+import UserCard from './UserCard'
+
+import amountHelper from '../../lib/amount'
 
 class FriendsIndex extends React.Component {
 
@@ -24,24 +26,26 @@ class FriendsIndex extends React.Component {
     const user = this.state.totals.user
     return (
       <section>
-        <FriendCard
+        <UserCard
           key={user.id}
           linkTo='/'
           name={'Total Balance'}
+          amountClass={amountHelper.getAmountClass(user.total)}
           description={`${user.total < 0 ? 'You owe' : 'You are owed'} 
                         ${'£' + user.total.replace('-','')}`}
         >
-        </FriendCard>
+        </UserCard>
         <div className="container">
           {friends.map(friend => (
-            <FriendCard
+            <UserCard
               key={friend.id}
               linkTo={`/friends/${friend.id}`}
               name={friend.username}
-              action={friend.total < 0 ? 'you owe' : 'owes you'}
-              amount={'£' + friend.total.replace('-','')}
+              action={amountHelper.getAmountString(friend.total)}
+              amount={Number(friend.total) === 0 ? '' : ' £' + friend.total.replace('-','')}
+              amountClass={amountHelper.getAmountClass(friend.total)}
             >
-            </FriendCard>
+            </UserCard>
           ))}
         </div>
       </section>

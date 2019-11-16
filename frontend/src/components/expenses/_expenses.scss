@@ -16,13 +16,13 @@
     background-color: $grey;
   }
 
-  .summary-div, .lent-div {
+  .summary-div, .lent-div, .balance-div {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
 
-  .summary-div {
+  .summary-div, .balance-div {
     flex-grow: 1;
     padding-left: 12px;
 
@@ -31,14 +31,19 @@
     }
 
     > div:last-of-type {
-      color: $dark-grey;
       font-size: 1.2rem;
     }
   }
 
+  .summary-div > div:last-of-type {
+    color: $dark-grey;
+  }
+
   .lent-div {
-    color: $blue;
+    // color: $blue;
     text-align: right;
+
+
 
     > div:first-of-type {
       font-size: 1.2rem;
@@ -175,4 +180,25 @@
       text-transform: uppercase;
     }
   }
+}
+
+.expense-date {
+  height: 40px;
+  width: 40px;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-right: 5px;
+  color: $dark-grey;
+}
+
+div.expense-credit{
+  color: green;
+}
+
+div.expense-debit{
+  color: red;
+}
+
+div.expense-settled{
+  color: $dark-grey;
 }
