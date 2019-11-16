@@ -11,6 +11,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
 from jwt_auth.serializers import NestedUserSerializer
 from . import totals_utils
+from .activity_utils import human_readable_activities
 
 User = get_user_model()
 
@@ -34,7 +35,7 @@ class ActivityListView(APIView):
         activities = Activity.objects.filter(**filter_param).order_by('-pk')
 
         print(f'activities::: {activities}')
-        return Response(len(activities))
+        return Response(human_readable_activities(activities))
 
 
 

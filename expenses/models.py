@@ -71,17 +71,18 @@ class Ledger(models.Model):
     def __str__(self):
         return f'{self.payment_to} owes {self.payment_from}  £{self.amount} ------ {self.expense}'
 
-class ActivityType(Enum):
-    expense_created = 'expense_created'
-    expense_updated = 'expense_updated'
-    comment_added = 'comment_added'
-    payment_made = 'payment_made'
-
 
 class Activity(models.Model):
     '''
     Recording an activity to trigger an event
     '''
+
+    class ActivityType(Enum):
+        expense_created = 'expense_created'
+        expense_updated = 'expense_updated'
+        comment_added = 'comment_added'
+        payment_made = 'payment_made'
+
     # guaranteed to fit numbers from 1 to 922,337,203,685,477,5807 according to django
     id = models.BigAutoField(primary_key=True)
 
@@ -92,9 +93,6 @@ class Activity(models.Model):
     # this is the person that will "considered" as the activity creator
     creator = models.ForeignKey(User, related_name='created_activities', on_delete=models.CASCADE)
 
-    # def save(self, *args, **kwargs):
-    #     self._expense_id = '51c174d3-a290-4b25-b4df-8b06103a76ab'
-    #     super(Activity, self).save(*args, **kwargs)
 
 
 class UserInvolvedActivity(models.Model):
