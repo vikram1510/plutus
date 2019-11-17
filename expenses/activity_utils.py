@@ -51,12 +51,17 @@ def _generate_owe_lent_detail(expense):
     lent_detail['payer'] = expense.payer.to_dict()
     lent_detail['debtors'] = []
 
+    split_total_exclude_payer = 0
     for split in expense.splits.all():
         lent_detail['debtors'].append({
             'id': str(split.debtor.id),
             'username': split.debtor.username,
             'amount': str(split.amount)
         })
+        if split.debtor.id != expense.payer.id:
+            split_total_exclude_payer += split.amount
+
+    lent_detail['split_total_exclude_payer'] = str(split_total_exclude_payer)
 
     return lent_detail
 
@@ -100,7 +105,7 @@ def human_readable_activities(activities, return_single=False):
     for activity in activities:
         readable_activity = OrderedDict() # ordered dict cuz helps to see on json
         readable_activity['id'] = str(activity.id)
-        readable_activity['created_date'] = activity.date_created.replace(tzinfo=None).isoformat()
+        readable_activity['date_created'] = activity.date_created.replace(tzinfo=None).isoformat()
         readable_activity['model_name'] = activity.model_name
         readable_activity['activity_type'] = activity.activity_type
         readable_activity['creator'] = activity.creator.to_dict(include_names=True)

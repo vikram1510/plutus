@@ -24,10 +24,7 @@ export default class ActivityIndex extends React.Component {
     const { activities } = this.state
     return (
       <div className='container'>
-        {activities && activities.map(activity => (
-          <ActivityListCard key={activity.id} activity={activity} user={Auth.getPayload()} />
-        ))
-        }
+        {activities && activities.map(activity => <ActivityListCard key={activity.id} activity={activity} user={Auth.getPayload()} />)}
       </div>
     )
   }
