@@ -6,16 +6,10 @@ from django.contrib.auth import get_user_model
 from .utils import upsert_expense
 
 # ensure this import from other app is before our own .models import
-from jwt_auth.serializers import NestedUserSerializer, ReferenceUserSerializer
-from .models import Expense, Split, Comment
+from jwt_auth.serializers import NestedUserSerializer
+from .models import Expense, Split, Comment, Activity
 
 User = get_user_model()
-
-
-class ActivitySerializer(serializers.Serializer):
-
-    latest_activity_id = serializers.CharField(required=True)
-
 
 
 class NestedExpenseSerializer(serializers.ModelSerializer):
@@ -50,7 +44,7 @@ class NestedListCommentSerializer(serializers.ModelSerializer):
 class CreateUpdateSplitSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField(required=False)
-    debtor = ReferenceUserSerializer()
+    debtor = NestedUserSerializer()
 
     class Meta:
         model = Split
