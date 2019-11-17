@@ -27,7 +27,7 @@ class Broadcaster:
                 cluster='eu',
                 ssl=True
             )
-            channels_client.trigger(serializer.data['email_channels'], serializer.data['event_name'], {**serializer.data['message']})
+            channels_client.trigger(serializer.data['email_channels'], serializer.data['event_name'], serializer.data['message'])
 
         else:
             raise Exception('Invalid json schema for broadcasting event' + f'{serializer.errors}')

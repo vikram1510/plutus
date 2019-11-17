@@ -1,36 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import ExpenseActivityCard from './ExpenseActivityCard'
+import CommentActivityCard from './CommentActivityCard'
 
 const ActivityListCard = ({ activity, user }) => {
 
-  let linkTo
-  let action // what did the user do: add, update or delete
-  const item = activity.activity_detail.description
-  let additionalDetail = ''
-
   if (activity.model_name === 'Expense') {
-    linkTo = `expenses/${activity.record_ref}`
-    action = activity.activity_type
-    if (action === 'created') action = 'added'
-
+    return <ExpenseActivityCard activity={activity} user={user}/>
 
   } else if (activity.model_name === 'Comment') {
-    linkTo = `expenses/${activity.activity_detail.expense_id}`
-    action = 'commented on'
-    additionalDetail = `: "${activity.activity_detail.text}"`
+    return <CommentActivityCard activity={activity} user={user}/>
   }
 
-  const who = user.username === activity.creator.username ? 'You' : activity.creator.username
-
-  return (
-    <Link to={linkTo} className='expense-item'>
-      <figure className='placeholder-figure'></figure>
-      <div className='summary-div'>
-        <div><b>{who}</b> {action} &quot;<strong>{item}</strong>&quot;{additionalDetail}</div>
-        <div>&nbsp;</div>
-      </div>
-    </Link>
-  )
+  // return null for any model_name that is not supported yet
+  return null
 }
 
 export default ActivityListCard

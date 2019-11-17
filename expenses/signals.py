@@ -39,7 +39,6 @@ def _broadcast_activites(involved_activities, **kwargs):
     broadcast_data['message'] = readable_activity
 
     broadcaster = Broadcaster(broadcast_data)
-    print(f'broadcast_data::: {broadcast_data}')
     broadcaster.push()
 
 

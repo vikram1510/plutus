@@ -71,7 +71,7 @@ def _generate_activty(model_name, ref_id, record_dict):
         expense_inst = record_dict['expense_dict'][str(ref_id)]
         record_detail = {
             'description': expense_inst.description,
-            'amount' : str(Decimal(expense_inst.amount)),
+            'amount' : str(expense_inst.amount),
             'split_type' : expense_inst.split_type,
             'lent_detail': _generate_owe_lent_detail(expense_inst)
         }
@@ -80,7 +80,8 @@ def _generate_activty(model_name, ref_id, record_dict):
         comment_inst = record_dict['comment_dict'][str(ref_id)]
         record_detail = {
             'text' : comment_inst.text,
-            'expense_id' : str(comment_inst.expense.id)
+            'expense_id' : str(comment_inst.expense.id),
+            'expense_description': comment_inst.expense.description
         }
 
     return record_detail
@@ -99,6 +100,7 @@ def human_readable_activities(activities, return_single=False):
     for activity in activities:
         readable_activity = OrderedDict() # ordered dict cuz helps to see on json
         readable_activity['id'] = str(activity.id)
+        readable_activity['created_date'] = activity.date_created.replace(tzinfo=None).isoformat()
         readable_activity['model_name'] = activity.model_name
         readable_activity['activity_type'] = activity.activity_type
         readable_activity['creator'] = activity.creator.to_dict(include_names=True)
