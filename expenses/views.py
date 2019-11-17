@@ -1,6 +1,6 @@
 #pylint: disable=no-member,arguments-differ
 import uuid
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAcceptable, NotAuthenticated
@@ -11,6 +11,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer, NestedSplitSerializer, NestedExpenseSerializer
 from jwt_auth.serializers import NestedUserSerializer
 from . import totals_utils
+from .activity_utils import human_readable_activities
 
 User = get_user_model()
 
@@ -25,7 +26,7 @@ class ActivityListView(APIView):
 
         current_user = request.user
 
-        filter_param = {'related_activities__related_user': current_user}
+        filter_param = {'activities__related_user': current_user}
 
         # if 'activity_after' is not provided then get the whole history - maybe need to limit the size
         if params and params.get('activity_after', None):
@@ -33,9 +34,21 @@ class ActivityListView(APIView):
 
         activities = Activity.objects.filter(**filter_param).order_by('-pk')
 
-        print(f'activities::: {activities}')
-        return Response(len(activities))
+        return Response(human_readable_activities(activities))
 
+
+class ActivityRetrieveView(APIView):
+
+    def get(self, request, pk):
+
+        if not request.user.is_authenticated:
+            raise NotAuthenticated(detail='Not Authenticated')
+
+        try:
+            activity = Activity.objects.get(pk=pk)
+            return Response(human_readable_activities([activity], return_single=True))
+        except Activity.DoesNotExist:
+            return Response({'message': 'activity not found'}, status=404)
 
 
 # this is the list view for the expense
@@ -44,7 +57,7 @@ class ExpenseView(ListCreateAPIView):
     def get_queryset(self):
         params = self.request.GET
         if not params:
-            return Expense.objects.all()
+            return Expense.objects.filter(splits__debtor=self.request.user)
         
         friend_id = params.get('friend_id')
         return Expense.objects.filter(splits__debtor=self.request.user).filter(splits__debtor=friend_id).distinct()
@@ -69,8 +82,11 @@ class ExpenseDetailView(RetrieveUpdateAPIView):
 class CommentListView(ListCreateAPIView):
 
     def get_queryset(self):
-        expense = Expense.objects.get(pk=self.kwargs['pk'])
-        return expense.comments.all()
+        try:
+            expense = Expense.objects.get(pk=self.kwargs['pk'])
+            return expense.comments.all()
+        except Expense.DoesNotExist:
+            raise NotFound(detail='activity not found')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

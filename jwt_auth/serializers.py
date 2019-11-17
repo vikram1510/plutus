@@ -20,16 +20,6 @@ class NestedUserSerializer(serializers.ModelSerializer):
         }
 
 
-# we only need to care about the id of the user when we want to reference the user from other places
-class ReferenceUserSerializer(serializers.ModelSerializer):
-
-    id = serializers.CharField()
-
-    class Meta:
-        model = User
-        fields = ('id',)
-
-
 class FriendSerializer(serializers.ModelSerializer):
 
     def create(self, friends_data):

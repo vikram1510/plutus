@@ -2,8 +2,10 @@
 from django.db.models import Sum
 from jwt_auth.serializers import NestedUserSerializer
 from .models import Ledger
+from django.contrib.auth import get_user_model
 from decimal import Decimal
 
+User = get_user_model()
 
 def get_current_user_total(user):
     key = 'amount__sum'
@@ -20,12 +22,8 @@ def get_current_user_total(user):
 def get_all_friends_total(user):
     response, tally = {}, {}
 
-    payments_to = Ledger.objects.values('payment_to').annotate(sum=Sum('amount')).filter(payment_from=user.id)
-    payments_from = Ledger.objects.values('payment_from').annotate(sum=Sum('amount')).filter(payment_to=user.id)
-
-    # serialize to friends list and user dictionary
-    friends = NestedUserSerializer(user.friends, many=True).data
-    user = NestedUserSerializer(user).data
+    payments_to = Ledger.objects.values('payment_to').annotate(sum=Sum('amount')).filter(payment_from=user)
+    payments_from = Ledger.objects.values('payment_from').annotate(sum=Sum('amount')).filter(payment_to=user)
 
     tally['user'] = 0
 
@@ -40,6 +38,15 @@ def get_all_friends_total(user):
             tally[friend_id] = 0
         tally[friend_id] += Decimal(payment['sum'])
         tally['user'] += Decimal(payment['sum'])
+
+    friend_ids = [str(friend.id) for friend in user.friends.all()]
+    ledger_ids = list(tally.keys())
+    ledger_ids.remove('user')
+    
+    friends = User.objects.filter(pk__in=set(friend_ids + ledger_ids))
+    
+    friends = NestedUserSerializer(friends, many=True).data
+    user = NestedUserSerializer(user).data
 
     for friend in friends:
         if friend['id'] in tally:

@@ -69,32 +69,35 @@ class Ledger(models.Model):
     expense = models.ForeignKey(Expense, related_name='ledgers', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.payment_to} owes {self.payment_from}  £{self.amount} ------ {self.expense}'
-
-class ActivityType(Enum):
-    expense_created = 'expense_created'
-    expense_updated = 'expense_updated'
-    comment_added = 'comment_added'
-    payment_made = 'payment_made'
+        return f'{self.payment_from} -> {self.payment_to}  £{self.amount} ------------- {self.expense}'
 
 
 class Activity(models.Model):
     '''
     Recording an activity to trigger an event
     '''
+
+    class ActivityType(Enum):
+        created = 'created'
+        updated = 'updated'
+        deleted = 'deleted'
+
     # guaranteed to fit numbers from 1 to 922,337,203,685,477,5807 according to django
     id = models.BigAutoField(primary_key=True)
 
     # this will just an str representation of object id - it's like an pointer
     record_ref = models.CharField(max_length=50)
+
+    # this will be the name of the model
+    model_name = models.CharField(max_length=50)
+
+    # created
     activity_type = models.CharField(max_length=20, choices=[(activity.value, activity.name) for activity in ActivityType])
 
-    # this is the person that will "considered" as the activity creator
+    # this is the person that will "considered as the activity creator"
     creator = models.ForeignKey(User, related_name='created_activities', on_delete=models.CASCADE)
 
-    # def save(self, *args, **kwargs):
-    #     self._expense_id = '51c174d3-a290-4b25-b4df-8b06103a76ab'
-    #     super(Activity, self).save(*args, **kwargs)
+    date_created = models.DateTimeField(auto_now_add=True)
 
 
 class UserInvolvedActivity(models.Model):
@@ -106,11 +109,11 @@ class UserInvolvedActivity(models.Model):
     id = models.BigAutoField(primary_key=True)
 
     # if the user and activity is related then delete this record as well
-    activity = models.ForeignKey(Activity, related_name='related_activities', on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity, related_name='activities', on_delete=models.CASCADE)
     related_user = models.ForeignKey(User, related_name='related_activities', on_delete=models.CASCADE)
 
 # This import is intentionally here - it's supposed to be on apps.py def ready() function but doesn't work
-# The reason this is at the bottom is that we want the signals uses some of the model so can't have it at the top
-# of this file.
+# The reason this is at the bottom is because some models are already referenced in signals.py file
+# so can't have it at the top of this file.
 # But we want to register of model signals as soon as we have loaded our models.
 from . import signals

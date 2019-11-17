@@ -3,6 +3,7 @@ import axios from 'axios'
 import auth from '../../lib/auth'
 
 import ExpenseIndex from '../expenses/ExpensesIndex'
+import amountHelper from '../../lib/amount'
 
 class FriendShow extends React.Component {
 
@@ -24,14 +25,14 @@ class FriendShow extends React.Component {
   render(){
     if (!this.state.friend) return null
     const { friend } = this.state
+    const friendAmountStr = `${amountHelper.getAmountString(friend.total)} £${friend.total.replace('-','')}`
     return (
       <section>
         <div className="container">
           <figure className='placeholder-figure'></figure>
           <h1>{friend.username}</h1>
           <h3>{friend.email}</h3>
-          <h2>{`${friend.total < 0 ? 'You owe' : 'owes you'} 
-                        ${'£' + friend.total.replace('-','')}`}</h2>
+          <h2>{friendAmountStr}</h2>
         </div>
         <ExpenseIndex
           filter={`?friend_id=${friend.id}`}

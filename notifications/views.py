@@ -30,7 +30,7 @@ class Broadcaster:
             channels_client.trigger(serializer.data['email_channels'], serializer.data['event_name'], {**serializer.data['message']})
 
         else:
-            raise Exception('Not valid json')
+            raise Exception('Invalid json schema for broadcasting event' + f'{serializer.errors}')
 
 class BroadcasterView(APIView):
 

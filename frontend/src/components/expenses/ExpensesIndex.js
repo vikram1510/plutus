@@ -22,6 +22,7 @@ export default class ExpensesIndex extends React.Component {
 
   render() {
     const { expenses } = this.state
+    // const userTotal = exp
     return (
       <section>
         <h1>This be Expenses Index</h1>
@@ -29,9 +30,17 @@ export default class ExpensesIndex extends React.Component {
           <button>Create</button>
         </Link>
         <div className='container'>
-          {expenses && expenses.map(expense => (
-            <ExpensesIndexItem key={expense.id} {...expense}/>
-          ))}
+          {expenses && expenses.map(expense => {
+            const userId = auth.getPayload().sub
+            const userIsPayer = expense.payer.id ===  userId
+            const userSplit = expense.splits.filter(split => split.debtor.id === userId)
+            const userDebtAmount = userSplit[0].amount
+            expense.userAmount = `£${userIsPayer ? (Number(expense.amount) - Number(userDebtAmount)).toFixed(2) : userDebtAmount}`
+            expense.amountClass = userIsPayer ? 'expense-credit' : 'expense-debit'
+            expense.userAction = userIsPayer ? 'you lent' : 'you borrowed'
+            return <ExpensesIndexItem key={expense.id} {...expense}/>
+          }
+          )}
         </div>
       </section>
     )
