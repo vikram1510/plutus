@@ -9,7 +9,10 @@ const ExpensesIndexItem = ({ id, payer, amount, splits, description, ...rest }) 
   return (
     <Link to={`/expenses/${id}`} className='expense-item'>
       <div className="expense-date">{dateCreated}</div>
-      <figure className='placeholder-figure'></figure>
+      <figure className='placeholder-figure'>
+        {/* <i className="fas fa-money-bill-wave"></i> */}
+        <i className="fas fa-money-check-alt"></i>
+      </figure>
       <div className='summary-div'>
         <div>{description}</div>
         <div>{payer.username} paid £{amount}</div>
