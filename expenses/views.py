@@ -55,10 +55,14 @@ class ActivityRetrieveView(APIView):
 class ExpenseView(ListCreateAPIView):
 
     def get_queryset(self):
+
+        if not self.request.user.is_authenticated:
+            raise NotAuthenticated(detail='Not Authenticated')
+
         params = self.request.GET
         if not params:
             return Expense.objects.filter(splits__debtor=self.request.user)
-        
+
         friend_id = params.get('friend_id')
         return Expense.objects.filter(splits__debtor=self.request.user).filter(splits__debtor=friend_id).distinct()
 

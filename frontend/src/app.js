@@ -15,6 +15,8 @@ import ExpensesShow from './components/expenses/ExpensesShow'
 import FriendsIndex from './components/friends/FriendsIndex'
 import FriendShow from './components/friends/FriendShow'
 
+import ActivityIndex from './components/activities/ActivityIndex'
+
 const App = () => (
   <BrowserRouter>
     <>
@@ -27,6 +29,7 @@ const App = () => (
         <Route path='/expenses' component={ExpensesIndex} />
         <Route path='/friends/:id' component={FriendShow} />
         <Route path='/friends' component={FriendsIndex} />
+        <Route path='/activities' component={ActivityIndex} />
       </Switch>
     </>
   </BrowserRouter>

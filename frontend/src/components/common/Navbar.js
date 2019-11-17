@@ -23,6 +23,7 @@ class Navbar extends React.Component {
           <Link to='/'>Home</Link>
           <Link to='/expenses'>Expense</Link>
           <Link to='/friends'>Friends</Link>
+          <Link to='/activities'>Activities</Link>
         </div>
         <div>
           {!authenticated && <Link to='/register'>Register</Link>}

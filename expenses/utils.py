@@ -38,6 +38,44 @@ def _bulk_query_users(data):
     return user_dict
 
 
+def _validate_splits(expense_inst, is_update):
+    '''
+    * For create/update, check if all the split amount adds up to the expense amount
+    * That's why this check must happen after updating the expense with splits.
+    * Finally, in all case, check if the payer was included in the splits or not.
+    '''
+    total_split_amount = 0
+    is_payer_in_splits = False
+
+    debtors_count = {}
+    for split in expense_inst.splits.all():
+        if not split.is_deleted:
+            total_split_amount += split.amount
+
+        if str(split.debtor.id) not in debtors_count:
+            debtors_count[str(split.debtor.id)] = 0
+        debtors_count[str(split.debtor.id)] += 1
+
+        # only check if it was False, if True then we don't bother
+        if not is_payer_in_splits:
+            is_payer_in_splits = str(expense_inst.payer.id) == str(split.debtor.id)
+
+    # throw IntegrityError exception
+    if expense_inst.amount != total_split_amount:
+        error_msg = f'Split amount {total_split_amount} does not add up with expense amount {expense_inst.amount}'
+        if is_update:
+            error_msg += '. If you are trying to update, do not forget to add existing split ids along with \'is_deleted\' flag set correctly.'
+        raise IntegrityError(error_msg)
+
+    if not is_payer_in_splits:
+        raise IntegrityError('Payer must also be included in the splits.')
+
+    for (debtor_username, count) in debtors_count.items():
+        if count > 1:
+            raise IntegrityError(f'Debtor: {debtor_username} has been included {count} times in the splits. ' \
+                'Either there is a split that already exists with debtor or multiple splits with same debtor was provided.')
+
+
 def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
     '''
     UPSERT means Update/Insert
@@ -47,8 +85,6 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
 
     splits_create_list = []
     splits_update_list = []
-
-    total_split_amount = 0
 
     for split_data in split_data_list:
         debtor_data = split_data.pop('debtor')
@@ -63,20 +99,16 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
         split.is_deleted = split_data.get('is_deleted', False)
         split.debtor = user_dict.get(debtor_data.get('id')) # get the instance from already queried object
 
-        total_split_amount += split.amount
-
         split.expense = expense_inst
 
-        # print('\33[33m' + f'split_data:: {split}' + '\033[0m')
-
+        # separate out the ones that needs to be created vs the ones that needs to be updated
         if split_data.get('id', None) is None:
             splits_create_list.append(split)
         else:
-            splits_update_list.append(split)
+            # add to update list only if it was PUT update request
+            if is_update:
+                splits_update_list.append(split)
 
-
-    if expense_inst.amount != total_split_amount:
-        raise IntegrityError('Split amount does not add up')
 
     all_splits = []
     if len(splits_create_list) > 0:
@@ -132,6 +164,7 @@ def upsert_expense(data, expense=None, is_update=False):
 
             # this is bulk create/update
             _upsert_split(splits_data, user_dict, expense_inst, is_update)
+            _validate_splits(expense_inst, is_update)
 
             update_ledger(expense_inst, is_update)
             record_activity(expense_inst, is_update)
@@ -142,7 +175,10 @@ def upsert_expense(data, expense=None, is_update=False):
         # rollback and throw the exception
         transaction.savepoint_rollback(tnx_sp)
         traceback.print_exc()
-        raise ValidationError({'errors': e})
+        err_msg = str(e)
+        if hasattr(e, 'message'):
+            err_msg = e.message
+        raise ValidationError({'errors': err_msg})
 
 
 def record_activity(expense_inst, is_update):
@@ -155,7 +191,7 @@ def record_activity(expense_inst, is_update):
     # default
     activity.activity_type = 'created'
     if is_update:
-        activity.activity_type = 'deleted' if activity.is_deleted else 'updated'
+        activity.activity_type = 'deleted' if expense_inst.is_deleted else 'updated'
 
     # this should send a signal to run and save activity fields
     activity.save()
@@ -168,7 +204,7 @@ def update_ledger(expense, is_update):
         if expense.is_deleted:
             return
         add_ledger_entries(expense)
-    
+
     else:
         add_ledger_entries(expense)
 

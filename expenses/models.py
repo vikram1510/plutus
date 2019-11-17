@@ -56,6 +56,7 @@ class Comment(models.Model):
     # CASCADE - When the referenced object is deleted, also delete the objects that have references to it
     expense = models.ForeignKey(Expense, related_name='comments', on_delete=models.CASCADE)
     creator = models.ForeignKey(User, related_name='comments', on_delete=models.DO_NOTHING)
+    # date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.creator}: {self.text}'

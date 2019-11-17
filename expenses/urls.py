@@ -6,6 +6,6 @@ urlpatterns = [
     path('expenses/<str:pk>', ExpenseDetailView.as_view()),
     path('expenses/<str:pk>/comments', CommentListView.as_view()),
     path('totals', TotalView.as_view()),
-    path('activites', ActivityListView.as_view()),
-    path('activites/<int:pk>', ActivityRetrieveView.as_view())
+    path('activities', ActivityListView.as_view()),
+    path('activities/<int:pk>', ActivityRetrieveView.as_view())
 ]
