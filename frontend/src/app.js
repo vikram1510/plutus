@@ -17,6 +17,7 @@ import FriendsIndex from './components/friends/FriendsIndex'
 import FriendShow from './components/friends/FriendShow'
 
 import ActivityIndex from './components/activities/ActivityIndex'
+import Faker from './components/common/Faker'
 
 const App = () => (
   <BrowserRouter>
@@ -32,6 +33,7 @@ const App = () => (
         <Route path='/friends/:id' component={FriendShow} />
         <Route path='/friends' component={FriendsIndex} />
         <Route path='/activities' component={ActivityIndex} />
+        <Route path='/faker' component={Faker} />
       </Switch>
     </>
   </BrowserRouter>

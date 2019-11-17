@@ -28,8 +28,10 @@ class FriendShow extends React.Component {
     const friendAmountStr = `${amountHelper.getAmountString(friend.total)} £${friend.total.replace('-','')}`
     return (
       <section>
-        <div className="container">
-          <figure className='placeholder-figure'></figure>
+        <div className="container friend-show">
+          <figure className='placeholder-figure friend-show'>
+            <img src={friend.profile_image}></img>
+          </figure>
           <h1>{friend.username}</h1>
           <h3>{friend.email}</h3>
           <h2>{friendAmountStr}</h2>

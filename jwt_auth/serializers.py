@@ -14,9 +14,10 @@ class NestedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
+        fields = ('id', 'username', 'email', 'profile_image')
         extra_kwargs = {
             'username': {'validators': [], 'required': False},
+            'profile_iamge': {'validators': [], 'required': False}
         }
 
 
@@ -88,5 +89,5 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'password_confirmation', 'groups', 'admin_groups')
+        fields = ('id', 'username', 'email', 'password', 'password_confirmation', 'groups', 'admin_groups', 'profile_image', 'is_superuser', 'is_staff')
         extra_kwargs = {'admin_groups': {'required': False}}

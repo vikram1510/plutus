@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const ListCard = ({ linkTo, name, amountClass, description = '', action = '', amount = '' }) => (
+const ListCard = ({ linkTo, name, amountClass, description = '', action = '', amount = '', profileImage }) => (
   <Link to={linkTo} className='expense-item'>
-    <figure className='placeholder-figure'></figure>
+    <figure className='placeholder-figure'>
+      <img src={profileImage}></img>
+    </figure>
     <div className='balance-div'>
       <div>{name}</div>
       <div className={amountClass}>{description}</div>
