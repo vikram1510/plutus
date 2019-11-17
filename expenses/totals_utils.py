@@ -9,8 +9,8 @@ User = get_user_model()
 
 def get_current_user_total(user):
     key = 'amount__sum'
-    payments_to = Ledger.objects.filter(payment_to=user.id).aggregate(Sum('amount'))
-    payments_from = Ledger.objects.filter(payment_from=user.id).aggregate(Sum('amount'))
+    payments_to = Ledger.objects.filter(payment_to=user.id, is_deleted=False).aggregate(Sum('amount'))
+    payments_from = Ledger.objects.filter(payment_from=user.id, is_deleted=False).aggregate(Sum('amount'))
     total_from = 0 if not payments_from[key] else payments_from[key]
     total_to = 0 if not payments_to[key] else payments_to[key]
     total = total_from - total_to
@@ -21,9 +21,8 @@ def get_current_user_total(user):
 
 def get_all_friends_total(user):
     response, tally = {}, {}
-
-    payments_to = Ledger.objects.values('payment_to').annotate(sum=Sum('amount')).filter(payment_from=user)
-    payments_from = Ledger.objects.values('payment_from').annotate(sum=Sum('amount')).filter(payment_to=user)
+    payments_to = Ledger.objects.values('payment_to').annotate(sum=Sum('amount')).filter(payment_from=user, is_deleted=False)
+    payments_from = Ledger.objects.values('payment_from').annotate(sum=Sum('amount')).filter(payment_to=user, is_deleted=False)
 
     tally['user'] = 0
 
@@ -64,8 +63,8 @@ def get_all_friends_total(user):
 def get_friend_total(user, friend):
     key = 'amount__sum'
 
-    payments_to = Ledger.objects.filter(payment_to=friend.id).filter(payment_from=user.id).aggregate(Sum('amount'))
-    payments_from = Ledger.objects.filter(payment_from=friend.id).filter(payment_to=user.id).aggregate(Sum('amount'))
+    payments_to = Ledger.objects.filter(is_deleted=False, payment_to=friend.id, payment_from=user.id).aggregate(Sum('amount'))
+    payments_from = Ledger.objects.filter(is_deleted=False, payment_from=friend.id, payment_to=user.id).aggregate(Sum('amount'))
 
     total_from = 0 if not payments_from[key] else payments_from[key]
     total_to = 0 if not payments_to[key] else payments_to[key]

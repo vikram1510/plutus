@@ -200,9 +200,11 @@ def record_activity(expense_inst, is_update):
 def update_ledger(expense, is_update):
 
     if is_update:
-        expense.ledgers.all().delete()
         if expense.is_deleted:
+            print('deleting expense')
+            expense.ledgers.all().update(is_deleted=True)
             return
+        expense.ledgers.all().delete()
         add_ledger_entries(expense)
 
     else:
