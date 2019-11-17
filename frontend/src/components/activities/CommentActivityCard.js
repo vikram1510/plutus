@@ -19,7 +19,9 @@ const CommentActivityCard = ({ activity, user }) => {
 
   return (
     <Link to={linkTo} className='expense-item'>
-      <figure className='placeholder-figure'></figure>
+      <figure className='activity-figure'>
+        <i className="fas fa-comment-dots fa-3x"/>
+      </figure>
       <div className='summary-div'>
         <div><b>{who}</b> {action} &quot;<strong>{commentDetail.expense_description}</strong>&quot;: &quot;{commentDetail.text}&quot;</div>
         <div>&nbsp;</div>

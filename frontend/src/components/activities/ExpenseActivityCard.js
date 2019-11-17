@@ -19,19 +19,17 @@ export default class ExpenseActivityCard extends React.Component {
     const debtors = lentDetail.debtors.filter(debtor => debtor.id !== lentDetail.payer.id )
 
     let oweAmount
-    let what
 
     if (detail.payer === 'You'){
-      what = 'get back'
+      detail.what = 'get back'
       oweAmount = lentDetail.split_total_exclude_payer
 
     } else {
       // then u must pay back
-      what = 'owe'
+      detail.what = 'owes'
       oweAmount = debtors.filter(debtor => debtor.username === loggedInUser.username)[0].amount
     }
 
-    detail.what = what
     detail.oweAmount = oweAmount
 
     return detail
@@ -61,7 +59,9 @@ export default class ExpenseActivityCard extends React.Component {
 
     return (
       <Link to={linkTo} className='expense-item'>
-        <figure className='placeholder-figure'></figure>
+        <figure className='activity-figure'>
+          <i className="fas fa-edit fa-3x"/>
+        </figure>
         <div className='summary-div'>
           <div>
             <b>{who}</b> {action} &quot;<strong>{expenseDescription}</strong>&quot;

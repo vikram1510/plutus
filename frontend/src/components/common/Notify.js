@@ -28,14 +28,14 @@ export default class Notify extends React.Component {
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
 
-    this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
-      cluster: 'eu',
-      forceTLS: true
-    })
-    this.channel = this.pusher.subscribe('buklau@email.com')
-    this.channel.bind('update', function (data) {
-      alert(JSON.stringify(data))
-    })
+    // this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+    //   cluster: 'eu',
+    //   forceTLS: true
+    // })
+    // this.channel = this.pusher.subscribe('buklau@email.com')
+    // this.channel.bind('update', function (data) {
+    //   alert(JSON.stringify(data))
+    // })
   }
 
 
