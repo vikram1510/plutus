@@ -68,6 +68,7 @@ class Ledger(models.Model):
     payment_to = models.ForeignKey(User, related_name='payments_owed', on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     expense = models.ForeignKey(Expense, related_name='ledgers', on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.payment_from} -> {self.payment_to}  £{self.amount} ------------- {self.expense}'
