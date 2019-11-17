@@ -176,3 +176,14 @@
     }
   }
 }
+
+// Expense New
+label.debtor {
+  position: static;
+  display: flex;
+
+  input {
+    width: auto;
+    margin-right: 1rem;
+  }
+}
