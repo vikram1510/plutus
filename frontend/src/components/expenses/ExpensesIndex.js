@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import ExpensesIndexItem from './ExpensesIndexItem'
 import auth from '../../lib/auth'
+import { Link } from 'react-router-dom'
 
 export default class ExpensesIndex extends React.Component {
   constructor() {
@@ -25,6 +26,9 @@ export default class ExpensesIndex extends React.Component {
     return (
       <section>
         <h1>This be Expenses Index</h1>
+        <Link to='/expenses/new'>
+          <button>Create</button>
+        </Link>
         <div className='container'>
           {expenses && expenses.map(expense => {
             const userId = auth.getPayload().sub

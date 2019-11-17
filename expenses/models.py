@@ -70,7 +70,7 @@ class Ledger(models.Model):
     expense = models.ForeignKey(Expense, related_name='ledgers', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.payment_to} owes {self.payment_from}  £{self.amount} ------ {self.expense}'
+        return f'{self.payment_from} -> {self.payment_to}  £{self.amount} ------------- {self.expense}'
 
 
 class Activity(models.Model):

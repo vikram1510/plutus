@@ -182,6 +182,18 @@
   }
 }
 
+// Expense New
+label.debtor {
+  position: static;
+  display: flex;
+
+  input {
+    width: auto;
+    margin-right: 1rem;
+  }
+}
+
+// Expense ???
 .expense-date {
   height: 40px;
   width: 40px;
