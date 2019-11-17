@@ -33,6 +33,7 @@ class FriendsIndex extends React.Component {
           amountClass={amountHelper.getAmountClass(user.total)}
           description={`${user.total < 0 ? 'You owe' : 'You are owed'} 
                         ${'£' + user.total.replace('-','')}`}
+          profileImage={user.profile_image}
         >
         </UserCard>
         <div className="container">
@@ -44,6 +45,7 @@ class FriendsIndex extends React.Component {
               action={amountHelper.getAmountString(friend.total)}
               amount={Number(friend.total) === 0 ? '' : ' £' + friend.total.replace('-','')}
               amountClass={amountHelper.getAmountClass(friend.total)}
+              profileImage={friend.profile_image}
             >
             </UserCard>
           ))}
