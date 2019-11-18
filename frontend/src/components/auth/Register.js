@@ -11,9 +11,9 @@ export default class Register extends React.Component {
         email: '',
         password: '',
         password_confirmation: '',
-        inviteData: null,
-        inviteKeyExists: false
+        inviteKey: ''
       },
+      inviteData: null,
       errors: {}
     }
 
@@ -31,19 +31,15 @@ export default class Register extends React.Component {
 
     const inviteKey = this.props.match.params.inviteKey
     if (inviteKey) {
-      // this.setState({ inviteKey, inviteKeyExists: true })
 
       axios.get(`/api/invites/${inviteKey}`)
         .then(res => {
-          if (res.status !== 404) this.setState({ inviteData: res.data, inviteKeyExists: true })
-          
+          this.setState({ inviteData: res.data, data: { ...this.state.data, inviteKey: res.data.key } } )
         })
         .catch(err => {
-          this.setState({ inviteData: err.response.data, inviteKeyExists: false })
+          this.setState({ inviteData: err.response.data })
         })
-
     }
-    
   }
 
   onSubmit(e) {
@@ -55,10 +51,10 @@ export default class Register extends React.Component {
   }
 
   render() {
-    const { errors, inviteKeyExists, inviteData } = this.state
+    const { errors, inviteData } = this.state
     return (
       <section>
-        {inviteKeyExists && <InviterDetail {...inviteData.inviter}/>}
+        {inviteData && <InviterDetail {...inviteData.inviter}/>}
         <form onSubmit={this.onSubmit}>
           <h2>Register</h2>
           <div>
@@ -94,7 +90,7 @@ const InviterDetail = ({ username, profile_image: profileImage }) => (
     <figure className='placeholder-figure friend-show'>
       <img src={profileImage}></img>
     </figure>
-    <h2><strong>{username}</strong> has invited to Plutus. </h2>
+    <h2><strong>{username}</strong> has invited you to Plutus.</h2>
 
   </div>
 )
