@@ -4,6 +4,12 @@ nav {
   background-color: $blue;
   color: #fff;
   font-size: 1.6rem;
+  position: fixed;
+  top: 0;
+  height: 70px;
+  width: 100%;
+  z-index: 1000;
+
 
   a {
     display: inline-block;

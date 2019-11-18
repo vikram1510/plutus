@@ -5,6 +5,7 @@ import auth from '../../lib/auth'
 import Spinner from '../common/Spinner'
 import ExpenseIndex from '../expenses/ExpensesIndex'
 import amountHelper from '../../lib/amount'
+import Dialog from '../common/Dialog'
 
 
 class FriendShow extends React.Component {
@@ -31,6 +32,8 @@ class FriendShow extends React.Component {
     const friendAmountStr = `${amountHelper.getAmountString(friend.total)} £${friend.total.replace('-','')}`
     const friendAmountClass = amountHelper.getAmountClass(friend.total)
     return (
+      <>
+
       <section>
         <div className="container friend-show">
           <figure className='placeholder-figure friend-show'>
@@ -44,6 +47,7 @@ class FriendShow extends React.Component {
           filter={`?friend_id=${friend.id}`}
         />
       </section>
+      </>
     )
   }
 }

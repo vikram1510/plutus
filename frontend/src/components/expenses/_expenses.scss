@@ -73,6 +73,25 @@
     padding: 0;
     margin-right: 2.4rem;
     border-radius: 100%;
+
+    &.delete {
+      transform: translateY(50%) translateX(-110%);
+      background-color: $red;
+      color: $light-grey;
+      border: 0;
+      &:hover{
+        color: $yellow;
+      }
+    }
+    &.restore{
+      // transform: translateY(50%) translateX(-110%);
+      background-color: $green;
+      color: $light-grey;
+      border: 0;
+      &:hover{
+        font-size: 2.2rem;
+      }
+    }
   }
 
   > div:first-of-type {
@@ -213,4 +232,55 @@ label.debtor {
 
 .expense-settled{
   color: $dark-grey;
+}
+
+.delete-dialog {
+  z-index: 1100;
+  h3 {
+    text-align: center;
+    font-size: 2rem;
+  }
+  .options {
+    display: flex;
+    justify-content: space-evenly;
+    button.yes {
+      background-color: $light-grey;
+      color: $green;
+      border: 2px $green solid;
+      &:hover {
+        background-color: $green;
+        color: $light-grey;
+        border: 2px $light-grey solid;
+      }
+    }
+    button.cancel {
+      background-color: $light-grey;
+      color: $red;
+      border: 2px $red solid;
+      &:hover {
+        background-color: $red;
+        color: $light-grey;
+        border: 2px $light-grey solid;
+      }
+    }
+  }
+}
+
+section.expense-deleted{
+  background-color: $grey;
+  color: $dark-grey;
+  height: calc(100vh - #{$navbar-height});
+}
+
+.expense-comment-form button{
+  &:disabled{
+    background-color: $dark-grey;
+    border: $grey;
+    color: $light-grey;
+  }
+}
+
+.expense-header.expense-deleted{
+  background-color: $dark-grey;
+  text-decoration: line-through;
 }

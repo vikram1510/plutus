@@ -2,6 +2,9 @@
   box-sizing: border-box;
   font-family: Kano, sans-serif;
 }
+main {
+  margin-top: $navbar-height;
+}
 
 html {
   color: $black;
@@ -17,6 +20,7 @@ button {
   font-size: 1.6rem;
   cursor: pointer;
   transition: all 0.2s;
+  outline: none;
 
   &:hover {
     background-color: $blue;
