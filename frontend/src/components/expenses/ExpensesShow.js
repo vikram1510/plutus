@@ -16,6 +16,19 @@ const YesCancelDialog = ({ onYes, onCancel, message }) => (
   </div>
 )
 
+const SplitText = ({ debtor, payer, amount, totalAmount }) => {
+  const t1 = payer.id === debtor.id
+  const t2 = amount > 0
+  return (
+    <p>
+      <span>{debtor.username}</span>
+      {t1 && ' paid £'}{t1 && <span>{totalAmount}</span>}
+      {t1 && t2 && ' and '}
+      {t2 && ' owes £'}{t2 && <span>{amount}</span>}
+    </p>
+  )
+}
+
 export default class ExpensesShow extends React.Component {
   constructor() {
     super()
@@ -58,8 +71,6 @@ export default class ExpensesShow extends React.Component {
     this.setState({ data, errors })
   }
 
-
-
   submitComment(e) {
     e.preventDefault()
 
@@ -79,29 +90,28 @@ export default class ExpensesShow extends React.Component {
   render() {
     if (!this.state.expense) return <Spinner />
     const { expense, errors } = this.state
+    console.log(expense)
     return expense &&
     <>
-    <Dialog 
-      open={this.state.deleteDialog || this.state.restoreDialog}
-      closeFunction={() => this.closeDialog()}
-    >
-      {
-        this.state.deleteDialog &&
-        <YesCancelDialog
-          onYes={() => this.expenseDelete(true)}
-          onCancel={() => this.closeDialog()}
-          message='Are you sure?'
-        />
-      }
-      {
-        this.state.restoreDialog &&
-        <YesCancelDialog
-          onYes={() => this.expenseDelete(false)}
-          onCancel={() => this.closeDialog()}
-          message='Restore Expense?'
-        />
-      }
-    </Dialog>
+      <Dialog
+        open={this.state.deleteDialog || this.state.restoreDialog}
+        closeFunction={() => this.closeDialog()}
+      >
+        {this.state.deleteDialog &&
+          <YesCancelDialog
+            onYes={() => this.expenseDelete(true)}
+            onCancel={() => this.closeDialog()}
+            message='Are you sure?'
+          />
+        }
+        {this.state.restoreDialog &&
+          <YesCancelDialog
+            onYes={() => this.expenseDelete(false)}
+            onCancel={() => this.closeDialog()}
+            message='Restore Expense?'
+          />
+        }
+      </Dialog>
       <section className={expense.is_deleted ? 'expense-deleted' : ''}>
         <div className={`expense-header ${expense.is_deleted ? 'expense-deleted' : ''}`}>
           <div>
@@ -113,7 +123,6 @@ export default class ExpensesShow extends React.Component {
             <h3>{expense.description}</h3>
             <h2>£{expense.amount}</h2>
             <h3>Paid by {expense.payer.username}</h3>
-            
           </div>
           <button><i className="fas fa-pen"></i></button>
           {!expense.is_deleted ?
@@ -126,12 +135,13 @@ export default class ExpensesShow extends React.Component {
           }
         </div>
         <div className='expense-splits'>
-          
           <p>SPLIT DETAILS</p>
-          {expense.splits.map(split => (
-            <div key={split.id}>
-              <figure className='placeholder-figure circle'></figure>
-              <p><span>{split.debtor.username}</span> owes <span>£{split.amount}</span></p>
+          {expense.splits.map(({ id, debtor, amount }) => (
+            <div key={id}>
+              <figure className='placeholder-figure circle'>
+                <img src={debtor.profile_image} />
+              </figure>
+              <SplitText payer={expense.payer} debtor={debtor} amount={amount} totalAmount={expense.amount} />
             </div>
           ))}
         </div>
