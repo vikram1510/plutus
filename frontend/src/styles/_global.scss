@@ -36,6 +36,13 @@ a {
   border-radius: 3px;
 }
 
+.container-no-bg {
+  @extend .container;
+  background-color: transparent;
+  border: none;
+}
+
+
 figure.placeholder-figure {
   margin: 0;
   width: 40px;
