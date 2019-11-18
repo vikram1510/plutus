@@ -3,6 +3,8 @@ import axios from 'axios'
 import moment from 'moment'
 import Auth from '../../lib/auth'
 
+import Spinner from '../common/Spinner'
+
 export default class ExpensesShow extends React.Component {
   constructor() {
     super()
@@ -46,6 +48,7 @@ export default class ExpensesShow extends React.Component {
   }
 
   render() {
+    if (!this.state.expense) return <Spinner />
     const { expense, errors } = this.state
     return expense &&
       <section>

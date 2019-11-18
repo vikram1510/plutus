@@ -2,8 +2,10 @@ import React from 'react'
 import axios from 'axios'
 import auth from '../../lib/auth'
 
+import Spinner from '../common/Spinner'
 import ExpenseIndex from '../expenses/ExpensesIndex'
 import amountHelper from '../../lib/amount'
+
 
 class FriendShow extends React.Component {
 
@@ -23,9 +25,11 @@ class FriendShow extends React.Component {
   }
 
   render(){
-    if (!this.state.friend) return null
+    // return <Spinner />
+    if (!this.state.friend) return <Spinner />
     const { friend } = this.state
     const friendAmountStr = `${amountHelper.getAmountString(friend.total)} £${friend.total.replace('-','')}`
+    const friendAmountClass = amountHelper.getAmountClass(friend.total)
     return (
       <section>
         <div className="container friend-show">
@@ -34,7 +38,7 @@ class FriendShow extends React.Component {
           </figure>
           <h1>{friend.username}</h1>
           <h3>{friend.email}</h3>
-          <h2>{friendAmountStr}</h2>
+          <h2 className={friendAmountClass}>{friendAmountStr}</h2>
         </div>
         <ExpenseIndex
           filter={`?friend_id=${friend.id}`}
