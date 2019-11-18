@@ -109,10 +109,11 @@ export default class ExpensesShow extends React.Component {
             <figure className='placeholder-figure'></figure>
           </div>
           <div>
+            <p className="expense-timestamp">Created by {expense.creator.username} on {moment(expense.date_created).format('LL')}</p>
             <h3>{expense.description}</h3>
             <h2>£{expense.amount}</h2>
             <h3>Paid by {expense.payer.username}</h3>
-            {/* <p>Added by {expense.creator.username} on {moment(expense.date_created).format('LL')}</p> */}
+            
           </div>
           <button><i className="fas fa-pen"></i></button>
           {!expense.is_deleted ?
@@ -125,6 +126,7 @@ export default class ExpensesShow extends React.Component {
           }
         </div>
         <div className='expense-splits'>
+          
           <p>SPLIT DETAILS</p>
           {expense.splits.map(split => (
             <div key={split.id}>
