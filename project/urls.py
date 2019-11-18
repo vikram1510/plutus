@@ -22,5 +22,9 @@ urlpatterns = [
     path('api/', include('jwt_auth.urls')),
     path('api/', include('expenses.urls')),
     path('api/', include('notifications.urls')),
+    # path('accounts/', include('invitation.urls')),
+    path('api/', include('invitation.urls')),
+    path('invitations/', include('invitation.urls')),
+    path('invitations/', include('invitations.urls')), # this is kinda screwing up our /api endpoints
     path('', include('frontend.urls')),
 ]

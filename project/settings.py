@@ -32,6 +32,14 @@ PUSHER_APP_ID = env('PUSHER_APP_ID')
 PUSHER_APP_KEY = env('PUSHER_APP_KEY')
 PUSHER_APP_SECRET = env('PUSHER_APP_SECRET')
 
+SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -40,6 +48,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SITE_ID = 1
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,11 +56,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
     'jwt_auth',
     'expenses',
-    'frontend'
+    'frontend',
+    'allauth',
+    'invitations',
+    'invitation' # this is our own custom custom invitation app just to redirect and override few things
 ]
+
+INVITE_MODE = True
+
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
+
+INVITATIONS_SIGNUP_REDIRECT = 'accept-invite'
+# INVITATIONS_LOGIN_REDIRECT = 'apilogin'
+INVITATIONS_GONE_ON_ACCEPT_ERROR = True
+INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
+# LOGIN_URL = '/login'
+
+STATIC_URL = '/static/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
