@@ -20,11 +20,12 @@ export default class ExpensesNew extends React.Component {
         split_type: 'equal',
         splits: []
       },
-      debtors: [],
+      debtors: {},
       errors: {}
     }
 
     this.onChange = this.onChange.bind(this)
+    this.onSplitChange = this.onSplitChange.bind(this)
     this.handleCheckbox = this.handleCheckbox.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
@@ -49,15 +50,15 @@ export default class ExpensesNew extends React.Component {
     this.setState({ data, errors })
   }
 
-  handleCheckbox({ target: { id, checked } }) {
-    const obj = {
-      amount: 0,
-      debtor: {
-        id: id
-      }
-    }
+  onSplitChange({ target: { id, value } }) {
+    const debtor = value > 0 ? { amount: value, debtor: { id } } : null
+    const debtors = { ...this.state.debtors, [id]: debtor }
+    this.setState({ debtors })
+  }
 
-    const debtors = checked ? [...this.state.debtors, obj] : this.state.debtors.filter(({ debtor }) => debtor.id !== obj.debtor.id)
+  handleCheckbox({ target: { id, checked } }) {
+    const debtor = checked ? { amount: 0, debtor: { id } } : null
+    const debtors = { ...this.state.debtors, [id]: debtor }
     this.setState({ debtors })
   }
 
@@ -67,12 +68,13 @@ export default class ExpensesNew extends React.Component {
 
   onSubmit(e) {
     e.preventDefault()
-    const splits = this.state.debtors.map(obj => {
-      return {
-        ...obj,
-        amount: this.state.data.amount / this.state.debtors.length
-      }
-    })
+    // const splits = this.state.debtors.map(obj => {
+    //   return {
+    //     ...obj,
+    //     amount: this.state.data.amount / this.state.debtors.length
+    //   }
+    // })
+    const splits = Object.values(this.state.debtors)
     const data = { ...this.state.data, splits }
 
     axios.post('/api/expenses', data)
@@ -96,11 +98,6 @@ export default class ExpensesNew extends React.Component {
             <label htmlFor='amount'>Amount</label>
             {errors.amount && <div className='error-message'>{errors.amount}</div>}
           </div>
-          {/* <div>
-            <input id='payer' placeholder=' ' onChange={this.onChange} />
-            {errors.payer && <div className='error-message'>{errors.payer}</div>}
-            <label htmlFor='payer'>Payer</label>
-          </div> */}
           <div>
             <p>Payer</p>
             <select id='payer' value={data.payer.id} onChange={this.onChange}>
@@ -123,17 +120,21 @@ export default class ExpensesNew extends React.Component {
             {errors.split_type && <div className='error-message'>{errors.split_type}</div>}
           </div>
           <div>
+            {data.split_type}
+          </div>
+          <div>
             <p>Splits between:</p>
-            {friends && friends.map(({ id, username }) => (
+            {data.split_type === 'equal' && friends && friends.map(({ id, username }) => (
               <label key={id} className='debtor'>
-                <input
-                  id={id}
-                  type='checkbox'
-                  value='testValue'
-                  // checked={debtors.find(({ debtor }) => debtor.id === id)}
-                  onChange={this.handleCheckbox}
-                />
                 {username}
+                <input id={id} type='checkbox' onChange={this.handleCheckbox}/>
+              </label>
+            ))}
+            {data.split_type !== 'equal' && friends && friends.map(({ id, username }) => (
+              <label key={id} className='debtor'>
+                {username}
+                {console.log(debtors[id])}
+                <input id={id} type='number' placeholder='0' onChange={this.onSplitChange}/>
               </label>
             ))}
             Currently hard coded to always split equally
