@@ -44,7 +44,7 @@ class FriendShow extends React.Component {
           <h2 className={friendAmountClass}>{friendAmountStr}</h2>
         </div>
         <ExpenseIndex
-          filter={`?friend_id=${friend.id}`}
+          friendId={friend.id}
         />
       </section>
       </>

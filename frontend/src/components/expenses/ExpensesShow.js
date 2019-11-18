@@ -6,7 +6,7 @@ import Auth from '../../lib/auth'
 import Spinner from '../common/Spinner'
 import Dialog from '../common/Dialog'
 
-const DeleteRestoreDialog = ({ onYes, onCancel, message }) => (
+const YesCancelDialog = ({ onYes, onCancel, message }) => (
   <div className="delete-dialog">
     <h3>{message}</h3>
     <div className="options">
@@ -87,7 +87,7 @@ export default class ExpensesShow extends React.Component {
     >
       {
         this.state.deleteDialog &&
-        <DeleteRestoreDialog
+        <YesCancelDialog
           onYes={() => this.expenseDelete(true)}
           onCancel={() => this.closeDialog()}
           message='Are you sure?'
@@ -95,7 +95,7 @@ export default class ExpensesShow extends React.Component {
       }
       {
         this.state.restoreDialog &&
-        <DeleteRestoreDialog
+        <YesCancelDialog
           onYes={() => this.expenseDelete(false)}
           onCancel={() => this.closeDialog()}
           message='Restore Expense?'

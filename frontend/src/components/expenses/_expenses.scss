@@ -284,3 +284,15 @@ section.expense-deleted{
   background-color: $dark-grey;
   text-decoration: line-through;
 }
+
+.expense-item.expense-deleted{
+  i {
+    color: inherit;
+  }
+  div {
+    color: inherit;
+  }
+  color: $dark-grey;
+  background-color: $grey;
+  text-decoration: line-through;
+}

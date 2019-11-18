@@ -15,10 +15,10 @@ export default class ExpensesIndex extends React.Component {
   }
 
   componentDidMount() {
-    const filter = this.props.filter ? this.props.filter : ''
-    axios.get('/api/expenses' + filter, { headers: { Authorization: `Bearer ${auth.getToken()}` } })
+    const friendId = this.props.friendId ? this.props.friendId : auth.getPayload().sub
+    axios.get(`/api/expenses?friend_id=${friendId}`, { headers: { Authorization: `Bearer ${auth.getToken()}` } })
       .then(res => this.setState({ expenses: res.data }))
-      .catch(err => console.log(err))
+      .catch(err => console.log(err.response.data))
   }
 
   render() {
@@ -35,9 +35,16 @@ export default class ExpensesIndex extends React.Component {
           {expenses && expenses.map(expense => {
             const userId = auth.getPayload().sub
             const userIsPayer = expense.payer.id ===  userId
-            const userSplit = expense.splits.filter(split => split.debtor.id === userId)
-            const userDebtAmount = userSplit[0].amount
-            expense.userAmount = `£${userIsPayer ? (Number(expense.amount) - Number(userDebtAmount)).toFixed(2) : userDebtAmount}`
+            const userSplit = expense.splits.find(split => {
+              if (userIsPayer){
+                const friendId = this.props.friendId
+                return friendId ? split.debtor.id === friendId : split.debtor.id === userId
+              } else {
+                return split.debtor.id === userId
+              }
+            })
+            const userDebtAmount = userSplit.amount
+            expense.userAmount = '£' + userDebtAmount
             expense.amountClass = userIsPayer ? 'expense-credit' : 'expense-debit'
             expense.userAction = userIsPayer ? 'you lent' : 'you borrowed'
             return <ExpensesIndexItem key={expense.id} {...expense}/>
