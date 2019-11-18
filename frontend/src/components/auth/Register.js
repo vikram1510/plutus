@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import queryString from 'query-string'
 
 export default class Register extends React.Component {
   constructor() {
@@ -11,9 +12,9 @@ export default class Register extends React.Component {
         email: '',
         password: '',
         password_confirmation: '',
-        inviteKey: ''
+        invite_key: ''
       },
-      inviteData: null,
+      inviteData: {},
       errors: {}
     }
 
@@ -29,16 +30,20 @@ export default class Register extends React.Component {
 
   componentDidMount(){
 
-    const inviteKey = this.props.match.params.inviteKey
-    if (inviteKey) {
-
-      axios.get(`/api/invites/${inviteKey}`)
-        .then(res => {
-          this.setState({ inviteData: res.data, data: { ...this.state.data, inviteKey: res.data.key } } )
-        })
-        .catch(err => {
-          this.setState({ inviteData: err.response.data })
-        })
+    if (this.props.location.search){
+      const queryValues = queryString.parse(this.props.location.search)
+      const inviteKey = queryValues.invite_key
+  
+      if (inviteKey) {
+  
+        axios.get(`/api/invites/${inviteKey}`)
+          .then(res => {
+            this.setState({ inviteData: res.data, data: { ...this.state.data, invite_key: res.data.key, email: res.data.email } } )
+          })
+          .catch(() => {
+            console.error('invitation key expired or does not exists! Act normal and just register!')
+          })
+      }
     }
   }
 
@@ -50,8 +55,9 @@ export default class Register extends React.Component {
       .catch(err => this.setState({ errors: err.response.data }))
   }
 
+
   render() {
-    const { errors, inviteData } = this.state
+    const { errors, inviteData, data } = this.state
     return (
       <section>
         {inviteData && <InviterDetail {...inviteData.inviter}/>}
@@ -63,7 +69,7 @@ export default class Register extends React.Component {
             {errors.username && <div className='error-message'>{errors.username}</div>}
           </div>
           <div>
-            <input id='email' placeholder=' ' onChange={this.onChange}/>
+            <input id='email' placeholder=' ' value={data.email} onChange={this.onChange}/>
             <label htmlFor='email'>Email</label>
             {errors.email && <div className='error-message'>{errors.email}</div>}
           </div>
@@ -87,10 +93,14 @@ export default class Register extends React.Component {
 
 const InviterDetail = ({ username, profile_image: profileImage }) => (
   <div className='container-no-bg friend-show'>
-    <figure className='placeholder-figure friend-show'>
-      <img src={profileImage}></img>
-    </figure>
-    <h2><strong>{username}</strong> has invited you to Plutus.</h2>
-
+    {!username && <h2>Invitation link expired or does not exists.</h2>}
+    {username && 
+      <>
+        <figure className='placeholder-figure friend-show'>
+          <img src={profileImage}></img>
+        </figure>
+        <h2><strong>{username}</strong> has invited you to Plutus.</h2>
+      </>
+    }
   </div>
 )

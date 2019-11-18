@@ -1,3 +1,4 @@
+# pylint: disable=protected-access,broad-except
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,17 +9,46 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.urls import resolve
 import jwt
+from invitations.utils import get_invitation_model
+from .serializers import UserSerializer, GroupSerializer, FriendSerializer
 
-from .serializers import UserSerializer, GroupSerializer, NestedUserSerializer, FriendSerializer
+Invitation = get_invitation_model()
 
 User = get_user_model()
 
 class RegisterView(APIView):
 
+
+    def _handle_invitation(self, user_data, invite_key):
+        '''
+        Need to handle and fail silently if the invite thing is broken - lol!
+        '''
+
+        try:
+            invitation = Invitation.objects.get(key=invite_key)
+
+            inviter = User.objects.get(pk=invitation.inviter.id)
+            invited_user = User.objects.get(email=user_data['email'])
+
+            inviter.friends.add(invited_user)
+            inviter.save()
+
+            invitation.delete()
+
+        except Exception as err:
+            # log it and do nothing
+            print(f'\nInviation Failing silently!!! {err}\n')
+
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
+
             serializer.save()
+
+            if request.data.get('invite_key'):
+                self._handle_invitation(serializer._validated_data, request.data.get('invite_key'))
+
             return Response({'message': 'Registration Successful'})
         return Response(serializer.errors, status=422)
 

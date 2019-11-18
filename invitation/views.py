@@ -6,9 +6,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from invitations.utils import get_invitation_model
-Invitation = get_invitation_model()
-
+from django.contrib.auth import get_user_model
 from .serializers import InviteListSerializer
+
+Invitation = get_invitation_model()
+User = get_user_model()
 
 
 class FindInvitationView(APIView):
@@ -42,8 +44,13 @@ class FindInvitationView(APIView):
             return Response({'message': 'invitation not found'}, status=404)
 
 
+
 def redirect_invite(_request, invite_key):
-    response = redirect(f'http://localhost:4000/register/{invite_key}')
+    '''
+    We need to redirect in a much friendly way to our frontend.
+    TODO: Make the redirection to frontend configurable from the settings... 👍
+    '''
+    response = redirect(f'http://localhost:4000/register?invite_key={invite_key}')
     return response
 
 
