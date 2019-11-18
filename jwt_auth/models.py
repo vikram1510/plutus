@@ -14,7 +14,8 @@ class User(AbstractUser):
         basic_detail = {
             'id': str(self.id),
             'username': self.get_username(),
-            'email': self.email
+            'email': self.email,
+            'profile_image': self.profile_image
         }
         if include_names:
             basic_detail['first_name'] = self.first_name
