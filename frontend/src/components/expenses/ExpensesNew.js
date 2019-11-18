@@ -20,12 +20,12 @@ export default class ExpensesNew extends React.Component {
         split_type: 'equal',
         splits: []
       },
-      debtors: [],
+      debtors: {},
       errors: {}
     }
 
     this.onChange = this.onChange.bind(this)
-    this.handleCheckbox = this.handleCheckbox.bind(this)
+    this.onSplitChange = this.onSplitChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
@@ -45,34 +45,44 @@ export default class ExpensesNew extends React.Component {
     if (id === 'payer') value = { id: value }
 
     const data = { ...this.state.data, [id]: value }
+    const debtors = (id === 'split_type') ? {} : this.state.debtors
     const errors = { ...this.state.errors, [id]: '' }
-    this.setState({ data, errors })
+
+    this.setState({ data, debtors, errors })
   }
 
-  handleCheckbox({ target: { id, checked } }) {
-    const obj = {
-      amount: 0,
-      debtor: {
-        id: id
-      }
-    }
-
-    const debtors = checked ? [...this.state.debtors, obj] : this.state.debtors.filter(({ debtor }) => debtor.id !== obj.debtor.id)
+  onSplitChange({ target: { id, value, checked } }) {
+    const debtor = (value > 0 || checked) ? { amount: value, debtor: { id } } : null
+    const debtors = { ...this.state.debtors, [id]: debtor }
     this.setState({ debtors })
   }
 
-  onSelect({ target: { value } }) {
-    this.setState({ data: { ...this.state.data, split_type: value } })
+  getSplits() {
+    const { data, debtors } = this.state
+    let splits = Object.values(debtors).filter(split => split)
+
+    switch (data.split_type) {
+      case 'equal':
+        splits =  splits.map(split => ({ ...split, amount: data.amount / splits.length }))
+        break
+      case 'unequal':
+        break
+      case 'percentage':
+        splits = splits.map(split => ({ ...split, amount: split.amount / 100 * data.amount }))
+        break
+      default:
+        console.log('unexpected split_type')
+        break
+    }
+
+    const payerIncluded = splits.find(split => split.debtor.id === data.payer.id)
+    return payerIncluded ? splits : [{ amount: 0, debtor: data.payer }, ...splits]
   }
 
   onSubmit(e) {
     e.preventDefault()
-    const splits = this.state.debtors.map(obj => {
-      return {
-        ...obj,
-        amount: this.state.data.amount / this.state.debtors.length
-      }
-    })
+
+    const splits = this.getSplits()
     const data = { ...this.state.data, splits }
 
     axios.post('/api/expenses', data)
@@ -81,7 +91,7 @@ export default class ExpensesNew extends React.Component {
   }
 
   render() {
-    const { data, friends, debtors, errors } = this.state
+    const { data, friends, errors } = this.state
     return (
       <section>
         <h1>This be Expenses New Page</h1>
@@ -96,15 +106,9 @@ export default class ExpensesNew extends React.Component {
             <label htmlFor='amount'>Amount</label>
             {errors.amount && <div className='error-message'>{errors.amount}</div>}
           </div>
-          {/* <div>
-            <input id='payer' placeholder=' ' onChange={this.onChange} />
-            {errors.payer && <div className='error-message'>{errors.payer}</div>}
-            <label htmlFor='payer'>Payer</label>
-          </div> */}
           <div>
             <p>Payer</p>
             <select id='payer' value={data.payer.id} onChange={this.onChange}>
-              <option value={payload.sub}>{payload.username} (you)</option>
               {friends && friends.map(({ id, username }) => (
                 <option key={id} value={id}>{username}</option>
               ))}
@@ -114,11 +118,9 @@ export default class ExpensesNew extends React.Component {
           <div>
             <p>Split Type</p>
             <select id='split_type' value={data.split_type} onChange={this.onChange}>
-              <option value='percentage'>Percentage</option>
               <option value='equal'>Equal</option>
               <option value='unequal'>Unequal</option>
-              <option value='full_amount'>Full Amount</option>
-              <option value='settlement'>Settlement</option>
+              <option value='percentage'>Percentage</option>
             </select>
             {errors.split_type && <div className='error-message'>{errors.split_type}</div>}
           </div>
@@ -126,17 +128,10 @@ export default class ExpensesNew extends React.Component {
             <p>Splits between:</p>
             {friends && friends.map(({ id, username }) => (
               <label key={id} className='debtor'>
-                <input
-                  id={id}
-                  type='checkbox'
-                  value='testValue'
-                  // checked={debtors.find(({ debtor }) => debtor.id === id)}
-                  onChange={this.handleCheckbox}
-                />
                 {username}
+                <input id={id} type={data.split_type === 'equal' ? 'checkbox' : 'number'} placeholder='0' onChange={this.onSplitChange}/>
               </label>
             ))}
-            Currently hard coded to always split equally
           </div>
           <button type='submit'>Create</button>
         </form>
