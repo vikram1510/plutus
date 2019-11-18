@@ -26,7 +26,6 @@ export default class ExpensesNew extends React.Component {
 
     this.onChange = this.onChange.bind(this)
     this.onSplitChange = this.onSplitChange.bind(this)
-    this.handleCheckbox = this.handleCheckbox.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
@@ -46,35 +45,30 @@ export default class ExpensesNew extends React.Component {
     if (id === 'payer') value = { id: value }
 
     const data = { ...this.state.data, [id]: value }
+    const debtors = (id === 'split_type') ? {} : this.state.debtors
     const errors = { ...this.state.errors, [id]: '' }
-    this.setState({ data, errors })
+
+    this.setState({ data, debtors, errors })
   }
 
-  onSplitChange({ target: { id, value } }) {
-    const debtor = value > 0 ? { amount: value, debtor: { id } } : null
+  onSplitChange({ target: { id, value, checked } }) {
+    const debtor = (value > 0 || checked) ? { amount: value, debtor: { id } } : null
     const debtors = { ...this.state.debtors, [id]: debtor }
     this.setState({ debtors })
-  }
-
-  handleCheckbox({ target: { id, checked } }) {
-    const debtor = checked ? { amount: 0, debtor: { id } } : null
-    const debtors = { ...this.state.debtors, [id]: debtor }
-    this.setState({ debtors })
-  }
-
-  onSelect({ target: { value } }) {
-    this.setState({ data: { ...this.state.data, split_type: value } })
   }
 
   onSubmit(e) {
     e.preventDefault()
-    // const splits = this.state.debtors.map(obj => {
-    //   return {
-    //     ...obj,
-    //     amount: this.state.data.amount / this.state.debtors.length
-    //   }
-    // })
-    const splits = Object.values(this.state.debtors)
+
+    let splits = Object.values(this.state.debtors).filter(split => split)
+    if (this.state.data.split_type === 'equal') splits = splits.map(split => {
+      return { ...split, amount: this.state.data.amount / splits.length }
+    })
+
+    if (!splits.find(split => split.debtor.id === payload.sub)) {
+      splits = [{ amount: 0, debtor: { id: payload.sub } }, ...splits]
+    }
+
     const data = { ...this.state.data, splits }
 
     axios.post('/api/expenses', data)
@@ -127,13 +121,12 @@ export default class ExpensesNew extends React.Component {
             {data.split_type === 'equal' && friends && friends.map(({ id, username }) => (
               <label key={id} className='debtor'>
                 {username}
-                <input id={id} type='checkbox' onChange={this.handleCheckbox}/>
+                <input id={id} type='checkbox' placeholder='0' onChange={this.onSplitChange}/>
               </label>
             ))}
             {data.split_type !== 'equal' && friends && friends.map(({ id, username }) => (
               <label key={id} className='debtor'>
                 {username}
-                {console.log(debtors[id])}
                 <input id={id} type='number' placeholder='0' onChange={this.onSplitChange}/>
               </label>
             ))}
