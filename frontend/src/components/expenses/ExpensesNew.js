@@ -94,7 +94,7 @@ export default class ExpensesNew extends React.Component {
     const { data, friends, errors } = this.state
     return (
       <section>
-        <h1>This be Expenses New Page</h1>
+        <h1>Add Expense</h1>
         <form onSubmit={this.onSubmit}>
           <div>
             <input id='description' placeholder=' ' onChange={this.onChange} />
@@ -106,31 +106,31 @@ export default class ExpensesNew extends React.Component {
             <label htmlFor='amount'>Amount</label>
             {errors.amount && <div className='error-message'>{errors.amount}</div>}
           </div>
-          <div>
+          <div className='select-wrapper'>
             <p>Payer</p>
             <select id='payer' value={data.payer.id} onChange={this.onChange}>
               {friends && friends.map(({ id, username }) => (
                 <option key={id} value={id}>{username}</option>
               ))}
             </select>
-            {errors.payer && <div className='error-message'>{errors.payer}</div>}
           </div>
-          <div>
-            <p>Split Type</p>
+          <div className='select-wrapper'>
+            <p>Splits</p>
             <select id='split_type' value={data.split_type} onChange={this.onChange}>
               <option value='equal'>Equal</option>
               <option value='unequal'>Unequal</option>
               <option value='percentage'>Percentage</option>
             </select>
-            {errors.split_type && <div className='error-message'>{errors.split_type}</div>}
           </div>
           <div>
-            <p>Splits between:</p>
             {friends && friends.map(({ id, username }) => (
-              <label key={id} className='debtor'>
-                {username}
-                <input id={id} type={data.split_type === 'equal' ? 'checkbox' : 'number'} placeholder='0' onChange={this.onSplitChange}/>
-              </label>
+              <div key={id} className='debtor-wrapper'>
+                <label htmlFor={id} className='debtor'>{username}</label>
+                <div>
+                  <div>{data.split_type === 'unequal' ? '£' : data.split_type === 'percentage' ? '%' : null}</div>
+                  <input id={id} type={data.split_type === 'equal' ? 'checkbox' : 'number'} placeholder='0' onChange={this.onSplitChange} />
+                </div>
+              </div>
             ))}
           </div>
           <button type='submit'>Create</button>
