@@ -28,8 +28,6 @@
   button {
     margin: 0.5rem 1rem;
     border-radius: 100%;
-    width: 4.5rem;
-    height: 4.5rem;
     outline: none;
     display: flex;
     justify-content: center;
@@ -53,4 +51,43 @@
 
 .hidden {
   visibility: hidden;
+}
+
+button.refresh {
+  height: 3.5rem;
+  width: 3.5rem;
+  font-size: 1.2rem;
+}
+
+button.add-friend {
+  height: 4.5rem;
+  width: 4.5rem;
+  background-color: $blue;
+  color: $light-grey;
+  border: 0;
+
+  &:hover{
+    font-size: 1.8rem;
+    color: $yellow;
+  }
+
+}
+
+.add-friend-dialog{
+  h2 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  form{
+    border:0;
+  }
+  button {
+    margin-top: 30px;
+    width: 100%;
+  }
+}
+
+.found-friend-dialog {
+  display: flex;
+  justify-content: space-around;
 }
