@@ -13,20 +13,23 @@ export default class ExpenseActivityCard extends React.Component {
     const lentDetail = expenseDetail.lent_detail
 
     const detail = {}
-    detail.payer = lentDetail.payer.username === loggedInUser.username ? 'You' : lentDetail.payer.username
+    // detail.payer = lentDetail.payer.username === loggedInUser.username ? 'You' : lentDetail.payer.username
+
+    const isUserPayer = lentDetail.payer.username === loggedInUser.username
+    detail.expensePayer = lentDetail.payer.username
 
     // filter the debtors without the payer
     const debtors = lentDetail.debtors.filter(debtor => debtor.id !== lentDetail.payer.id )
 
     let oweAmount
 
-    if (detail.payer === 'You'){
+    if (isUserPayer){
       detail.what = 'get back'
       oweAmount = lentDetail.split_total_exclude_payer
 
     } else {
       // then u must pay back
-      detail.what = 'owes'
+      detail.what = 'owe'
       oweAmount = debtors.filter(debtor => debtor.username === loggedInUser.username)[0].amount
     }
 
@@ -46,7 +49,7 @@ export default class ExpenseActivityCard extends React.Component {
 
     // this is the date of this activity
     const dateCreated = `${moment(activity.date_created).fromNow()} (${moment(activity.date_created).format('MMM DD hh:mm:ss')})`
-    const who = user.username === activity.creator.username ? 'You' : activity.creator.username
+    const activityOwner = user.username === activity.creator.username ? 'You' : activity.creator.username
 
     const expenseDetail = activity.activity_detail
 
@@ -55,7 +58,7 @@ export default class ExpenseActivityCard extends React.Component {
     const oweDetail = this.generateOweAmount(expenseDetail, user)
 
     // green if the current user is expected to recieve money, organge if current user needs to pay
-    const oweAmountClass = oweDetail.payer === 'You' ? 'expense-credit' : 'expense-debit'
+    const oweAmountClass = oweDetail.isUserPayer ? 'expense-credit' : 'expense-debit'
 
     return (
       <Link to={linkTo} className='expense-item'>
@@ -64,9 +67,9 @@ export default class ExpenseActivityCard extends React.Component {
         </figure>
         <div className='summary-div'>
           <div>
-            <b>{who}</b> {action} &quot;<strong>{expenseDescription}</strong>&quot;
+            <b>{activityOwner}</b> {action} &quot;<strong>{expenseDescription}</strong>&quot;
             <div className={oweAmountClass}>
-              <b>{oweDetail.payer}</b> {oweDetail.what} <strong>£{oweDetail.oweAmount}</strong>
+              <strong>You</strong> {oweDetail.what} <strong>£{oweDetail.oweAmount}</strong>
             </div>
           </div>
           <div>&nbsp;</div>

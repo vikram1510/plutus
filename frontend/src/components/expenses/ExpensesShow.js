@@ -60,6 +60,7 @@ export default class ExpensesShow extends React.Component {
           <div>
             <h3>{expense.description}</h3>
             <h2>£{expense.amount}</h2>
+            <h3>Paid by {expense.payer.username}</h3>
             <p>Added by {expense.creator.username} on {moment(expense.date_created).format('LL')}</p>
           </div>
           <button onClick={() => alert('edit function not yet implemented')}>Edit</button>
