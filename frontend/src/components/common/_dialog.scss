@@ -1,0 +1,27 @@
+.dialog-wrapper {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.486);
+  width: 100%;
+  height: calc(100% - #{$navbar-height});
+  z-index: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .dialog-component {
+    padding: 0.5rem;
+    padding-bottom: 1rem;
+    width: 80%;
+  }
+
+  .close {
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    color: $blue;
+    i:hover{
+      cursor: pointer;
+      color: rgb(255, 51, 0);
+    }
+  }
+}

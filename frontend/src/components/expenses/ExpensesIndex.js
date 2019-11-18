@@ -3,6 +3,7 @@ import axios from 'axios'
 import ExpensesIndexItem from './ExpensesIndexItem'
 import auth from '../../lib/auth'
 import { Link } from 'react-router-dom'
+import Spinner from '../common/Spinner'
 
 export default class ExpensesIndex extends React.Component {
   constructor() {
@@ -21,6 +22,7 @@ export default class ExpensesIndex extends React.Component {
   }
 
   render() {
+    if (!this.state.expenses) return <Spinner wrapper={false}/>
     const { expenses } = this.state
     // const userTotal = exp
     return (
