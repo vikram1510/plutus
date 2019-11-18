@@ -1,5 +1,5 @@
 # pylint: disable=protected-access,broad-except
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
@@ -10,7 +10,7 @@ from django.conf import settings
 from django.urls import resolve
 import jwt
 from invitations.utils import get_invitation_model
-from .serializers import UserSerializer, GroupSerializer, FriendSerializer
+from .serializers import UserSerializer, GroupSerializer, FriendSerializer, NestedUserSerializer
 
 Invitation = get_invitation_model()
 
@@ -70,6 +70,20 @@ class LoginView(APIView):
 
         token = jwt.encode({'sub': str(user.id), 'username': user.username, 'email': user.email}, settings.SECRET_KEY, algorithm='HS256')
         return Response({'token': token, 'message': f'Welcome back {user.username}'})
+
+
+class UserList(ListAPIView):
+    serializer_class = NestedUserSerializer
+
+    def get_queryset(self):
+        params = self.request.GET
+        if not params:
+            return User.objects.all()
+
+        elif params.get('email'):
+            email = params.get('email')
+            return User.objects.filter(email=email)
+
 
 
 class GroupFriendsIndexCreate(ListCreateAPIView):

@@ -11,3 +11,9 @@ class InviteListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = ('__all__')
+
+class InviteCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Invitation
+        fields = ('email', 'inviter')

@@ -208,14 +208,54 @@
 }
 
 // Expense New
-label.debtor {
-  position: static;
+.select-wrapper {
   display: flex;
+  justify-content: space-between;
+
+  > p {
+    color: $dark-grey;
+    font-size: 1.6rem;
+    margin: 0;
+  }
+
+  > select {
+    min-width: 90px;
+    border: 1px solid $grey;
+  }
+}
+
+.debtor-wrapper {
+  display: flex;
+  &:not(:last-of-type) {
+    margin-bottom: 8px;
+  }
+
+  > div {
+    display: flex;
+
+    > div {
+      font-size: 16px;
+      padding: 4px;
+      color: $dark-grey;
+    }
+  }
 
   input {
     width: auto;
-    margin-right: 1rem;
   }
+}
+
+label.debtor {
+  position: static;
+  // display: flex;
+  transform: none;
+  // min-width: 100px;
+  width: 100%;
+
+  // input {
+  //   width: auto;
+  //   margin-right: 1rem;
+  // }
 }
 
 // Expense ???
@@ -240,6 +280,7 @@ label.debtor {
   color: $dark-grey;
 }
 
+// Delet dialog box
 .delete-dialog {
   z-index: 1100;
   h3 {
