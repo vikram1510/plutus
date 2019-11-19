@@ -80,11 +80,12 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
     '''
     UPSERT means Update/Insert
     Create split data, populate debtor and return the splits as list.
-    It also validates whether the split amount was equal or the expense amount or not.
+    Here, the code does what it is told - aka - no validations. Validations is done later and transactions is rolled back.
     '''
 
     splits_create_list = []
     splits_update_list = []
+    splits_delete_list = []
 
     for split_data in split_data_list:
         debtor_data = split_data.pop('debtor')
@@ -107,7 +108,11 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
         else:
             # add to update list only if it was PUT update request
             if is_update:
-                splits_update_list.append(split)
+                if split.is_deleted:
+                    splits_delete_list.append(split)
+                else:
+                    splits_update_list.append(split)
+
 
 
     all_splits = []
@@ -118,6 +123,9 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
     if is_update and len(splits_update_list) > 0:
         [split_inst.save() for split_inst in splits_update_list]
         all_splits += splits_update_list
+
+    if len(splits_delete_list) > 0:
+         [split_inst.delete() for split_inst in splits_delete_list]
 
     expense_inst.splits.set(all_splits)
     return splits_create_list
