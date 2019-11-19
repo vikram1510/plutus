@@ -95,6 +95,7 @@ div.coin-logo {
 .navbar-item-selected {
   color: $yellow;
   background-color: $dark-blue;
+  border-top: 5px solid $yellow;
 }
 
 .navbar-item.nav-notification {
