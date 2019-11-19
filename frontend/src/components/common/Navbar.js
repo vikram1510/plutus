@@ -12,7 +12,8 @@ class Navbar extends React.Component {
       friendsClass: '',
       notificationClass: '',
       expenseClass: '',
-      notifications: 0
+      notifications: 0,
+      bellAnimate: false
     }
 
     this.handleLogout = this.handleLogout.bind(this)
@@ -34,7 +35,12 @@ class Navbar extends React.Component {
     const channel = pusher.subscribe(Auth.getPayload().email)
     channel.bind('update', data => {
       if (data.creator.id !== Auth.getPayload().sub) {
-        this.setState({ notifications: this.state.notifications + 1 })
+        this.setState({ 
+          notifications: this.state.notifications + 1,
+          bellAnimate: true
+        }, () => {
+          setTimeout(() => this.setState({ bellAnimate: false }), 1000)
+        })
       }
     })
   }
@@ -61,7 +67,6 @@ class Navbar extends React.Component {
   render() {
     const authenticated = Auth.isAuthenticated()
     const profileImage = Auth.getPayload().profile_image
-    console.log('notifications', typeof this.state.notifications)
     return (
       Auth.isAuthenticated() ?
         <nav>
@@ -82,7 +87,7 @@ class Navbar extends React.Component {
             </Link>
             <Link className={this.state.notificationClass} to='/activities'>
               <div className="navbar-item nav-notification">
-                <i className="fas fa-bell"></i>
+                <i className={`fas fa-bell ${this.state.bellAnimate ? 'animated swing' : ''}`}></i>
                 <span>Notifications</span>
                 {this.state.notifications !== 0 && <span className="number">{this.state.notifications}</span>}
               </div>
