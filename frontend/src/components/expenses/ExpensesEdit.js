@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 import Auth from '../../lib/auth'
-// import ExpensesForm from './ExpensesForm'
 
 const payload = Auth.getPayload()
 
@@ -27,23 +26,12 @@ export default class ExpensesEdit extends React.Component {
   }
 
   async componentDidMount() {
-    // axios.get(`/api/expenses/${this.props.match.params.id}`)
-    //   .then(({ data }) => {
-    //     const debtors = {}
-    //     data.splits.forEach(split => debtors[split.debtor.id] = split)
-    //     this.setState({ data, debtors })
-    //   })
-    //   .catch(err => console.log(err))
-
-    // axios.get('/api/friends', { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
-    //   .then(res => this.setState({ friends: [{ id: payload.sub, username: payload.username }, ...res.data] }))
-    //   .catch(err => console.log(err))
-
-    const friends = await axios.get('/api/friends', { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
+    const header = { headers: { Authorization: `Bearer ${Auth.getToken()}` } }
+    const friends = await axios.get('/api/friends', header)
       .then(res => [{ id: payload.sub, username: payload.username }, ...res.data])
       .catch(err => console.log(err))
 
-    const data = await axios.get(`/api/expenses/${this.props.match.params.id}`)
+    const data = await axios.get(`/api/expenses/${this.props.match.params.id}`, header)
       .then(({ data }) => data)
       .catch(err => console.log(err))
 
@@ -74,10 +62,6 @@ export default class ExpensesEdit extends React.Component {
     if (type === 'checkbox') value = checked
     const debtor = { amount: value, debtor: { id } }
 
-    // const debtor = type === 'checkbox' && checked ? { amount: value, debtor: { id } } :
-    //   value > 0 ? { amount: value, debtor: { id } } : null
-
-    // const debtor = (value > 0 || checked) ? { amount: value, debtor: { id } } : null
     const debtors = { ...this.state.debtors, [id]: debtor }
     this.setState({ debtors })
   }
@@ -109,7 +93,6 @@ export default class ExpensesEdit extends React.Component {
 
     const splits = this.getSplits()
     const data = { ...this.state.data, splits }
-    console.log(data)
     axios.post('/api/expenses', data)
       .then(res => this.props.history.push(`/expenses/${res.data.id}`))
       .catch(err => this.setState({ errors: err.response.data }))
