@@ -129,3 +129,8 @@ button.add-friend {
   span{ margin-right: 10px;}
 
 }
+
+.expense-item.user:hover{
+  background-color: $light-grey;
+  cursor: auto;
+}
