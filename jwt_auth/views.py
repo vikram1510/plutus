@@ -1,12 +1,13 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.urls import resolve
+from django.core.validators import validate_email
 import jwt
 
 from .serializers import UserSerializer, GroupSerializer, NestedUserSerializer, FriendSerializer
@@ -52,6 +53,10 @@ class UserList(ListAPIView):
         
         elif params.get('email'):
             email = params.get('email')
+            try:
+                validate_email(email)
+            except:
+                raise ValidationError(detail='Invalid Email')
             return User.objects.filter(email=email)
 
 
