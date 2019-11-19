@@ -67,7 +67,7 @@ class CreateUpdateExpenseSerializer(serializers.ModelSerializer):
         '''
         Need to update the transaction including the splits
         '''
-        return upsert_expense(data=new_data, expense=expense, is_update=True)
+        return upsert_expense(data=new_data, expense=expense, is_update=True, updator=self.context['request'].user)
 
 
     def create(self, data):
@@ -85,11 +85,12 @@ class ListExpenseSerializer(serializers.ModelSerializer):
     splits = NestedSplitSerializer(many=True, required=False)
     creator = NestedUserSerializer()
     payer = NestedUserSerializer()
+    updator = NestedUserSerializer()
     comments = NestedListCommentSerializer(many=True)
 
     class Meta:
         model = Expense
-        fields = ('id', 'creator', 'payer', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits', 'comments')
+        fields = ('id', 'creator', 'payer', 'updator', 'amount', 'description', 'split_type', 'date_created', 'date_updated', 'is_deleted', 'splits', 'comments')
 
 class ListCommentSerializer(serializers.ModelSerializer):
 

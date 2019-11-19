@@ -25,12 +25,15 @@ export default class ExpenseActivityCard extends React.Component {
 
     if (isUserPayer){
       detail.what = 'get back'
-      oweAmount = lentDetail.split_total_exclude_payer
+      oweAmount = `£${lentDetail.split_total_exclude_payer}`
 
     } else {
       // then u must pay back
       detail.what = 'owe'
-      oweAmount = debtors.filter(debtor => debtor.username === loggedInUser.username)[0].amount
+      const debtor = debtors.filter(debtor => debtor.username === loggedInUser.username)[0]
+      if (debtor) oweAmount = `£${debtor.amount}`
+      else oweAmount = 'None' // probably because the split person must have been deleted!
+
     }
 
     detail.oweAmount = oweAmount
@@ -69,7 +72,7 @@ export default class ExpenseActivityCard extends React.Component {
           <div>
             <b>{activityOwner}</b> {action} &quot;<strong>{expenseDescription}</strong>&quot;
             <div className={oweAmountClass}>
-              <strong>You</strong> {oweDetail.what} <strong>£{oweDetail.oweAmount}</strong>
+              <strong>You</strong> {oweDetail.what} <strong>{oweDetail.oweAmount}</strong>
             </div>
           </div>
           <div>&nbsp;</div>

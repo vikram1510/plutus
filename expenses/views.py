@@ -75,7 +75,13 @@ class ExpenseView(ListCreateAPIView):
 
 # we want to only update the expense - we will never ever delete the expense object - EVER!!!
 class ExpenseDetailView(RetrieveUpdateAPIView):
-    queryset = Expense.objects.all()
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            raise NotAuthenticated(detail='Not Authenticated')
+
+        return Expense.objects.all()
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ListExpenseSerializer

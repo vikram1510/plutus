@@ -50,7 +50,7 @@ export default class ExpensesShow extends React.Component {
   }
 
   getExpense() {
-    axios.get(`/api/expenses/${this.props.match.params.id}`)
+    axios.get(`/api/expenses/${this.props.match.params.id}`, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.setState({ expense: res.data }))
       .catch(err => console.log(err))
   }
@@ -59,7 +59,7 @@ export default class ExpensesShow extends React.Component {
     const expense = this.state.expense
     this.setState({ expense: null }, () => {
       expense.is_deleted = value
-      axios.put(`/api/expenses/${this.props.match.params.id}`, expense)
+      axios.put(`/api/expenses/${this.props.match.params.id}`, expense, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
         .then(() => this.setState({ expense }, this.closeDialog))
         .catch(err => console.log(err.response.data))
     })
@@ -90,7 +90,6 @@ export default class ExpensesShow extends React.Component {
   render() {
     if (!this.state.expense) return <Spinner />
     const { expense, errors } = this.state
-    console.log(expense)
     return expense &&
     <>
       <Dialog

@@ -10,7 +10,7 @@ THIS ONLY WORKS IF WE USE THE save.() METHOD ON MODEL
 '''
 
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.contrib.auth import get_user_model
 from notifications.views import Broadcaster
 from .models import Expense, UserInvolvedActivity, Activity, Comment
@@ -51,11 +51,14 @@ def _create_user_involved_activity(activity, **kwargs):
     # this is activities where all the users are involved and need to be notified
     splits = []
     if activity.model_name.lower() == 'expense':
-        expense = kwargs.get('instance')
+        expense = kwargs.get('expense')
         splits = expense.splits.all()
+    
+    elif activity.model_name.lower() == 'split':
+        splits = []
 
     elif activity.model_name.lower() == 'comment':
-        comment = kwargs.get('instance')
+        comment = kwargs.get('comment')
         splits = comment.expense.splits.all()
 
     involved_activities = []
@@ -86,11 +89,38 @@ def handle_new_activity(**kwargs):
 
     if activity.model_name.lower() == 'expense':
         expense = Expense.objects.get(pk=activity.record_ref)
-        _create_user_involved_activity(activity, instance=expense)
+        _create_user_involved_activity(activity, expense=expense)
 
     elif activity.model_name.lower() == 'comment':
-        expense = Comment.objects.get(pk=activity.record_ref)
-        _create_user_involved_activity(activity, instance=expense)
+        comment = Comment.objects.get(pk=activity.record_ref)
+        _create_user_involved_activity(activity, comment=comment)
+
+    elif activity.model_name.lower() == 'split':
+        debtor = activity._debtor
+        expense = activity._expense
+        print(f'debtor::: {debtor.__dict__}')
+        print(f'expense::: {expense.__dict__}')
+        _create_user_involved_activity(activity, expense=expense, debtor=debtor)
+
+
+@receiver(post_delete, sender='expenses.split')
+def handle_split_delete(**kwargs):
+    '''
+    Need to notify the user that was removed from the split so he/she is made aware
+    and will never start receiving notifications :)
+    '''
+    split_inst = kwargs['instance']
+
+    activity = Activity()
+    activity.record_ref = str(split_inst.expense.id)
+    activity.model_name = split_inst.__class__.__name__
+    activity.creator = split_inst.expense.updator
+    activity.activity_type = 'deleted'
+    activity._debtor = split_inst.debtor
+    activity._expense = split_inst.expense
+    # this should send a signal to run and save activity fields
+    activity.save()
+
 
 
 @receiver(post_save, sender='expenses.comment')
