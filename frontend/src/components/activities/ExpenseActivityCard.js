@@ -66,7 +66,7 @@ export default class ExpenseActivityCard extends React.Component {
     if (action === 'created') action = 'added'
 
     // this is the date of this activity
-    const dateCreated = `${moment(activity.date_created).fromNow()} (${moment(activity.date_created).format('MMM DD hh:mm:ss')})`
+    const dateCreated = `${moment(activity.date_created).fromNow()} (${moment(activity.date_created).format('MMM DD HH:mm:ss')})`
     const activityOwner = user.username === activity.creator.username ? 'You' : activity.creator.username
 
     const expenseDetail = activity.activity_detail

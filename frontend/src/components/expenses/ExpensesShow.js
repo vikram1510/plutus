@@ -160,12 +160,15 @@ export default class ExpensesShow extends React.Component {
           </form>
         </div>
         <div className='expense-comments'>
-          {expense.comments && expense.comments.map(({ id, creator, text }) => (
+          {expense.comments && expense.comments.map(({ id, creator, text, date_created: dateCreated }) => (
             <div key={id} className='comment'>
-              <figure className='placeholder-figure circle'></figure>
+              <figure className='placeholder-figure circle'>
+                <img src={creator.profile_image}></img>
+              </figure>
               <div>
                 <p className='username'>{creator.username}</p>
                 <p>{text}</p>
+                <p>{`${moment(dateCreated).fromNow()} (${moment(dateCreated).format('MMM DD HH:mm:ss')})`}</p>
               </div>
             </div>
           ))}
