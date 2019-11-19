@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 import Auth from '../../lib/auth'
 
 import Spinner from '../common/Spinner'
@@ -90,7 +91,6 @@ export default class ExpensesShow extends React.Component {
   render() {
     if (!this.state.expense) return <Spinner />
     const { expense, errors } = this.state
-    console.log(expense)
     return expense &&
     <>
       <Dialog
@@ -124,13 +124,15 @@ export default class ExpensesShow extends React.Component {
             <h2>£{expense.amount}</h2>
             <h3>Paid by {expense.payer.username}</h3>
           </div>
-          <button><i className="fas fa-pen"></i></button>
+          <Link to={`/expenses/${this.props.match.params.id}/edit`}>
+            <button><i className="fas fa-pen"/></button>
+          </Link>
           {!expense.is_deleted ?
             <button className="delete" onClick={() => this.setState({ deleteDialog: true })}>
-              <i className="fas fa-trash-alt"></i>
+              <i className="fas fa-trash-alt"/>
             </button> :
             <button className="restore" onClick={() => this.setState({ restoreDialog: true })}>
-              <i className="fas fa-trash-restore"></i>
+              <i className="fas fa-trash-restore"/>
             </button>
           }
         </div>
