@@ -91,7 +91,7 @@ class FriendsIndex extends React.Component {
 
   onSubmit(e){
     e.preventDefault()
-    axios.get('/api/users?email=' + this.state.friendEmail)
+    axios.get('/api/users?email=' + this.state.friendEmail, { headers: { Authorization: `Bearer ${auth.getToken()}` } })
       .then((res) => {
         this.setState({ foundUser: res.data[0] }, () => {
           this.closeDialogs()

@@ -87,6 +87,10 @@ class UserList(ListAPIView):
                 validate_email(email)
             except:
                 raise ValidationError(detail='Invalid Email')
+
+            if email == self.request.user.email:
+                raise ValidationError(detail='You can\'t add yourself')
+            
             return User.objects.filter(email=email)
 
 
