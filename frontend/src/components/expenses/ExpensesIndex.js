@@ -27,10 +27,6 @@ export default class ExpensesIndex extends React.Component {
     // const userTotal = exp
     return (
       <section>
-        <h1>This be Expenses Index</h1>
-        <Link to='/expenses/new'>
-          <button>Create</button>
-        </Link>
         <div className='container'>
           {expenses && expenses.map(expense => {
             const userId = auth.getPayload().sub
