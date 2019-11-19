@@ -96,3 +96,19 @@ div.coin-logo {
   color: $yellow;
   background-color: $dark-blue;
 }
+
+.navbar-item.nav-notification {
+  position: relative;
+  .number {
+    color: $light-grey;
+    position: absolute;
+    text-align: center;
+    min-width: 10px;
+    min-height: 10px;
+    top: -15px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+  }
+}

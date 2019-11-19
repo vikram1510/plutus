@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import Auth from '../../lib/auth'
+import Pusher from 'pusher-js'
+import axios from 'axios'
 
 class Navbar extends React.Component {
   constructor() {
@@ -9,7 +11,8 @@ class Navbar extends React.Component {
     this.state = {
       friendsClass: '',
       notificationClass: '',
-      expenseClass: ''
+      expenseClass: '',
+      notifications: 0
     }
 
     this.handleLogout = this.handleLogout.bind(this)
@@ -22,11 +25,24 @@ class Navbar extends React.Component {
 
   componentDidMount(){
     this.setSelectedNavbarItem()
+    const pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+      cluster: 'eu',
+      forceTLS: true
+    })
 
+    // each user subscribes to their channel to listen of events
+    const channel = pusher.subscribe(Auth.getPayload().email)
+    channel.bind('update', data => {
+      if (data.creator.id !== Auth.getPayload().sub) {
+        this.setState({ notifications: this.state.notifications + 1 })
+      }
+    })
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.location.pathname !== prevProps.location.pathname) this.setSelectedNavbarItem()
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.setSelectedNavbarItem()
+    }
   }
 
   setSelectedNavbarItem(){
@@ -37,7 +53,7 @@ class Navbar extends React.Component {
       } else if (pathname === '/expenses/new') {
         this.setState({ expenseClass: 'navbar-item-selected' })
       } else if (pathname === '/activities') {
-        this.setState({ notificationClass: 'navbar-item-selected' })
+        this.setState({ notificationClass: 'navbar-item-selected', notifications: 0 })
       }
     })
 
@@ -45,7 +61,7 @@ class Navbar extends React.Component {
   render() {
     const authenticated = Auth.isAuthenticated()
     const profileImage = Auth.getPayload().profile_image
-
+    console.log('notifications', typeof this.state.notifications)
     return (
       Auth.isAuthenticated() ?
         <nav>
@@ -65,9 +81,10 @@ class Navbar extends React.Component {
               </div>
             </Link>
             <Link className={this.state.notificationClass} to='/activities'>
-              <div className="navbar-item">
+              <div className="navbar-item nav-notification">
                 <i className="fas fa-bell"></i>
                 <span>Notifications</span>
+                {this.state.notifications !== 0 && <span className="number">{this.state.notifications}</span>}
               </div>
             </Link>
           </div>
