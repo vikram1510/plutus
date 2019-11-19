@@ -90,4 +90,42 @@ button.add-friend {
 .found-friend-dialog {
   display: flex;
   justify-content: space-around;
+  .user {
+    display: flex;
+  }
+  figure {
+    margin-right: 10px;
+  }
+  button {
+    width: 50px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.invite-dialog{
+  text-align: center;
+  h1 {
+    padding:0;
+  }
+  p {
+    font-size: 1rem;
+  }
+  .invite {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .invite-success {
+    border: 2px solid $green;
+    color: $green;
+    cursor: auto;
+    &:hover{
+      border: 2px solid $green;
+      color: $green;
+      background-color: transparent;
+    }
+  }
+  span{ margin-right: 10px;}
+
 }

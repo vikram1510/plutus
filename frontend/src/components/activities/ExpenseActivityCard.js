@@ -25,12 +25,15 @@ export default class ExpenseActivityCard extends React.Component {
 
     if (isUserPayer){
       detail.what = 'get back'
-      oweAmount = lentDetail.split_total_exclude_payer
+      oweAmount = `£${lentDetail.split_total_exclude_payer}`
 
     } else {
       // then u must pay back
       detail.what = 'owe'
-      oweAmount = debtors.filter(debtor => debtor.username === loggedInUser.username)[0].amount
+      const debtor = debtors.filter(debtor => debtor.username === loggedInUser.username)[0]
+      if (debtor) oweAmount = `£${debtor.amount}`
+      else oweAmount = 'None' // probably because the split person must have been deleted!
+
     }
 
     detail.oweAmount = oweAmount
@@ -58,10 +61,14 @@ export default class ExpenseActivityCard extends React.Component {
     const oweDetail = this.generateOweAmount(expenseDetail, user)
 
     // green if the current user is expected to recieve money, organge if current user needs to pay
-    const oweAmountClass = oweDetail.isUserPayer ? 'expense-credit' : 'expense-debit'
+    const oweAmountClass = oweDetail.what === 'owe' ? 'expense-debit' : 'expense-credit'
+
+
+    let additionalClass = ''
+    if (action === 'deleted') additionalClass = 'expense-deleted'
 
     return (
-      <Link to={linkTo} className='expense-item'>
+      <Link to={linkTo} className={`expense-item ${additionalClass}`}>
         <figure className='activity-figure'>
           <i className="fas fa-edit fa-3x"/>
         </figure>
@@ -69,7 +76,7 @@ export default class ExpenseActivityCard extends React.Component {
           <div>
             <b>{activityOwner}</b> {action} &quot;<strong>{expenseDescription}</strong>&quot;
             <div className={oweAmountClass}>
-              <strong>You</strong> {oweDetail.what} <strong>£{oweDetail.oweAmount}</strong>
+              <strong>You</strong> {oweDetail.what} <strong>{oweDetail.oweAmount}</strong>
             </div>
           </div>
           <div>&nbsp;</div>
