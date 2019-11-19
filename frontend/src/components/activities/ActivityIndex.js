@@ -12,6 +12,14 @@ export default class ActivityIndex extends React.Component {
     this.state = {
       activities: null
     }
+
+    this.channel = null
+    this.pusher = null
+  }
+
+  componentWillUnmount() {
+    this.channel.unbind()
+    this.pusher.unsubscribe(this.channel)
   }
 
   componentDidMount() {
@@ -21,14 +29,14 @@ export default class ActivityIndex extends React.Component {
       })
       .then(() => {
         // setup the pusher and binding to receive realtime activities
-        const pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+        this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
           cluster: 'eu',
           forceTLS: true
         })
 
         // each user subscribes to their channel to listen of events
-        const channel = pusher.subscribe(Auth.getPayload().email)
-        channel.bind('update', data => {
+        this.channel = this.pusher.subscribe(Auth.getPayload().email)
+        this.channel.bind('update', data => {
           this.setState({ activities: [data, ...this.state.activities] })
         })
       })

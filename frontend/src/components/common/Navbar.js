@@ -17,6 +17,9 @@ class Navbar extends React.Component {
     }
 
     this.handleLogout = this.handleLogout.bind(this)
+
+    this.channel = null
+    this.pusher = null
   }
 
   handleLogout() {
@@ -24,16 +27,21 @@ class Navbar extends React.Component {
     this.props.history.push('/')
   }
 
+  componentWillUnmount() {
+    this.channel.unbind()
+    this.pusher.unsubscribe(this.channel)
+  }
+
   componentDidMount(){
     this.setSelectedNavbarItem()
-    const pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+    this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
       cluster: 'eu',
       forceTLS: true
     })
 
     // each user subscribes to their channel to listen of events
-    const channel = pusher.subscribe(Auth.getPayload().email)
-    channel.bind('update', data => {
+    this.channel = this.pusher.subscribe(Auth.getPayload().email)
+    this.channel.bind('update', data => {
       if (data.creator.id !== Auth.getPayload().sub) {
         this.setState({ 
           notifications: this.state.notifications + 1,
