@@ -117,6 +117,10 @@ class UserInvolvedActivity(models.Model):
     activity = models.ForeignKey(Activity, related_name='activities', on_delete=models.CASCADE)
     related_user = models.ForeignKey(User, related_name='related_activities', on_delete=models.CASCADE)
 
+    # this is (kinda) optional but usually activity corresponds to expense - this is owe amount when this activity was created
+    # 0 for payer but some amount if borrowed
+    current_awe_amount = models.DecimalField(max_digits=6, decimal_places=2)
+
 # This import is intentionally here - it's supposed to be on apps.py def ready() function but doesn't work
 # The reason this is at the bottom is because some models are already referenced in signals.py file
 # so can't have it at the top of this file.

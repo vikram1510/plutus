@@ -100,7 +100,6 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
 
         if is_update:
             split.is_deleted = split_data.get('is_deleted', False)
-            
         split.debtor = user_dict.get(debtor_data.get('id')) # get the instance from already queried object
 
         split.expense = expense_inst

@@ -61,10 +61,14 @@ export default class ExpenseActivityCard extends React.Component {
     const oweDetail = this.generateOweAmount(expenseDetail, user)
 
     // green if the current user is expected to recieve money, organge if current user needs to pay
-    const oweAmountClass = oweDetail.isUserPayer ? 'expense-credit' : 'expense-debit'
+    const oweAmountClass = oweDetail.what === 'owe' ? 'expense-debit' : 'expense-credit'
+
+
+    let additionalClass = ''
+    if (action === 'deleted') additionalClass = 'expense-deleted'
 
     return (
-      <Link to={linkTo} className='expense-item'>
+      <Link to={linkTo} className={`expense-item ${additionalClass}`}>
         <figure className='activity-figure'>
           <i className="fas fa-edit fa-3x"/>
         </figure>
