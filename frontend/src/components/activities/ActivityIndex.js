@@ -3,6 +3,8 @@ import axios from 'axios'
 import Auth from '../../lib/auth'
 import Pusher from 'pusher-js'
 
+import Spinner from '../common/Spinner'
+
 import ActivityListCard from './ActivityListCard'
 
 export default class ActivityIndex extends React.Component {
@@ -44,6 +46,7 @@ export default class ActivityIndex extends React.Component {
   }
 
   render() {
+    if (!this.state.activities) return <Spinner />
     const { activities } = this.state
     return (
       <div className='container'>

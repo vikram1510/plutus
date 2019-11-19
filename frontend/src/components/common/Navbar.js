@@ -2,7 +2,6 @@ import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import Auth from '../../lib/auth'
 import Pusher from 'pusher-js'
-import axios from 'axios'
 
 class Navbar extends React.Component {
   constructor() {

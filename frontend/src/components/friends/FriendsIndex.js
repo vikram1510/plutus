@@ -177,13 +177,14 @@ class FriendsIndex extends React.Component {
         <div className="user-card">
           <UserCard
             key={user.id}
-            linkTo='/'
+            linkTo='/friends'
             name={'Total Balance'}
             amountClass={amountHelper.getAmountClass(user.total)}
             description={`${user.total < 0 ? 'You owe' : 'You are owed'} 
                         ${'£' + user.total.replace('-','')}`}
             profileImage={user.profile_image}
             refresh={this.state.refresh}
+            className='user'
           />
           <div><button className="refresh" onClick={() => this.getTotals()}>
             <i className={`fas fa-sync-alt ${this.state.refresh ? 'fa-spin' : ''}`}></i>
