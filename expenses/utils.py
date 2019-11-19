@@ -49,8 +49,8 @@ def _validate_splits(expense_inst, is_update):
 
     debtors_count = {}
     for split in expense_inst.splits.all():
-        if not split.is_deleted:
-            total_split_amount += split.amount
+        # if not split.is_deleted:
+        total_split_amount += split.amount
 
         if str(split.debtor.id) not in debtors_count:
             debtors_count[str(split.debtor.id)] = 0

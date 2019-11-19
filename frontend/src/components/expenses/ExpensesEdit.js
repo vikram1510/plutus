@@ -60,7 +60,7 @@ export default class ExpensesEdit extends React.Component {
 
   onSplitChange({ target: { id, value, checked, type } }) {
     if (type === 'checkbox') value = checked
-    const debtor = { amount: value, debtor: { id } }
+    const debtor = (value) ? { amount: value, debtor: { id } } : { }
 
     const debtors = { ...this.state.debtors, [id]: debtor }
     this.setState({ debtors })
@@ -68,7 +68,7 @@ export default class ExpensesEdit extends React.Component {
 
   getSplits() {
     const { data, debtors } = this.state
-    let splits = Object.values(debtors).filter(split => split)
+    let splits = Object.values(debtors).filter(split => split.debtor && split.amount > 0)
 
     switch (data.split_type) {
       case 'equal':
@@ -80,12 +80,12 @@ export default class ExpensesEdit extends React.Component {
         splits = splits.map(split => ({ ...split, amount: split.amount / 100 * data.amount }))
         break
       default:
-        console.log('unexpected split_type')
         break
     }
 
     const payerIncluded = splits.find(split => split.debtor.id === data.payer.id)
-    return payerIncluded ? splits : [{ amount: 0, debtor: data.payer }, ...splits]
+    const output =  payerIncluded ? splits : [{ amount: 0, debtor: data.payer }, ...splits]
+    return output
   }
 
   onSubmit(e) {
@@ -93,7 +93,7 @@ export default class ExpensesEdit extends React.Component {
 
     const splits = this.getSplits()
     const data = { ...this.state.data, splits }
-    axios.post('/api/expenses', data)
+    axios.put(`/api/expenses/${this.props.match.params.id}`, data, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.props.history.push(`/expenses/${res.data.id}`))
       .catch(err => this.setState({ errors: err.response.data }))
   }
