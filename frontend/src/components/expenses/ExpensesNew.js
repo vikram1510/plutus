@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Auth from '../../lib/auth'
+import ExpensesForm from './ExpensesForm'
 
 const payload = Auth.getPayload()
 
@@ -30,13 +31,7 @@ export default class ExpensesNew extends React.Component {
   }
 
   componentDidMount() {
-    const header = {
-      headers: {
-        Authorization: `Bearer ${Auth.getToken()}`
-      }
-    }
-
-    axios.get('/api/friends', header)
+    axios.get('/api/friends', { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.setState({ friends: [{ id: payload.sub, username: payload.username }, ...res.data] }))
       .catch(err => console.log(err))
   }
@@ -95,46 +90,14 @@ export default class ExpensesNew extends React.Component {
     return (
       <section>
         <h1>Add Expense</h1>
-        <form onSubmit={this.onSubmit}>
-          <div>
-            <input id='description' placeholder=' ' onChange={this.onChange} />
-            <label htmlFor='description'>Description</label>
-            {errors.description && <div className='error-message'>{errors.description}</div>}
-          </div>
-          <div>
-            <input id='amount' type='number' placeholder=' ' onChange={this.onChange} />
-            <label htmlFor='amount'>Amount</label>
-            {errors.amount && <div className='error-message'>{errors.amount}</div>}
-          </div>
-          <div className='select-wrapper'>
-            <p>Payer</p>
-            <select id='payer' value={data.payer.id} onChange={this.onChange}>
-              {friends && friends.map(({ id, username }) => (
-                <option key={id} value={id}>{username}</option>
-              ))}
-            </select>
-          </div>
-          <div className='select-wrapper'>
-            <p>Splits</p>
-            <select id='split_type' value={data.split_type} onChange={this.onChange}>
-              <option value='equal'>Equal</option>
-              <option value='unequal'>Unequal</option>
-              <option value='percentage'>Percentage</option>
-            </select>
-          </div>
-          <div>
-            {friends && friends.map(({ id, username }) => (
-              <div key={id} className='debtor-wrapper'>
-                <label htmlFor={id} className='debtor'>{username}</label>
-                <div>
-                  <div>{data.split_type === 'unequal' ? '£' : data.split_type === 'percentage' ? '%' : null}</div>
-                  <input id={id} type={data.split_type === 'equal' ? 'checkbox' : 'number'} placeholder='0' onChange={this.onSplitChange} />
-                </div>
-              </div>
-            ))}
-          </div>
-          <button type='submit'>Create</button>
-        </form>
+        <ExpensesForm
+          data={data}
+          friends={friends}
+          errors={errors}
+          onChange={this.onChange}
+          onSubmit={this.onSubmit}
+          onSplitChange={this.onSplitChange}
+        />
       </section>
     )
   }
