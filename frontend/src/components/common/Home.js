@@ -1,8 +1,13 @@
 import React from 'react'
 import Notify from './Notify'
 import { Link } from 'react-router-dom'
+import Auth from '../../lib/auth'
 
 export default class Home extends React.Component {
+
+  componentDidMount(){
+    if (Auth.isAuthenticated()) this.props.history.push('/friends')
+  }
   render() {
     return (
       <>
