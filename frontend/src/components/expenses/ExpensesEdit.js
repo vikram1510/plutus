@@ -93,6 +93,7 @@ export default class ExpensesEdit extends React.Component {
 
     const splits = this.getSplits()
     const data = { ...this.state.data, splits }
+    console.log('data: ', data)
     axios.put(`/api/expenses/${this.props.match.params.id}`, data, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.props.history.push(`/expenses/${res.data.id}`))
       .catch(err => this.setState({ errors: err.response.data }))

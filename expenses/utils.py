@@ -133,6 +133,33 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
     return splits_create_list
 
 
+def _clean_update_split(split_data_list, user_dict, expense_inst):
+    '''
+    v2 of nuking all the splits and recreating splits from the front end and return it
+    '''
+
+    expense_inst.splits.all().delete()
+
+    splits_create_list = []
+    for split_data in split_data_list:
+        debtor_data = split_data.pop('debtor')
+
+        split = Split()
+
+        split.amount = split_data.get('amount')
+        split.debtor = user_dict.get(debtor_data.get('id')) # get the instance from already queried object
+
+        split.expense = expense_inst
+        splits_create_list.append(split)
+
+
+    Split.objects.bulk_create(splits_create_list)
+    expense_inst.splits.set(splits_create_list)
+    
+    return splits_create_list
+
+
+
 def upsert_expense(data, expense=None, is_update=False, **kwargs):
     '''
     UPSERT means Update/Insert
@@ -179,7 +206,7 @@ def upsert_expense(data, expense=None, is_update=False, **kwargs):
                 raise ValidationError({'splits': 'missing split details'})
 
             # this is bulk create/update
-            _upsert_split(splits_data, user_dict, expense_inst, is_update)
+            _clean_update_split(splits_data, user_dict, expense_inst)
             _validate_splits(expense_inst, is_update)
 
             update_ledger(expense_inst, is_update)
