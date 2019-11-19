@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 import Auth from '../../lib/auth'
 
 import Spinner from '../common/Spinner'
@@ -50,7 +51,7 @@ export default class ExpensesShow extends React.Component {
   }
 
   getExpense() {
-    axios.get(`/api/expenses/${this.props.match.params.id}`)
+    axios.get(`/api/expenses/${this.props.match.params.id}`, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.setState({ expense: res.data }))
       .catch(err => console.log(err))
   }
@@ -59,7 +60,7 @@ export default class ExpensesShow extends React.Component {
     const expense = this.state.expense
     this.setState({ expense: null }, () => {
       expense.is_deleted = value
-      axios.put(`/api/expenses/${this.props.match.params.id}`, expense)
+      axios.put(`/api/expenses/${this.props.match.params.id}`, expense, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
         .then(() => this.setState({ expense }, this.closeDialog))
         .catch(err => console.log(err.response.data))
     })
@@ -90,7 +91,6 @@ export default class ExpensesShow extends React.Component {
   render() {
     if (!this.state.expense) return <Spinner />
     const { expense, errors } = this.state
-    console.log(expense)
     return expense &&
     <>
       <Dialog
@@ -124,13 +124,15 @@ export default class ExpensesShow extends React.Component {
             <h2>£{expense.amount}</h2>
             <h3>Paid by {expense.payer.username}</h3>
           </div>
-          <button><i className="fas fa-pen"></i></button>
+          <Link to={`/expenses/${this.props.match.params.id}/edit`}>
+            <button><i className="fas fa-pen"/></button>
+          </Link>
           {!expense.is_deleted ?
             <button className="delete" onClick={() => this.setState({ deleteDialog: true })}>
-              <i className="fas fa-trash-alt"></i>
+              <i className="fas fa-trash-alt"/>
             </button> :
             <button className="restore" onClick={() => this.setState({ restoreDialog: true })}>
-              <i className="fas fa-trash-restore"></i>
+              <i className="fas fa-trash-restore"/>
             </button>
           }
         </div>

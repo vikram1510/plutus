@@ -11,7 +11,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer, NestedSplitSerializer, NestedExpenseSerializer
 from jwt_auth.serializers import NestedUserSerializer
 from . import totals_utils
-from .activity_utils import human_readable_activities
+from .activity_utils import human_readable_activity_2
 
 User = get_user_model()
 
@@ -34,7 +34,7 @@ class ActivityListView(APIView):
 
         activities = Activity.objects.filter(**filter_param).order_by('-pk')
 
-        return Response(human_readable_activities(activities))
+        return Response(human_readable_activity_2(activities, query_owe_amount=True))
 
 
 class ActivityRetrieveView(APIView):
@@ -46,7 +46,7 @@ class ActivityRetrieveView(APIView):
 
         try:
             activity = Activity.objects.get(pk=pk)
-            return Response(human_readable_activities([activity], return_single=True))
+            return Response(human_readable_activity_2([activity], query_owe_amount=True, return_single=True))
         except Activity.DoesNotExist:
             return Response({'message': 'activity not found'}, status=404)
 
@@ -75,7 +75,13 @@ class ExpenseView(ListCreateAPIView):
 
 # we want to only update the expense - we will never ever delete the expense object - EVER!!!
 class ExpenseDetailView(RetrieveUpdateAPIView):
-    queryset = Expense.objects.all()
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            raise NotAuthenticated(detail='Not Authenticated')
+
+        return Expense.objects.all()
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ListExpenseSerializer

@@ -97,7 +97,9 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
             split = Split.objects.get(pk=split_data.get('id'))
 
         split.amount = split_data.get('amount')
-        split.is_deleted = split_data.get('is_deleted', False)
+
+        if is_update:
+            split.is_deleted = split_data.get('is_deleted', False)
         split.debtor = user_dict.get(debtor_data.get('id')) # get the instance from already queried object
 
         split.expense = expense_inst
@@ -131,7 +133,7 @@ def _upsert_split(split_data_list, user_dict, expense_inst, is_update):
     return splits_create_list
 
 
-def upsert_expense(data, expense=None, is_update=False):
+def upsert_expense(data, expense=None, is_update=False, **kwargs):
     '''
     UPSERT means Update/Insert
     Creates or updates the expense depending on the context
@@ -151,11 +153,17 @@ def upsert_expense(data, expense=None, is_update=False):
     # for both update and create we stil need to check/populate the user
     expense_inst.payer = user_dict[payer_data.get('id')]
     expense_inst.creator = user_dict[creator_data.get('id')]
+    expense_inst.updator = expense_inst.creator
+
+    if is_update:
+        expense_inst.updator = kwargs.get('updator')
 
     expense_inst.split_type = data.get('split_type')
-    expense_inst.description = data.pop('description')
+    expense_inst.description = data.get('description')
     expense_inst.amount = data['amount']
-    expense_inst.is_deleted = data.get('is_deleted', False)
+
+    if is_update:
+        expense_inst.is_deleted = data.get('is_deleted', False)
 
     # is_new = expense is None
 
@@ -194,7 +202,7 @@ def record_activity(expense_inst, is_update):
 
     activity.record_ref = str(expense_inst.id)
     activity.model_name = expense_inst.__class__.__name__
-    activity.creator = expense_inst.creator
+    activity.creator = expense_inst.updator
 
     # default
     activity.activity_type = 'created'
@@ -209,7 +217,6 @@ def update_ledger(expense, is_update):
 
     if is_update:
         if expense.is_deleted:
-            print('deleting expense')
             expense.ledgers.all().update(is_deleted=True)
             return
         expense.ledgers.all().delete()
