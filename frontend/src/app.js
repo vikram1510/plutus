@@ -13,6 +13,7 @@ import ExpensesIndex from './components/expenses/ExpensesIndex'
 import ExpensesShow from './components/expenses/ExpensesShow'
 import ExpensesNew from './components/expenses/ExpensesNew'
 import ExpensesEdit from './components/expenses/ExpensesEdit'
+import ExpensesSettleEdit from './components/expenses/ExpensesSettleEdit'
 
 import FriendsIndex from './components/friends/FriendsIndex'
 import FriendShow from './components/friends/FriendShow'
@@ -30,6 +31,7 @@ const App = () => (
           <Route path='/login' component={Login} />
           <Route path='/expenses/new' component={ExpensesNew} />
           <Route path='/expenses/:id/edit' component={ExpensesEdit} />
+          <Route path='/expenses/:id/settleedit' component={ExpensesSettleEdit} />
           <Route path='/expenses/:id' component={ExpensesShow} />
           <Route path='/expenses' component={ExpensesIndex} />
           <Route path='/friends/:id' component={FriendShow} />

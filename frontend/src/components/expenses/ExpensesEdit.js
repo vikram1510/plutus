@@ -60,7 +60,6 @@ export default class ExpensesEdit extends React.Component {
 
   onSplitChange({ target: { id, value, checked, type } }) {
     if (type === 'checkbox') value = checked
-    console.log('value:', value)
     const debtor = (value) ? { amount: value, debtor: { id } } : { }
 
     const debtors = { ...this.state.debtors, [id]: debtor }
@@ -94,7 +93,6 @@ export default class ExpensesEdit extends React.Component {
 
     const splits = this.getSplits()
     const data = { ...this.state.data, splits }
-    console.log('submit data:', data)
     axios.put(`/api/expenses/${this.props.match.params.id}`, data, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.props.history.push(`/expenses/${res.data.id}`))
       .catch(err => this.setState({ errors: err.response.data }))
@@ -102,7 +100,6 @@ export default class ExpensesEdit extends React.Component {
 
   render() {
     const { data, debtors, friends, errors } = this.state
-    console.log('render data:', data)
     return (
       <section>
         <h1>Edit Expense</h1>

@@ -91,6 +91,8 @@ export default class ExpensesShow extends React.Component {
   render() {
     if (!this.state.expense) return <Spinner />
     const { expense, errors } = this.state
+    const isSettlement = expense.split_type === 'settlement'
+    const editLink = isSettlement ? `/expenses/${this.props.match.params.id}/settleedit` : `/expenses/${this.props.match.params.id}/edit`
     return expense &&
     <>
       <Dialog
@@ -124,7 +126,7 @@ export default class ExpensesShow extends React.Component {
             <h2>£{expense.amount}</h2>
             <h3>Paid by {expense.payer.username}</h3>
           </div>
-          <Link to={`/expenses/${this.props.match.params.id}/edit`}>
+          <Link to={editLink}>
             <button><i className="fas fa-pen"/></button>
           </Link>
           {!expense.is_deleted ?
