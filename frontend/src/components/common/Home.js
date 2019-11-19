@@ -1,5 +1,6 @@
 import React from 'react'
 import Notify from './Notify'
+import { Link } from 'react-router-dom'
 
 export default class Home extends React.Component {
   render() {
@@ -12,8 +13,8 @@ export default class Home extends React.Component {
               <img src="../../assets/images/main-logo.png"></img>
             </div>
             <div className="auth-buttons">
-              <button className="sign-up">Sign Up</button>
-              <button className="log-in">Log In</button>
+              <Link to="/register"><button className="sign-up">Sign Up</button></Link>
+              <Link to="/login"><button className="log-in">Log In</button></Link>
             </div>
           </div>
 

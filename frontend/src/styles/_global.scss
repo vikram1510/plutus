@@ -3,7 +3,8 @@
   font-family: Kano, sans-serif;
 }
 main {
-  margin-top: $navbar-height;
+  padding-top: $navbar-height;
+  height: 100vh;
 }
 
 html {
@@ -39,7 +40,7 @@ a {
 }
 
 .container {
-  margin: 8px 16px;
+  margin: 13px 16px;
   background-color: #fff;
   border: 1px solid $grey;
   border-radius: 3px;

@@ -36,7 +36,7 @@ export default class Login extends React.Component {
   render() {
     const { errors } = this.state
     return (
-      <section>
+      <section className="auth-section">
         <form onSubmit={this.onSubmit}>
           <h2>Login</h2>
           <div>

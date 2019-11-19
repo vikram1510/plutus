@@ -23,20 +23,23 @@ const App = () => (
   <BrowserRouter>
     <>
       <Navbar />
-      <Switch>
-        <Route exact path='/' component={Home} />
-        <Route path='/register' component={Register} />
-        {/* <Route path='/register' component={Register} /> */}
-        <Route path='/login' component={Login} />
-        <Route path='/expenses/new' component={ExpensesNew} />
-        <Route path='/expenses/:id' component={ExpensesShow} />
-        <Route path='/expenses' component={ExpensesIndex} />
-        <Route path='/friends/:id' component={FriendShow} />
-        <Route path='/friends' component={FriendsIndex} />
-        <Route path='/activities' component={ActivityIndex} />
-        <Route path='/faker' component={Faker} />
-        {/* <Route path='/invite/:inviteKey' component={Invite} /> */}
-      </Switch>
+
+      <main>
+        <Switch>
+          <Route exact path='/' component={Home} />
+          <Route path='/register' component={Register} />
+          {/* <Route path='/register' component={Register} /> */}
+          <Route path='/login' component={Login} />
+          <Route path='/expenses/new' component={ExpensesNew} />
+          <Route path='/expenses/:id' component={ExpensesShow} />
+          <Route path='/expenses' component={ExpensesIndex} />
+          <Route path='/friends/:id' component={FriendShow} />
+          <Route path='/friends' component={FriendsIndex} />
+          <Route path='/activities' component={ActivityIndex} />
+          <Route path='/faker' component={Faker} />
+          {/* <Route path='/invite/:inviteKey' component={Invite} /> */}
+        </Switch>
+      </main>
     </>
   </BrowserRouter>
 )
