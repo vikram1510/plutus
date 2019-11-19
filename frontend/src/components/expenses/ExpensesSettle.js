@@ -79,11 +79,6 @@ export default class ExpensesSettle extends React.Component {
 
   }
 
-  renderPayPal(){
-    window['loadPayPalBtn']()
-    // window['hello']()
-    // window.loadPayPalBtn()
-  }
 
 
   render() {
