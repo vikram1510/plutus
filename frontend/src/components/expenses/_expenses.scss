@@ -343,3 +343,25 @@ section.expense-deleted{
   background-color: $grey;
   text-decoration: line-through;
 }
+
+.settlement-form {
+  border: none;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .input-save{
+    width: 40%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    >div:first-of-type {
+      // width: 40%;
+      margin-right: 20px;
+    }
+  }
+
+}
