@@ -30,13 +30,7 @@ export default class ExpensesNew extends React.Component {
   }
 
   componentDidMount() {
-    const header = {
-      headers: {
-        Authorization: `Bearer ${Auth.getToken()}`
-      }
-    }
-
-    axios.get('/api/friends', header)
+    axios.get('/api/friends', { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.setState({ friends: [{ id: payload.sub, username: payload.username }, ...res.data] }))
       .catch(err => console.log(err))
   }
