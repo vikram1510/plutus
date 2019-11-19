@@ -199,6 +199,12 @@
       font-weight: 100;
     }
 
+    p:last-of-type {
+      color: $dark-grey;
+      // margin: 0;
+      font-size: 1.4rem;
+    }
+
     .username {
       color: $dark-grey;
       // font-weight: 700;
@@ -353,7 +359,7 @@ section.expense-deleted{
   flex-direction: column;
 
   .input-save{
-    width: 40%;
+    // width: 40%;
     display: flex;
     justify-content: space-around;
     align-items: center;

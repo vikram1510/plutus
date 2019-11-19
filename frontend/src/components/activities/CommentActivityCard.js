@@ -12,7 +12,7 @@ const CommentActivityCard = ({ activity, user }) => {
 
   const linkTo = `expenses/${activity.activity_detail.expense_id}`
   const action = 'commented on'
-  const dateCreated = `${moment(activity.date_created).fromNow()} (${moment(activity.date_created).format('MMM DD hh:mm:ss')})`
+  const dateCreated = `${moment(activity.date_created).fromNow()} (${moment(activity.date_created).format('MMM DD HH:mm:ss')})`
   
 
   const who = user.username === activity.creator.username ? 'You' : activity.creator.username

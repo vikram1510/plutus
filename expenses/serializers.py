@@ -38,7 +38,7 @@ class NestedListCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'text', 'creator')
+        fields = ('id', 'text', 'creator', 'date_created')
 
 
 class CreateUpdateSplitSerializer(serializers.ModelSerializer):
