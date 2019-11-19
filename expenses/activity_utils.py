@@ -141,13 +141,13 @@ def human_readable_activity_2(activities, return_single=False, query_owe_amount=
 
 def broadcast_activity_2(activity, event_name='update', **kwargs):
     broadcast_data = {}
-    creator_email = activity.creator.email
+    # creator_email = activity.creator.email
 
     involved_activities = kwargs.get('involved_activities', [])
 
     # we don't want to publist to the creator's own channel
     emails = set()
-    [emails.add(uia.related_user.email) for uia in involved_activities if uia.related_user.email != creator_email]
+    [emails.add(uia.related_user.email) for uia in involved_activities]
 
     broadcast_data['email_channels'] = list(emails)
     broadcast_data['event_name'] = event_name
