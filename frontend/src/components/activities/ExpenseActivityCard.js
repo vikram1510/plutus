@@ -8,35 +8,50 @@ export default class ExpenseActivityCard extends React.Component {
     need to do some rendering calculation to add expense split details
   */
 
-  generateOweAmount(expenseDetail, loggedInUser){
+  // _GenerateOweAmount(expenseDetail, loggedInUser){
+  //   const lentDetail = expenseDetail.lent_detail
 
-    const lentDetail = expenseDetail.lent_detail
+  //   const detail = {}
+  //   // detail.payer = lentDetail.payer.username === loggedInUser.username ? 'You' : lentDetail.payer.username
 
+  //   const isUserPayer = lentDetail.payer.username === loggedInUser.username
+
+  //   // filter the debtors without the payer
+  //   const debtors = lentDetail.debtors.filter(debtor => debtor.id !== lentDetail.payer.id )
+
+  //   let oweAmount
+
+  //   const isSettlement = expenseDetail.split_type === 'settlement'
+  //   if (isUserPayer){
+  //     detail.what = (isSettlement) ? 'paid' : 'get back'
+  //     oweAmount = `£${lentDetail.split_total_exclude_payer}`
+  //   } else {
+  //     // then u must pay back
+  //     detail.what = (isSettlement) ? 'received' : 'owe'
+  //     const debtor = debtors.filter(debtor => debtor.username === loggedInUser.username)[0]
+  //     if (debtor) oweAmount = `£${debtor.amount}`
+  //     else oweAmount = 'None' // probably because the split person must have been deleted!
+  //   }
+
+  //   detail.oweAmount = oweAmount
+
+  //   return detail
+  // }
+
+  generateOweAmount(expense, currentUser) {
+    const { payer, debtors } = expense.lent_detail
+    const isSettlement = expense.split_type === 'settlement'
     const detail = {}
-    // detail.payer = lentDetail.payer.username === loggedInUser.username ? 'You' : lentDetail.payer.username
 
-    const isUserPayer = lentDetail.payer.username === loggedInUser.username
-    detail.expensePayer = lentDetail.payer.username
-
-    // filter the debtors without the payer
-    const debtors = lentDetail.debtors.filter(debtor => debtor.id !== lentDetail.payer.id )
-
-    let oweAmount
-
-    if (isUserPayer){
-      detail.what = 'get back'
-      oweAmount = `£${lentDetail.split_total_exclude_payer}`
-
+    if (payer.id === currentUser.sub) {
+      detail.verb = (isSettlement) ? 'paid' : 'get back'
+      detail.amount = expense.lent_detail.split_total_exclude_payer
     } else {
-      // then u must pay back
-      detail.what = 'owe'
-      const debtor = debtors.filter(debtor => debtor.username === loggedInUser.username)[0]
-      if (debtor) oweAmount = `£${debtor.amount}`
-      else oweAmount = 'None' // probably because the split person must have been deleted!
+      const debtor = debtors.find(debtor => debtor.id === currentUser.sub)
 
+      detail.verb = (isSettlement) ? 'received' : 'owe'
+      detail.amount = (debtor) ? debtor.amount : 'None'
     }
-
-    detail.oweAmount = oweAmount
 
     return detail
   }
@@ -58,10 +73,10 @@ export default class ExpenseActivityCard extends React.Component {
 
     const expenseDescription = expenseDetail.description
 
-    const oweDetail = this.generateOweAmount(expenseDetail, user)
-
+    // const oweDetail = this.generateOweAmount(expenseDetail, user)
+    const { verb, amount } = this.generateOweAmount(expenseDetail, user)
     // green if the current user is expected to recieve money, organge if current user needs to pay
-    const oweAmountClass = oweDetail.what === 'owe' ? 'expense-debit' : 'expense-credit'
+    const oweAmountClass = ['owe', 'paid'].includes(verb) ? 'expense-debit' : 'expense-credit'
 
 
     let additionalClass = ''
@@ -76,7 +91,7 @@ export default class ExpenseActivityCard extends React.Component {
           <div>
             <b>{activityOwner}</b> {action} &quot;<strong>{expenseDescription}</strong>&quot;
             <div className={oweAmountClass}>
-              <strong>You</strong> {oweDetail.what} <strong>{oweDetail.oweAmount}</strong>
+              <strong>You</strong> {verb} <strong>£{amount}</strong>
             </div>
           </div>
           <div>&nbsp;</div>

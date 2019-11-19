@@ -17,7 +17,7 @@ const YesCancelDialog = ({ onYes, onCancel, message }) => (
   </div>
 )
 
-const SplitText = ({ debtor, payer, amount, totalAmount }) => {
+const SplitText = ({ debtor, payer, amount, totalAmount, isSettlement }) => {
   const t1 = payer.id === debtor.id
   const t2 = amount > 0
   return (
@@ -25,7 +25,7 @@ const SplitText = ({ debtor, payer, amount, totalAmount }) => {
       <span>{debtor.username}</span>
       {t1 && ' paid £'}{t1 && <span>{totalAmount}</span>}
       {t1 && t2 && ' and '}
-      {t2 && ' owes £'}{t2 && <span>{amount}</span>}
+      {t2 && ` ${isSettlement ? 'received' : 'owes'} £`}{t2 && <span>{amount}</span>}
     </p>
   )
 }
@@ -143,7 +143,7 @@ export default class ExpensesShow extends React.Component {
               <figure className='placeholder-figure circle'>
                 <img src={debtor.profile_image} />
               </figure>
-              <SplitText payer={expense.payer} debtor={debtor} amount={amount} totalAmount={expense.amount} />
+              <SplitText payer={expense.payer} debtor={debtor} amount={amount} totalAmount={expense.amount} isSettlement={expense.split_type === 'settlement'}/>
             </div>
           ))}
         </div>
