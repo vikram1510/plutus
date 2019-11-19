@@ -18,19 +18,26 @@ class Navbar extends React.Component {
     const authenticated = Auth.isAuthenticated()
     const { username } = Auth.getPayload()
     return (
-      <nav>
-        <div>
-          <Link to='/'>Home</Link>
-          <Link to='/expenses'>Expense</Link>
-          <Link to='/friends'>Friends</Link>
-          <Link to='/activities'>Activities</Link>
-        </div>
-        <div>
-          {!authenticated && <Link to='/register'>Register</Link>}
-          {!authenticated && <Link to='/login'>Login</Link>}
-          {authenticated && <NavDropdown username={username} handleLogout={this.handleLogout}/>}
-        </div>
-      </nav>
+      Auth.isAuthenticated() ?
+        <nav>
+          <div>
+            <Link to='/'>Home</Link>
+            <Link to='/expenses'>Expense</Link>
+            <Link to='/friends'>Friends</Link>
+            <Link to='/activities'>Activities</Link>
+          </div>
+          <div>
+            {!authenticated && <Link to='/register'>Register</Link>}
+            {!authenticated && <Link to='/login'>Login</Link>}
+            {authenticated && <NavDropdown username={username} handleLogout={this.handleLogout}/>}
+          </div>
+        </nav> :
+        <nav className="not-logged-in">
+          <div className="coin-logo animated rollIn">
+            <img className="fa-spin" src="../../assets/images/coin-logo.png"></img>
+          </div>
+          <h1>PLUTUS</h1>
+        </nav>
     )
   }
 }
