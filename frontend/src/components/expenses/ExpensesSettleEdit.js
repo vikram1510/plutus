@@ -35,7 +35,7 @@ export default class ExpensesSettleEdit extends React.Component {
   onSubmit(e) {
     e.preventDefault()
     console.log(this.state.expense)
-    axios.put('/api/expenses', this.state.expense)
+    axios.put(`/api/expenses/${this.props.match.params.id}`, this.state.expense, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.props.history.push(`/expenses/${res.data.id}`))
       .catch(err => {
         console.log('in error catch:', err.response)
