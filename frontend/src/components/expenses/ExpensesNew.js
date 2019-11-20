@@ -69,6 +69,10 @@ export default class ExpensesNew extends React.Component {
         break
     }
 
+    // Add the £0.01 rounding error back
+    const sum = splits.reduce((sum, split) => sum + Number(split.amount), 0)
+    splits[0].amount = Number(splits[0].amount) + (data.amount - sum)
+
     const payerIncluded = splits.find(split => split.debtor.id === data.payer.id)
     return payerIncluded ? splits : [{ amount: 0, debtor: data.payer }, ...splits]
   }
