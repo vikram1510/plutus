@@ -127,7 +127,7 @@ class ExpensesSettle extends React.Component {
               <button>Save</button>
             </div>
             <div>
-              <PayPal/>
+              {!displayUserOnRight && <PayPal/>}
             </div>
 
           </form>
