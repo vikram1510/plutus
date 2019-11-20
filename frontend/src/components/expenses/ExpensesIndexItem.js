@@ -16,7 +16,7 @@ const ExpensesIndexItem = ({ id, payer, amount, description, ...rest }) => {
         {rest.split_type === 'settlement' ? <img src={coin}></img> : <i className="fas fa-money-check-alt"></i>}
       </figure>
       {rest.split_type === 'settlement' &&
-        <div className='summary-div'>
+        <div className={'summary-div ' + rest.split_type}>
           <div>{payer.username} paid {rest.splits.find(split => split.amount > 0).debtor.username} £{amount}</div>
           <div></div>
         </div>
