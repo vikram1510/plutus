@@ -60,13 +60,11 @@ class ExpenseView(ListCreateAPIView):
             raise NotAuthenticated(detail='Not Authenticated')
 
         params = self.request.GET
+        if not params:
+            return Expense.objects.filter(splits__debtor=self.request.user).order_by('-date_updated')
+        friend_id = params.get('friend_id')
+        return Expense.objects.filter(splits__debtor=self.request.user).filter(splits__debtor=friend_id).order_by('-date_updated')
 
-        filter_query = {'splits__debtor': self.request.user}
-
-        if params and params.get('friend_id'):
-            filter_query['splits__debtor'] = params.get('friend_id')
-
-        return Expense.objects.filter(**filter_query).distinct().order_by('-date_updated')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
