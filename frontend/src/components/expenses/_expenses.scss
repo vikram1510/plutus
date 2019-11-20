@@ -227,6 +227,7 @@
   > select {
     min-width: 90px;
     border: 1px solid $grey;
+    font-size: 1.2rem;
   }
 }
 
@@ -359,7 +360,7 @@ div.settlement-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    i{ 
+    i{
       padding-top: 20px;
       font-size: 4rem;
       color: $blue;
@@ -380,7 +381,7 @@ div.settlement-container {
     justify-content: space-around;
     align-items: center;
 
-    >div:first-of-type {   
+    >div:first-of-type {
       margin-right: 20px;
     }
   }
