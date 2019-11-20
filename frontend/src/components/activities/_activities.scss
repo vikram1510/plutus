@@ -32,3 +32,8 @@ figure.activity-figure {
   justify-content: center;
   align-items: center;
 }
+
+.activity-deleted {
+  text-decoration: line-through;
+  color: inherit;
+}

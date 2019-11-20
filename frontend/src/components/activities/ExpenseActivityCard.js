@@ -80,10 +80,12 @@ export default class ExpenseActivityCard extends React.Component {
 
 
     let additionalClass = ''
+    const isDeleted = action === 'deleted'
     if (action === 'deleted') additionalClass = 'expense-deleted'
 
+
     return (
-      <Link to={linkTo} className={`expense-item ${additionalClass}`}>
+      <Link to={linkTo} className='expense-item'>
         <figure className='activity-figure'>
           <i className="fas fa-edit fa-3x"/>
         </figure>
@@ -91,7 +93,9 @@ export default class ExpenseActivityCard extends React.Component {
           <div>
             <b>{activityOwner}</b> {action} &quot;<strong>{expenseDescription}</strong>&quot;
             <div className={oweAmountClass}>
-              <strong>You</strong> {verb} <strong>£{amount}</strong>
+              <div className={action === 'deleted' ? 'activity-deleted' : ''}>
+                <strong>You</strong> {verb} <strong>£{amount}</strong>
+              </div>
             </div>
           </div>
           <div>&nbsp;</div>
