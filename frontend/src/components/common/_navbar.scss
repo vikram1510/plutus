@@ -75,9 +75,10 @@ nav.not-logged-in{
 }
 
 div.coin-logo {
+  display: flex;
   height: 50px;
   width: 50px;
-  display: flex;
+  margin-right: 10px;
   align-items: center;
   justify-content: center;
   img {
