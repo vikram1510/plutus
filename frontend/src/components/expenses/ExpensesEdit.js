@@ -72,14 +72,15 @@ export default class ExpensesEdit extends React.Component {
 
     switch (data.split_type) {
       case 'equal':
-        splits = splits.map(split => ({ ...split, amount: data.amount / splits.length }))
+        splits = splits.map(split => ({ ...split, amount: (data.amount / splits.length).toFixed(2) }))
         break
       case 'unequal':
         break
       case 'percentage':
-        splits = splits.map(split => ({ ...split, amount: split.amount / 100 * data.amount }))
+        splits = splits.map(split => ({ ...split, amount: (split.amount / 100 * data.amount).toFixed(2) }))
         break
       default:
+        console.log('unexpected split_type')
         break
     }
 
@@ -93,7 +94,7 @@ export default class ExpensesEdit extends React.Component {
 
     const splits = this.getSplits()
     const data = { ...this.state.data, splits }
-    console.log('data: ', data)
+
     axios.put(`/api/expenses/${this.props.match.params.id}`, data, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
       .then(res => this.props.history.push(`/expenses/${res.data.id}`))
       .catch(err => this.setState({ errors: err.response.data }))

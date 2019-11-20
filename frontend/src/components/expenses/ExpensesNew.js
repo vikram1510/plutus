@@ -57,12 +57,12 @@ export default class ExpensesNew extends React.Component {
 
     switch (data.split_type) {
       case 'equal':
-        splits =  splits.map(split => ({ ...split, amount: data.amount / splits.length }))
+        splits =  splits.map(split => ({ ...split, amount: (data.amount / splits.length).toFixed(2) }))
         break
       case 'unequal':
         break
       case 'percentage':
-        splits = splits.map(split => ({ ...split, amount: split.amount / 100 * data.amount }))
+        splits = splits.map(split => ({ ...split, amount: (split.amount / 100 * data.amount).toFixed(2) }))
         break
       default:
         console.log('unexpected split_type')
