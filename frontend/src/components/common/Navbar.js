@@ -139,6 +139,7 @@ const NavDropdown = ({ profileImage, handleLogout }) => (
       </figure>
     </div>
     <div className='dropdown-content'>
+      <div>{Auth.getPayload().username}</div>
       <Link to='/expenses'>Expenses</Link>
       <a onClick={handleLogout}>Logout</a>
     </div>

@@ -38,6 +38,24 @@ const users = [
     is_superuser: true,
     is_staff: true,
     profile_image: faker.image.avatar()
+  },
+  {
+    username: 'vikram',
+    email: 'vikram@email.com',
+    password: 'admin',
+    password_confirmation: 'admin',
+    is_superuser: true,
+    is_staff: true,
+    profile_image: faker.image.avatar()
+  },
+  {
+    username: 'chawit',
+    email: 'chawit@email.com',
+    password: 'admin',
+    password_confirmation: 'admin',
+    is_superuser: true,
+    is_staff: true,
+    profile_image: faker.image.avatar()
   }
 ]
 
