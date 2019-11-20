@@ -157,7 +157,7 @@ def _clean_update_split(split_data_list, user_dict, expense_inst):
 
     Split.objects.bulk_create(splits_create_list)
     expense_inst.splits.set(splits_create_list)
-    
+
     return splits_create_list
 
 
