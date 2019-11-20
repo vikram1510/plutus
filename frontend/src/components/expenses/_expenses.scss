@@ -350,6 +350,17 @@ section.expense-deleted{
   text-decoration: line-through;
 }
 
+div.settlement-container {
+  @extend .container;
+  border: none;
+  text-align: center;
+
+  .settle-payment {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 .settlement-form {
   border: none;
   width: 100%;
@@ -359,13 +370,11 @@ section.expense-deleted{
   flex-direction: column;
 
   .input-save{
-    // width: 40%;
     display: flex;
     justify-content: space-around;
     align-items: center;
 
-    >div:first-of-type {
-      // width: 40%;
+    >div:first-of-type {   
       margin-right: 20px;
     }
   }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import Auth from '../../lib/auth'
+import coin from '../../assets/images/coin-logo.png'
 
 const ExpensesIndexItem = ({ id, payer, amount, description, ...rest }) => {
 
@@ -14,7 +15,7 @@ const ExpensesIndexItem = ({ id, payer, amount, description, ...rest }) => {
     <Link to={`/expenses/${id}`} className={`expense-item ${deleted ? 'expense-deleted' : ''}`}>
       <div className="expense-date">{dateCreated}</div>
       <figure className='placeholder-figure'>
-        <i className="fas fa-money-check-alt"></i>
+        {rest.split_type === 'settlement' ? <img src={coin}></img> : <i className="fas fa-money-check-alt"></i>}
       </figure>
       {rest.split_type === 'settlement' &&
         <div className='summary-div'>

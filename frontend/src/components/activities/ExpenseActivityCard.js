@@ -79,11 +79,6 @@ export default class ExpenseActivityCard extends React.Component {
     const oweAmountClass = ['owe', 'paid'].includes(verb) ? 'expense-debit' : 'expense-credit'
 
 
-    let additionalClass = ''
-    const isDeleted = action === 'deleted'
-    if (action === 'deleted') additionalClass = 'expense-deleted'
-
-
     return (
       <Link to={linkTo} className='expense-item'>
         <figure className='activity-figure'>

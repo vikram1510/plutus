@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 import Auth from '../../lib/auth'
@@ -42,16 +41,15 @@ class FriendShow extends React.Component {
     if (!this.state.friend) return <Spinner />
     const { friend } = this.state
     
-    const friendAmountStr = `${amountHelper.getAmountString(friend.total)} £${friend.total.replace('-','')}`
-    const friendAmountClass = amountHelper.getAmountClass(friend.total)
+    const friendTotal = friend.total
+    const friendAmountStr = `${amountHelper.getAmountString(friendTotal)} £${friendTotal.replace('-','')}`
+    const friendAmountClass = amountHelper.getAmountClass(friendTotal)
     return (
       <>
       <Dialog open={this.state.deleteDialog || this.state.restoreDialog}
         closeFunction={() => this.setState({ deleteDialog: false, restoreDialog: false })}>
 
-        <ExpenseSettle
-          friend={this.state.friend}
-        />
+        <ExpenseSettle friend={this.state.friend} />
       </Dialog>
       <section>
         <div className="container friend-show">
@@ -62,7 +60,7 @@ class FriendShow extends React.Component {
           <h2>{friend.email}</h2>
           <h2 className={friendAmountClass}>{friendAmountStr}</h2>
           
-          <button onClick={this.openSettle}>Settle up</button>
+          { amountHelper.getAmountString(friendTotal) !== 'settled up' && <button onClick={this.openSettle}>Settle up</button> }
           
         </div>
         <ExpenseIndex
