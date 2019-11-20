@@ -27,34 +27,54 @@ class Navbar extends React.Component {
   }
 
   componentWillUnmount() {
-    this.channel.unbind()
-    this.pusher.unsubscribe(this.channel)
+    this.unsubscribePusher()
+  }
+
+  subscribePusher(){
+    if (Auth.isAuthenticated()){
+      // console.log('subscribing')
+      this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+        cluster: 'eu',
+        forceTLS: true
+      })
+      this.channel = this.pusher.subscribe(Auth.getPayload().email)
+      this.channel.bind('update', data => {
+        if (data.creator.id !== Auth.getPayload().sub) {
+          this.setState({ 
+            notifications: this.state.notifications + 1,
+            bellAnimate: true
+          }, () => {
+            setTimeout(() => this.setState({ bellAnimate: false }), 1000)
+          })
+        }
+      })
+    }
+  }
+  
+  unsubscribePusher(){
+    if (this.channel){
+      // console.log('unsubscrbing')
+      this.channel.unbind()
+      this.pusher.unsubscribe(this.channel)
+      this.channel = null
+      this.pusher = null
+    }
   }
 
   componentDidMount(){
     this.setSelectedNavbarItem()
-    this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
-      cluster: 'eu',
-      forceTLS: true
-    })
-
-    // each user subscribes to their channel to listen of events
-    this.channel = this.pusher.subscribe(Auth.getPayload().email)
-    this.channel.bind('update', data => {
-      if (data.creator.id !== Auth.getPayload().sub) {
-        this.setState({ 
-          notifications: this.state.notifications + 1,
-          bellAnimate: true
-        }, () => {
-          setTimeout(() => this.setState({ bellAnimate: false }), 1000)
-        })
-      }
-    })
   }
 
   componentDidUpdate(prevProps){
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.setSelectedNavbarItem()
+      if (!this.channel){
+        this.subscribePusher()
+      } else {
+        if (!Auth.isAuthenticated()){
+          this.unsubscribePusher()
+        }
+      }
     }
   }
 
