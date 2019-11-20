@@ -9,8 +9,6 @@ const ExpensesIndexItem = ({ id, payer, amount, description, ...rest }) => {
   const dateCreated = moment(rest.data_created).format('MMM DD')
   const deleted = rest.is_deleted
   const { userAmount, amountClass, userAction  } = rest
-  console.log(rest.split_type)
-  console.log(rest.splits.filter(split => split.amount > 0))
   return (
     <Link to={`/expenses/${id}`} className={`expense-item ${deleted ? 'expense-deleted' : ''}`}>
       <div className="expense-date">{dateCreated}</div>

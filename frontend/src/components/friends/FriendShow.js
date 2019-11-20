@@ -18,8 +18,7 @@ class FriendShow extends React.Component {
       friend: null,
       expenses: null,
 
-      deleteDialog: false,
-      restoreDialog: false
+      settlementDialog: false
     }
 
     this.openSettle = this.openSettle.bind(this)
@@ -34,7 +33,7 @@ class FriendShow extends React.Component {
   }
 
   openSettle(){
-    this.setState({ restoreDialog: true })
+    this.setState({ settlementDialog: true })
   }
 
   render(){
@@ -46,8 +45,8 @@ class FriendShow extends React.Component {
     const friendAmountClass = amountHelper.getAmountClass(friendTotal)
     return (
       <>
-      <Dialog open={this.state.deleteDialog || this.state.restoreDialog}
-        closeFunction={() => this.setState({ deleteDialog: false, restoreDialog: false })}>
+      <Dialog open={this.state.settlementDialog}
+        closeFunction={() => this.setState({ settlementDialog: false })}>
 
         <ExpenseSettle friend={this.state.friend} />
       </Dialog>

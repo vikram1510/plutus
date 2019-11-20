@@ -32,7 +32,6 @@ class Navbar extends React.Component {
 
   subscribePusher(){
     if (Auth.isAuthenticated()){
-      // console.log('subscribing')
       this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
         cluster: 'eu',
         forceTLS: true
@@ -40,7 +39,7 @@ class Navbar extends React.Component {
       this.channel = this.pusher.subscribe(Auth.getPayload().email)
       this.channel.bind('update', data => {
         if (data.creator.id !== Auth.getPayload().sub) {
-          this.setState({ 
+          this.setState({
             notifications: this.state.notifications + 1,
             bellAnimate: true
           }, () => {
@@ -50,10 +49,9 @@ class Navbar extends React.Component {
       })
     }
   }
-  
+
   unsubscribePusher(){
     if (this.channel){
-      // console.log('unsubscrbing')
       this.channel.unbind()
       this.pusher.unsubscribe(this.channel)
       this.channel = null
@@ -97,32 +95,30 @@ class Navbar extends React.Component {
     return (
       Auth.isAuthenticated() ?
         <nav>
-          <div>
-            <Link className={this.state.friendsClass} to='/friends'>
-              <div className="navbar-item">
-                <i className="fas fa-home"></i>
-                <span>Home</span>
+          <Link className={this.state.friendsClass} to='/friends'>
+            <div className="navbar-item">
+              <i className="fas fa-home"></i>
+              <span>Home</span>
+            </div>
+          </Link>
+          <Link className={this.state.expenseClass} to='/expenses/new'>
+            <div className="navbar-item">
+              <div className="coin-logo">
+                <img src="../../assets/images/coin-logo.png"></img>
               </div>
-            </Link>
-            <Link className={this.state.expenseClass} to='/expenses/new'>
-              <div className="navbar-item">
-                <div className="coin-logo">
-                  <img src="../../assets/images/coin-logo.png"></img>
-                </div>
-                <span>Add Expense</span>
-              </div>
-            </Link>
-            <Link className={this.state.notificationClass} to='/activities'>
-              <div className="navbar-item nav-notification">
-                <i className={`fas fa-bell ${this.state.bellAnimate ? 'animated swing' : ''}`}></i>
-                <span>Notifications</span>
-                {this.state.notifications !== 0 && <span className="number">{this.state.notifications}</span>}
-              </div>
-            </Link>
-          </div>
-          <div>
-            {authenticated && <NavDropdown profileImage={profileImage} handleLogout={this.handleLogout}/>}
-          </div>
+              <span>Add Expense</span>
+            </div>
+          </Link>
+          <Link className={this.state.notificationClass} to='/activities'>
+            <div className="navbar-item nav-notification">
+              <i className={`fas fa-bell ${this.state.bellAnimate ? 'animated swing' : ''}`}></i>
+              <span>Notifications</span>
+              {this.state.notifications !== 0 && <span className="number">{this.state.notifications}</span>}
+            </div>
+          </Link>
+          {authenticated &&
+              <NavDropdown profileImage={profileImage} handleLogout={this.handleLogout}/>
+          }
         </nav> :
         <nav className="not-logged-in">
           <div className="coin-logo animated rollIn">
@@ -139,10 +135,12 @@ const NavDropdown = ({ profileImage, handleLogout }) => (
   <div className='dropdown nav-menu'>
     <div className='dropdown-trigger'>
       <figure className='placeholder-figure'>
-        <img src={profileImage}></img>
-      </figure></div>
+        <img src={profileImage} />
+      </figure>
+    </div>
     <div className='dropdown-content'>
-      <a onClick={handleLogout} className="logout">Logout</a>
+      <Link to='/expenses'>Expenses</Link>
+      <a onClick={handleLogout}>Logout</a>
     </div>
   </div>
 )
