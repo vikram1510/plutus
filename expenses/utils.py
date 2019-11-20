@@ -61,7 +61,7 @@ def _validate_splits(expense_inst, is_update):
             is_payer_in_splits = str(expense_inst.payer.id) == str(split.debtor.id)
 
     # throw IntegrityError exception
-    check_amount = expense_inst.split_type == 'equal'
+    check_amount = expense_inst.split_type == 'unequal'
 
     if check_amount and expense_inst.amount != total_split_amount:
         error_msg = f'Split amount {total_split_amount} does not add up with expense amount {expense_inst.amount}'
