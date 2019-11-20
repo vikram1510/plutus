@@ -11,32 +11,31 @@ nav {
   width: 100%;
   z-index: 1000;
 
-  > div {
+  > * {
     display: flex;
+    justify-content: center;
     align-items: center;
-  }
-
-  a {
-    display: flex;
-    align-items: flex-end;
-    padding: 8px 16px;
-    color: #fff;
-    font-size: 1.6rem;
-    text-decoration: none;
+    width: 25%;
     transition: all 0.2s;
-    height: $navbar-height;
 
     &:hover {
       color: $yellow;
       background-color: $dark-blue;
     }
   }
-  .logout {
-    height: 30px;
+
+  a {
+    padding: 8px;
+    color: #fff;
+    font-size: 1.6rem;
+    text-decoration: none;
+    height: $navbar-height;
   }
 }
 
 .nav-menu {
+  height: 100%;
+
   div:first-of-type {
     padding: 8px 16px;
   }

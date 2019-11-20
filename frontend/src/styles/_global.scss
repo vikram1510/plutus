@@ -107,7 +107,10 @@ figure.placeholder-figure {
   display: inline-block;
 
   .dropdown-trigger {
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     cursor: pointer;
   }
 
@@ -120,7 +123,14 @@ figure.placeholder-figure {
     cursor: pointer;
 
     & > * {
-      width: 100%
+      width: 100%;
+      height: auto;
+      transition: all 0.2s;
+
+      &:hover {
+        color: $yellow;
+        background-color: $dark-blue;
+      }
     }
   }
 
