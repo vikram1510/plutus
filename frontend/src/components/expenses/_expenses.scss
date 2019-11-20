@@ -89,7 +89,6 @@
       }
     }
     &.restore{
-      // transform: translateY(50%) translateX(-110%);
       background-color: $green;
       color: $light-grey;
       border: 0;
@@ -101,11 +100,13 @@
 
   > div:first-of-type {
     > button {
+      position: static;
       padding: 0;
       border: none;
       color: inherit;
       font-size: 4rem;
       height: 10px;
+      margin: 0;
       background-color: transparent;
     }
 
@@ -117,7 +118,6 @@
 
   > div:last-of-type {
     margin: 0;
-    margin-left: 2.4rem;
 
     h2 {
       margin: 0;
