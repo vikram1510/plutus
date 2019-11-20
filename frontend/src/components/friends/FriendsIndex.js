@@ -189,10 +189,12 @@ class FriendsIndex extends React.Component {
           <div><button className="refresh" onClick={() => this.getTotals()}>
             <i className={`fas fa-sync-alt ${this.state.refresh ? 'fa-spin' : ''}`}></i>
           </button></div>
-          <div><button className="add-friend" onClick={() => this.setState({ friendDialog: true })}>
-            <i className="fas fa-plus"></i>
-          </button></div>
+
         </div>
+        <div className="add-friend"><button onClick={() => this.setState({ friendDialog: true })}>
+          {/* <i className="fas fa-plus"></i> */}
+            Add Friend
+        </button></div>
         <div className="container">
           {friends.map(friend => (
             <UserCard

@@ -27,7 +27,6 @@
   }
   button {
     margin: 0.5rem 1rem;
-    border-radius: 100%;
     outline: none;
     display: flex;
     justify-content: center;
@@ -57,21 +56,37 @@ button.refresh {
   height: 3.5rem;
   width: 3.5rem;
   font-size: 1.2rem;
+  border-radius: 100%;
 }
-
-button.add-friend {
-  height: 4.5rem;
-  width: 4.5rem;
-  background-color: $blue;
-  color: $light-grey;
-  border: 0;
-
-  &:hover{
-    font-size: 1.8rem;
+div.add-friend {
+  text-align: center;
+  >button {
+    width: 100%;
+    background-color: $blue;
     color: $yellow;
+    &:active {
+      font-size: 1.8rem;
+    }
+    &:hover {
+      box-shadow: 0 0 10px 2px $blue;
+    }
   }
-
+  font-size: 1.5rem;
+  width: 100%;
+  padding: 10px 16px;
 }
+//   // height: 4.5rem;
+//   // width: 4.5rem;
+//   background-color: $blue;
+//   color: $light-grey;
+//   border: 0;
+
+//   &:hover{
+//     font-size: 1.8rem;
+//     color: $yellow;
+//   }
+
+// }
 
 .add-friend-dialog{
   h2 {
