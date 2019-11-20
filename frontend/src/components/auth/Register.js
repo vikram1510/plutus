@@ -2,6 +2,8 @@ import React from 'react'
 import axios from 'axios'
 import queryString from 'query-string'
 
+import faker from 'faker'
+
 export default class Register extends React.Component {
   constructor() {
     super()
@@ -50,7 +52,7 @@ export default class Register extends React.Component {
   onSubmit(e) {
     e.preventDefault()
 
-    axios.post('/api/register', this.state.data)
+    axios.post('/api/register', { ...this.state.data, profile_image: faker.image.avatar() })
       .then(() => this.props.history.push('/login'))
       .catch(err => this.setState({ errors: err.response.data }))
   }
