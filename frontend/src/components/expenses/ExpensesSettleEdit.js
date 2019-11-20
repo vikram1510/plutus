@@ -8,7 +8,9 @@ export default class ExpensesSettleEdit extends React.Component {
 
     this.state = {
       expense: null,
-      errors: {}
+      errors: {},
+      payer: null,
+      ower: null
     }
 
     this.onChange = this.onChange.bind(this)
@@ -17,7 +19,11 @@ export default class ExpensesSettleEdit extends React.Component {
 
   componentDidMount() {
     axios.get(`/api/expenses/${this.props.match.params.id}`, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
-      .then(res => this.setState({ expense: res.data }))
+      .then(res => {
+        const splitPayer = res.data.splits.find(split => split.debtor.id === res.data.payer.id)
+        const splitOwer = res.data.splits.find(split => split.debtor.id !== res.data.payer.id)
+        this.setState({ expense: res.data, ower: splitOwer.debtor, payer: splitPayer.debtor })
+      })
       .catch(err => console.log(err))
   }
 
@@ -36,7 +42,7 @@ export default class ExpensesSettleEdit extends React.Component {
     e.preventDefault()
     console.log(this.state.expense)
     axios.put(`/api/expenses/${this.props.match.params.id}`, this.state.expense, { headers: { Authorization: `Bearer ${Auth.getToken()}` } })
-      .then(res => this.props.history.push(`/expenses/${res.data.id}`))
+      .then(() => this.props.history.go(-1))
       .catch(err => {
         console.log('in error catch:', err.response)
         this.setState({ errors: err.response.data })
@@ -44,19 +50,40 @@ export default class ExpensesSettleEdit extends React.Component {
   }
 
   render () {
-    const { expense, errors } = this.state
+    const { expense, errors, ower, payer } = this.state
     return (
       <section>
-        <h1>Settlement Edit Page</h1>
         {expense &&
-          <form onSubmit={this.onSubmit}>
-            <div>
-              <input id='amount' type='number' placeholder=' ' value={expense.amount} onChange={this.onChange} />
-              <label htmlFor='amount'>Amount</label>
-              {errors.amount && <div className='error-message'>{errors.amount}</div>}
+          <div className='settlement-container friend-show'>
+            <h1>Edit settlement</h1>
+
+            <div className='settle-payment'>
+              <div>
+                <figure className='placeholder-figure friend-show'>
+                  <img src={payer.profile_image}></img>
+                </figure>
+                <h2>{payer.username}</h2>
+              </div>
+              <div>
+                <i className="fas fa-chevron-circle-right fa-5x"></i>
+              </div>
+              <div>
+                <figure className='placeholder-figure friend-show'>
+                  <img src={ower.profile_image}></img>
+                </figure>
+                <h2>{ower.username}</h2>
+              </div>
             </div>
-            <button type='submit'>Save</button>
-          </form>
+
+            <form onSubmit={this.onSubmit}>
+              <div>
+                <input id='amount' type='number' placeholder=' ' value={expense.amount} onChange={this.onChange} />
+                <label htmlFor='amount'>Amount</label>
+                {errors.amount && <div className='error-message'>{errors.amount}</div>}
+              </div>
+              <button type='submit'>Save</button>
+            </form>
+          </div>
         }
       </section>
 
