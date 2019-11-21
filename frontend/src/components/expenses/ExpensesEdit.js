@@ -35,6 +35,10 @@ export default class ExpensesEdit extends React.Component {
       .then(({ data }) => data)
       .catch(err => console.log(err))
 
+    if (data.split_type === 'percentage') {
+      data.splits.forEach(split => split.amount /= data.amount / 100)
+    }
+
     const debtors = {}
     data.splits.forEach(split => debtors[split.debtor.id] = split)
     friends.forEach(({ id }) => debtors[id] = debtors[id] || {})
@@ -147,7 +151,7 @@ export default class ExpensesEdit extends React.Component {
                       id={id}
                       type={data.split_type === 'equal' ? 'checkbox' : 'number'}
                       placeholder='0'
-                      value={data.split_type === 'percentage' ? debtors[id].amount / data.amount * 100 : debtors[id].amount}
+                      value={debtors[id].amount}
                       checked={debtors[id].amount > 0}
                       onChange={this.onSplitChange}
                     />
