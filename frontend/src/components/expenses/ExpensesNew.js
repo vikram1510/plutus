@@ -85,7 +85,10 @@ export default class ExpensesNew extends React.Component {
 
     axios.post('/api/expenses', data)
       .then(res => this.props.history.push(`/expenses/${res.data.id}`))
-      .catch(err => this.setState({ errors: err.response.data }))
+      .catch(err => {
+        console.log(err.response.data)
+        this.setState({ errors: err.response.data })
+      })
   }
 
   render() {

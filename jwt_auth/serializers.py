@@ -17,6 +17,7 @@ class NestedUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'profile_image')
         extra_kwargs = {
             'username': {'validators': [], 'required': False},
+            'email': {'validators': [], 'required': False},
             'profile_image': {'validators': [], 'required': False}
         }
 
@@ -36,6 +37,7 @@ class FriendSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email',)
         extra_kwargs = {
             'username': {'validators': []},
+            'email': {'validators': [], 'required': False}
         }
 
 

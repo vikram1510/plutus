@@ -45,14 +45,14 @@ const InviteDialog = ({ email, sendInvite, success, pending }) => {
       <h2>This person does not have a Plutus account, Send them an invite!</h2>
       <div className="invite">
         <p>{email}</p>
-        <button 
+        <button
           className={success ? 'invite-success animated tada' : ''}
           onClick={() => sendInvite()}
           disabled={success}
         >
-          {success ? 
-          <><span>Sent</span><i className="fas fa-check"></i></> : 
-            pending ? 
+          {success ?
+          <><span>Sent</span><i className="fas fa-check"></i></> :
+            pending ?
               <i className="fas fa-spinner fa-spin"></i> : 'Send Invite'
           }
         </button>
@@ -111,6 +111,7 @@ class FriendsIndex extends React.Component {
         this.closeDialogs()
         this.getTotals()
       })
+      .catch(err => console.log(err.response.data))
   }
 
   sendInvite(){
@@ -140,7 +141,7 @@ class FriendsIndex extends React.Component {
     this.setState({ friendDialog: false, foundFriendDialog: false, inviteDialog: false, inviteSuccess: false, invitePending: false })
   }
 
-  
+
 
   render(){
     if (!this.state.totals) return <Spinner />
@@ -173,14 +174,14 @@ class FriendsIndex extends React.Component {
             pending={this.state.invitePending}
           />}
         </Dialog>
-        
+
         <div className="user-card">
           <UserCard
             key={user.id}
             linkTo='/friends'
             name={'Total Balance'}
             amountClass={amountHelper.getAmountClass(user.total)}
-            description={`${user.total < 0 ? 'You owe' : 'You are owed'} 
+            description={`${user.total < 0 ? 'You owe' : 'You are owed'}
                         ${'£' + user.total.replace('-','')}`}
             profileImage={user.profile_image}
             refresh={this.state.refresh}
