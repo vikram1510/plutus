@@ -1,2 +1,8 @@
 .vscode/
 **/__pycache__/
+frontend/dist
+node_modules
+.sass-cache
+.env
+*.log
+
