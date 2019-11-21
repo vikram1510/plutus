@@ -12,7 +12,7 @@ export default class Home extends React.Component {
     return (
       <>
         <div className="home-page">
-          <p className="animated bounceInLeft">Split that fucking bill!</p>
+          <p className="animated bounceInLeft">Split that bill!</p>
           <div className="home-page-contents">
             <div className="main-logo-div">
               <img src="../../assets/images/main-logo.png"></img>
