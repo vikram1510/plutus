@@ -1,0 +1,59 @@
+form {
+  position: relative;
+  padding: 2rem 1.2rem;
+  margin: 8px 16px;
+  background-color: #fff;
+  border: 1px solid $grey;
+  border-radius: 3px;
+
+  h2 {
+    margin-top: 2.4rem;
+    margin-bottom: 4rem;
+    font-size: 3rem;
+  }
+
+  button[type='submit'] {
+    width: 100%;
+    margin-top: 4rem;
+  }
+
+  & > div {
+    position: relative;
+
+    &:not(:last-of-type) {
+      margin-bottom: 4rem;
+    }
+
+    label {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      color: $dark-grey;
+      font-size: 1.6rem;
+      transition: all 0.2s ease-out;
+    }
+
+    input {
+      width: 100%;
+      padding: 4px 0;
+      border: none;
+      border-bottom: 1px solid $grey;
+      outline: none;
+      font-size: 1.6rem;
+    }
+
+    input:focus + label, input:not(:placeholder-shown) + label {
+      transform: translateY(-200%);
+      font-size: 1.2rem;
+      transition: all 0.2s ease-in;
+    }
+  }
+
+  .error-message {
+    position: absolute;
+    transform: translateY(0.5rem);
+    color: $red;
+    font-size: 1.2rem;
+  }
+}

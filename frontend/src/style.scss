@@ -1,0 +1,13 @@
+@import './styles/normalize';
+@import './styles/variables';
+@import './styles/global';
+@import './styles/form';
+@import './styles/animate';
+
+@import './components/auth/auth';
+@import './components/common/home';
+@import './components/common/navbar';
+@import './components/common/dialog';
+@import './components/expenses/expenses';
+@import './components/friends/friends';
+@import './components/activities/activities';

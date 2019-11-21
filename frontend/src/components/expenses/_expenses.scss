@@ -1,0 +1,394 @@
+
+// Expenses Index
+.expense-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid $grey;
+  transition: all 0.2s;
+
+  &:last-of-type {
+    border: none;
+  }
+
+  &:hover, &:active {
+    background-color: $grey;
+  }
+
+  .summary-div, .lent-div, .balance-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .summary-div, .balance-div {
+    flex-grow: 1;
+    padding-left: 12px;
+
+    > div:first-of-type {
+      font-size: 1.6rem;
+    }
+
+    > div:last-of-type {
+      font-size: 1.2rem;
+    }
+  }
+
+  .summary-div > div:last-of-type {
+    color: $dark-grey;
+  }
+
+  .lent-div {
+    // color: $blue;
+    text-align: right;
+
+
+
+    > div:first-of-type {
+      font-size: 1.2rem;
+    }
+
+    > div:last-of-type {
+      font-size: 1.6rem;
+    }
+  }
+}
+
+// Expenses Show
+.expense-header {
+  position: relative;
+  display: flex;
+  padding: 1.2rem 2.4rem;
+  color: #fff;
+  background-color: $light-blue;
+
+  .expense-timestamp {
+    color: $grey;
+  }
+
+
+  button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateY(50%);
+    height: 5rem;
+    width: 5rem;
+    padding: 0;
+    margin-right: 2.4rem;
+    border-radius: 100%;
+
+    &.delete {
+      transform: translateY(50%) translateX(-110%);
+      background-color: $red;
+      color: $light-grey;
+      border: 0;
+      &:hover{
+        color: $yellow;
+      }
+    }
+    &.restore{
+      background-color: $green;
+      color: $light-grey;
+      border: 0;
+      &:hover{
+        font-size: 2.2rem;
+      }
+    }
+  }
+
+  > div:first-of-type {
+    > button {
+      position: static;
+      padding: 0;
+      border: none;
+      color: inherit;
+      font-size: 4rem;
+      height: 10px;
+      margin: 0;
+      background-color: transparent;
+    }
+
+    > figure {
+      position: relative;
+      // transform: translateY(50%);
+    }
+  }
+
+  > div:last-of-type {
+    margin: 0;
+
+    h2 {
+      margin: 0;
+      font-size: 3.2rem;
+      font-weight: 400;
+    }
+
+    h3 {
+      margin: 0;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-size: 1.6rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.expense-splits {
+  padding: 0 2.4rem 1.2rem;
+  font-size: 1.6rem;
+  border-bottom: 1px solid $grey;
+
+  > div {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-of-type) {
+      margin-bottom: 1.2rem;
+    }
+
+    > p {
+      padding-left: 1.2rem;
+      margin: 0;
+      height: 100%;
+    }
+
+    span {
+      font-weight: 700;
+    }
+  }
+}
+
+.expense-comment-form {
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
+  border-bottom: 1px solid $grey;
+
+  form {
+    margin: 0;
+    padding: 2.4rem 0;
+    border: none;
+    background-color: inherit;
+
+    input {
+      background-color: inherit;
+    }
+  }
+}
+
+.expense-comments {
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
+
+  .comment {
+    display: flex;
+    padding-top: 1.2rem;
+
+    > div {
+      padding-left: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    p {
+      margin-top: 0;
+      font-weight: 100;
+    }
+
+    p:last-of-type {
+      color: $dark-grey;
+      // margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .username {
+      color: $dark-grey;
+      // font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+}
+
+// Expense New
+.select-wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  > p {
+    color: $dark-grey;
+    font-size: 1.6rem;
+    margin: 0;
+  }
+
+  > select {
+    min-width: 90px;
+    border: 1px solid $grey;
+    font-size: 1.2rem;
+  }
+}
+
+.debtor-wrapper {
+  display: flex;
+  &:not(:last-of-type) {
+    margin-bottom: 8px;
+  }
+
+  > div {
+    display: flex;
+
+    > div {
+      font-size: 16px;
+      padding: 4px;
+      color: $dark-grey;
+    }
+  }
+
+  input {
+    width: auto;
+  }
+}
+
+label.debtor {
+  position: static;
+  // display: flex;
+  transform: none;
+  // min-width: 100px;
+  width: 100%;
+
+  // input {
+  //   width: auto;
+  //   margin-right: 1rem;
+  // }
+}
+
+// Expense ???
+.expense-date {
+  height: 40px;
+  width: 40px;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-right: 5px;
+  color: $dark-grey;
+}
+
+.expense-credit{
+  color: green;
+}
+
+.expense-debit{
+  color: #ff5100;
+}
+
+.expense-settled{
+  color: $dark-grey;
+}
+
+// Delet dialog box
+.delete-dialog {
+  z-index: 1100;
+  h3 {
+    text-align: center;
+    font-size: 2rem;
+  }
+  .options {
+    display: flex;
+    justify-content: space-evenly;
+    button.yes {
+      background-color: $light-grey;
+      color: $green;
+      border: 2px $green solid;
+      &:hover {
+        background-color: $green;
+        color: $light-grey;
+        border: 2px $light-grey solid;
+      }
+    }
+    button.cancel {
+      background-color: $light-grey;
+      color: $red;
+      border: 2px $red solid;
+      &:hover {
+        background-color: $red;
+        color: $light-grey;
+        border: 2px $light-grey solid;
+      }
+    }
+  }
+}
+
+section.expense-deleted{
+  background-color: $grey;
+  color: $dark-grey;
+  height: calc(100vh - #{$navbar-height});
+}
+
+.expense-comment-form button{
+  &:disabled{
+    background-color: $dark-grey;
+    border: $grey;
+    color: $light-grey;
+  }
+}
+
+.expense-header.expense-deleted{
+  background-color: $dark-grey;
+  text-decoration: line-through;
+}
+
+.expense-item.expense-deleted{
+  i {
+    color: inherit;
+  }
+  div {
+    color: inherit;
+  }
+  color: $dark-grey;
+  background-color: $grey;
+  text-decoration: line-through;
+}
+
+div.settlement-container {
+  @extend .container;
+  border: none;
+  text-align: center;
+
+  .settle-payment {
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+
+    i{
+      padding-top: 20px;
+      font-size: 4rem;
+      color: $blue;
+    }
+  }
+}
+
+.settlement-form {
+  border: none;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .input-save{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    >div:first-of-type {
+      margin-right: 20px;
+    }
+  }
+
+}
+
+.summary-div.settlement > div:first-of-type{
+  padding-top: 10px;
+}

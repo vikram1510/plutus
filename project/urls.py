@@ -20,5 +20,11 @@ urlpatterns = [
     path('django-admin/', admin.site.urls),
     path('admin/', include('rest_framework.urls')),
     path('api/', include('jwt_auth.urls')),
+    path('api/', include('expenses.urls')),
+    path('api/', include('notifications.urls')),
+    # path('accounts/', include('invitation.urls')),
+    path('api/', include('invitation.urls')), # 'URL namespace 'invitation' isn't unique' warning is coming because of this - it's fine for now
+    path('invitations/', include('invitation.urls')),
+    path('invitations/', include('invitations.urls')),
     path('', include('frontend.urls')),
 ]

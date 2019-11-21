@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import environ
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env(env_file='.env')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +27,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u0(af_7*(ilakdgg%ci^u68c-81v+6g_ai#t)9q@cu6+_(@x)%'
+SECRET_KEY = env('SECRET_KEY')
+PUSHER_APP_ID = env('PUSHER_APP_ID')
+PUSHER_APP_KEY = env('PUSHER_APP_KEY')
+PUSHER_APP_SECRET = env('PUSHER_APP_SECRET')
+
+SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,6 +48,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SITE_ID = 1
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,10 +56,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
     'jwt_auth',
-    'frontend'
+    'expenses',
+    'frontend',
+    'allauth',
+    'invitations',
+    'invitation' # this is our own custom custom invitation app just to redirect and override few things
 ]
+
+INVITE_MODE = True
+
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
+
+INVITATIONS_SIGNUP_REDIRECT = 'accept-invite' 
+# INVITATIONS_LOGIN_REDIRECT = 'apilogin'
+INVITATIONS_GONE_ON_ACCEPT_ERROR = True
+INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
+# LOGIN_URL = '/login'
+
+STATIC_URL = '/static/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,7 +115,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django-plutus',
+        'NAME': env('DB_NAME'),
         'HOST': 'localhost',
         'PORT': 5432
     }
@@ -132,7 +168,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'jwt_auth.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication', # mess with jwt auth
     ],
 }
 

@@ -5,12 +5,18 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+autopep8 = "*"
+rope = "*"
 
 [packages]
 django = "*"
 psycopg2-binary = "*"
 pyjwt = "*"
 djangorestframework = "*"
+django-environ = "*"
+pusher = "*"
+django-invitations = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.7"

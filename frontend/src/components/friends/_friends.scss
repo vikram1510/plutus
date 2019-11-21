@@ -1,0 +1,151 @@
+.friend-show.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.user-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 1.6rem;
+  flex-grow: 1;
+  padding-left: 12px;
+  justify-content: center;
+  > div:nth-of-type(2){
+    padding-top: 0.5rem;
+    font-size: 1.4rem;
+  }
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  > a {
+    flex-grow: 1;
+  }
+  button {
+    margin: 0.5rem 1rem;
+    outline: none;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+
+.loading-wrapper {
+  height: 600px;
+  display: flex;
+  align-items: center;
+}
+.loading {
+  height: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+button.refresh {
+  height: 3.5rem;
+  width: 3.5rem;
+  font-size: 1.2rem;
+  border-radius: 100%;
+}
+div.add-friend {
+  text-align: center;
+  >button {
+    width: 100%;
+    background-color: $blue;
+    color: $yellow;
+    &:active {
+      font-size: 1.8rem;
+    }
+    &:hover {
+      box-shadow: 0 0 10px 2px $blue;
+    }
+  }
+  font-size: 1.5rem;
+  width: 100%;
+  padding: 10px 16px;
+}
+//   // height: 4.5rem;
+//   // width: 4.5rem;
+//   background-color: $blue;
+//   color: $light-grey;
+//   border: 0;
+
+//   &:hover{
+//     font-size: 1.8rem;
+//     color: $yellow;
+//   }
+
+// }
+
+.add-friend-dialog{
+  h2 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  form{
+    border:0;
+  }
+  button {
+    margin-top: 30px;
+    width: 100%;
+  }
+}
+
+.found-friend-dialog {
+  display: flex;
+  justify-content: space-around;
+  .user {
+    display: flex;
+  }
+  figure {
+    margin-right: 10px;
+  }
+  button {
+    width: 50px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.invite-dialog{
+  text-align: center;
+  h1 {
+    padding:0;
+  }
+  p {
+    font-size: 1rem;
+  }
+  .invite {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .invite-success {
+    border: 2px solid $green;
+    color: $green;
+    cursor: auto;
+    &:hover{
+      border: 2px solid $green;
+      color: $green;
+      background-color: transparent;
+    }
+  }
+  span{ margin-right: 10px;}
+
+}
+
+.expense-item.user:hover{
+  background-color: $light-grey;
+  cursor: auto;
+}

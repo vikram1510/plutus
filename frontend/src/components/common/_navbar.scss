@@ -1,0 +1,115 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $blue;
+  color: #fff;
+  font-size: 1.6rem;
+  position: fixed;
+  top: 0;
+  height: 70px;
+  width: 100%;
+  z-index: 1000;
+
+  > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    transition: all 0.2s;
+
+    &:hover {
+      color: $yellow;
+      background-color: $dark-blue;
+    }
+  }
+
+  a {
+    padding: 8px;
+    color: #fff;
+    font-size: 1.6rem;
+    text-decoration: none;
+    height: $navbar-height;
+  }
+}
+
+.nav-menu {
+  height: 100%;
+
+  div:first-of-type {
+    padding: 8px 16px;
+  }
+
+  div:last-of-type {
+    background-color: $blue;
+  }
+}
+
+.navbar-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  min-width: 60px;
+  i {
+    font-size: 2.5rem;
+  }
+  span {
+    margin-top: 5px;
+    font-size: 1.2rem;
+  }
+}
+
+
+nav.not-logged-in{
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+
+  h1 {
+    padding: 0;
+  }
+
+
+}
+
+div.coin-logo {
+  display: flex;
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  align-items: center;
+  justify-content: center;
+  img {
+    height: 100%;
+    width: auto;
+  }
+}
+
+.navbar-item .coin-logo {
+  height: 30px;
+  width: 100%;
+}
+
+.navbar-item-selected {
+  color: $yellow;
+  background-color: $dark-blue;
+  border-top: 5px solid $yellow;
+}
+
+.navbar-item.nav-notification {
+  position: relative;
+  .number {
+    color: $light-grey;
+    position: absolute;
+    text-align: center;
+    min-width: 10px;
+    min-height: 10px;
+    top: -15px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+  }
+}

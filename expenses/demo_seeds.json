@@ -1,0 +1,256 @@
+[
+{
+  "model": "expenses.expense",
+  "pk": "c35081d5-bc39-464a-bb0b-50a638d72408",
+  "fields": {
+    "amount": "18.00",
+    "creator": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "payer": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "updator": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "description": "Poutine",
+    "split_type": "equal",
+    "date_created": "2019-11-20T12:47:02.263Z",
+    "date_updated": "2019-11-20T12:47:02.263Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.expense",
+  "pk": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+  "fields": {
+    "amount": "20.00",
+    "creator": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "payer": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "updator": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "description": "bottle expense",
+    "split_type": "equal",
+    "date_created": "2019-11-20T12:47:02.268Z",
+    "date_updated": "2019-11-20T12:47:02.268Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "0d3316d3-2199-436b-9012-2f77bffeb795",
+  "fields": {
+    "amount": "5.00",
+    "expense": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "debtor": "dd301e96-addc-4f09-869b-a4c1b176e050",
+    "date_created": "2019-11-20T12:47:02.270Z",
+    "date_updated": "2019-11-20T12:47:02.270Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "1d36746b-230d-4fd5-949a-becba6b42cb4",
+  "fields": {
+    "amount": "6.00",
+    "expense": "c35081d5-bc39-464a-bb0b-50a638d72408",
+    "debtor": "dd301e96-addc-4f09-869b-a4c1b176e050",
+    "date_created": "2019-11-20T12:47:02.266Z",
+    "date_updated": "2019-11-20T12:47:02.266Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "676150ef-bd3d-4a48-81e0-6ab45c0f04ff",
+  "fields": {
+    "amount": "5.00",
+    "expense": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "debtor": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "date_created": "2019-11-20T12:47:02.270Z",
+    "date_updated": "2019-11-20T12:47:02.270Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "80ecdc0b-b812-4693-9195-dc6a720090bb",
+  "fields": {
+    "amount": "5.00",
+    "expense": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "debtor": "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+    "date_created": "2019-11-20T12:47:02.270Z",
+    "date_updated": "2019-11-20T12:47:02.270Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "bdf04db5-b9a8-4176-a8d4-ea6e10761564",
+  "fields": {
+    "amount": "5.00",
+    "expense": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "debtor": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "date_created": "2019-11-20T12:47:02.270Z",
+    "date_updated": "2019-11-20T12:47:02.270Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "c2594571-bf70-46b6-95e7-3d3e4133c987",
+  "fields": {
+    "amount": "6.00",
+    "expense": "c35081d5-bc39-464a-bb0b-50a638d72408",
+    "debtor": "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+    "date_created": "2019-11-20T12:47:02.265Z",
+    "date_updated": "2019-11-20T12:47:02.265Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.split",
+  "pk": "e9fe1b2b-5c82-48ac-812e-d9a639a26ae6",
+  "fields": {
+    "amount": "6.00",
+    "expense": "c35081d5-bc39-464a-bb0b-50a638d72408",
+    "debtor": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "date_created": "2019-11-20T12:47:02.265Z",
+    "date_updated": "2019-11-20T12:47:02.265Z",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.ledger",
+  "pk": "429c5120-f456-4368-80ac-33e870d9b220",
+  "fields": {
+    "payment_from": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "payment_to": "dd301e96-addc-4f09-869b-a4c1b176e050",
+    "amount": "5.00",
+    "expense": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.ledger",
+  "pk": "61f03704-efa8-43b7-9621-07f6ae884e90",
+  "fields": {
+    "payment_from": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "payment_to": "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+    "amount": "6.00",
+    "expense": "c35081d5-bc39-464a-bb0b-50a638d72408",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.ledger",
+  "pk": "83b8229b-0474-4abb-b564-638ce317e03f",
+  "fields": {
+    "payment_from": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "payment_to": "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+    "amount": "5.00",
+    "expense": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.ledger",
+  "pk": "9d1c7e48-3c98-47ed-a036-a1936eeb9dc2",
+  "fields": {
+    "payment_from": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "payment_to": "dd301e96-addc-4f09-869b-a4c1b176e050",
+    "amount": "6.00",
+    "expense": "c35081d5-bc39-464a-bb0b-50a638d72408",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.ledger",
+  "pk": "a37d609f-f7de-4428-bf81-3a6f2884241a",
+  "fields": {
+    "payment_from": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "payment_to": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "amount": "5.00",
+    "expense": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "is_deleted": false
+  }
+},
+{
+  "model": "expenses.activity",
+  "pk": 1,
+  "fields": {
+    "record_ref": "c35081d5-bc39-464a-bb0b-50a638d72408",
+    "model_name": "Expense",
+    "activity_type": "created",
+    "creator": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "date_created": "2019-11-20T12:47:02.277Z"
+  }
+},
+{
+  "model": "expenses.activity",
+  "pk": 2,
+  "fields": {
+    "record_ref": "f89e9f29-8317-4f1f-a5b0-ed977da726b1",
+    "model_name": "Expense",
+    "activity_type": "created",
+    "creator": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "date_created": "2019-11-20T12:47:02.281Z"
+  }
+},
+{
+  "model": "expenses.userinvolvedactivity",
+  "pk": 1,
+  "fields": {
+    "activity": 1,
+    "related_user": "dd301e96-addc-4f09-869b-a4c1b176e050",
+    "current_awe_amount": "6.00"
+  }
+},
+{
+  "model": "expenses.userinvolvedactivity",
+  "pk": 2,
+  "fields": {
+    "activity": 1,
+    "related_user": "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+    "current_awe_amount": "6.00"
+  }
+},
+{
+  "model": "expenses.userinvolvedactivity",
+  "pk": 3,
+  "fields": {
+    "activity": 1,
+    "related_user": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "current_awe_amount": "6.00"
+  }
+},
+{
+  "model": "expenses.userinvolvedactivity",
+  "pk": 4,
+  "fields": {
+    "activity": 2,
+    "related_user": "dd301e96-addc-4f09-869b-a4c1b176e050",
+    "current_awe_amount": "5.00"
+  }
+},
+{
+  "model": "expenses.userinvolvedactivity",
+  "pk": 5,
+  "fields": {
+    "activity": 2,
+    "related_user": "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+    "current_awe_amount": "5.00"
+  }
+},
+{
+  "model": "expenses.userinvolvedactivity",
+  "pk": 6,
+  "fields": {
+    "activity": 2,
+    "related_user": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+    "current_awe_amount": "5.00"
+  }
+},
+{
+  "model": "expenses.userinvolvedactivity",
+  "pk": 7,
+  "fields": {
+    "activity": 2,
+    "related_user": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+    "current_awe_amount": "5.00"
+  }
+}
+]

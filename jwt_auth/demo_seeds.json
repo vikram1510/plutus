@@ -1,0 +1,144 @@
+[
+{
+  "model": "jwt_auth.user",
+  "pk": "13a017b7-dd5b-4cb0-8469-617cde2b6cb4",
+  "fields": {
+    "password": "pbkdf2_sha256$150000$6433KBE6HE7w$7h1LY0x6T4Lk8gGkGX2nmHkPJdrwTIVDzELwHLzkjZc=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "vikram",
+    "first_name": "",
+    "last_name": "",
+    "email": "vikram@email.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-11-20T12:46:59.436Z",
+    "profile_image": "https://s3.amazonaws.com/uifaces/faces/twitter/carlosblanco_eu/128.jpg",
+    "groups": [],
+    "user_permissions": [],
+    "friends": [
+      "339a1562-358a-4687-8fb1-f8e11b68a2f3"
+    ]
+  }
+},
+{
+  "model": "jwt_auth.user",
+  "pk": "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+  "fields": {
+    "password": "pbkdf2_sha256$150000$i0uqVopandzd$lg/LwgAcHy3aRdqTrauKINrsD7tOupJ756vusw4o7ms=",
+    "last_login": "2019-11-20T12:47:32Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@email.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-11-20T12:46:59Z",
+    "profile_image": "https://s3.amazonaws.com/uifaces/faces/twitter/croakx/128.jpg",
+    "groups": [],
+    "user_permissions": [],
+    "friends": [
+      "13a017b7-dd5b-4cb0-8469-617cde2b6cb4",
+      "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+      "c2998eb3-9ff9-4229-bef0-b002138991e9",
+      "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+      "dd301e96-addc-4f09-869b-a4c1b176e050"
+    ]
+  }
+},
+{
+  "model": "jwt_auth.user",
+  "pk": "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+  "fields": {
+    "password": "pbkdf2_sha256$150000$IgkOow36VPIf$xsVSXb4yndxJqHXbctvFvIAB/xTuyxHSXsCe0GZqgN4=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "rakesh",
+    "first_name": "",
+    "last_name": "",
+    "email": "rakesh@email.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-11-20T12:46:59Z",
+    "profile_image": "https://s3.amazonaws.com/uifaces/faces/twitter/smenov/128.jpg",
+    "groups": [],
+    "user_permissions": [],
+    "friends": [
+      "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+      "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+      "dd301e96-addc-4f09-869b-a4c1b176e050"
+    ]
+  }
+},
+{
+  "model": "jwt_auth.user",
+  "pk": "c2998eb3-9ff9-4229-bef0-b002138991e9",
+  "fields": {
+    "password": "pbkdf2_sha256$150000$bBgbQWjUdCYV$Hwd1f+POwhVGcB3SUtYYeYP4nSyLx34hUmq3dOdbJpk=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "chawit",
+    "first_name": "",
+    "last_name": "",
+    "email": "chawit@email.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-11-20T12:46:59.436Z",
+    "profile_image": "https://s3.amazonaws.com/uifaces/faces/twitter/lepinski/128.jpg",
+    "groups": [],
+    "user_permissions": [],
+    "friends": [
+      "339a1562-358a-4687-8fb1-f8e11b68a2f3"
+    ]
+  }
+},
+{
+  "model": "jwt_auth.user",
+  "pk": "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3",
+  "fields": {
+    "password": "pbkdf2_sha256$150000$RgEdJOz6fjJM$9LlOcIy6p5RxNnCbxh+3038lGDxW/iHf0N2P8iw8yg4=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "buklau",
+    "first_name": "",
+    "last_name": "",
+    "email": "buklau@email.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-11-20T12:46:59Z",
+    "profile_image": "https://s3.amazonaws.com/uifaces/faces/twitter/divya/128.jpg",
+    "groups": [],
+    "user_permissions": [],
+    "friends": [
+      "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+      "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+      "dd301e96-addc-4f09-869b-a4c1b176e050"
+    ]
+  }
+},
+{
+  "model": "jwt_auth.user",
+  "pk": "dd301e96-addc-4f09-869b-a4c1b176e050",
+  "fields": {
+    "password": "pbkdf2_sha256$150000$qflreSgTYTzs$JRhWkQ5+hEIELAblPvZpXzeyy/isQsVClE/6m2jAkI8=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "tyler",
+    "first_name": "",
+    "last_name": "",
+    "email": "tyler@email.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-11-20T12:46:59Z",
+    "profile_image": "https://s3.amazonaws.com/uifaces/faces/twitter/michigangraham/128.jpg",
+    "groups": [],
+    "user_permissions": [],
+    "friends": [
+      "339a1562-358a-4687-8fb1-f8e11b68a2f3",
+      "bcf7beea-8755-4715-b0d7-e00e81ad20c0",
+      "c7a257c4-bbcf-47e3-9367-ccdb5572c9e3"
+    ]
+  }
+}
+]
