@@ -9,7 +9,7 @@ module.exports = {
   context: path.resolve(__dirname, 'frontend'),
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'frontend'),
+    path: path.resolve(__dirname, 'frontend/dist'),
     publicPath: '/'
   },
   module: {
@@ -42,7 +42,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       filename: 'index.html',
-      inject: 'body'
+      inject: 'body',
+      favicon: './src/assets/images/coin-logo.png'
     }),
     new CopyWebpackPlugin([
       { from: './src/assets', to: 'assets' }
