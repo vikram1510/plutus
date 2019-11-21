@@ -16,7 +16,7 @@ export default class Register extends React.Component {
         password_confirmation: '',
         invite_key: ''
       },
-      inviteData: {},
+      inviteData: null,
       errors: {}
     }
 

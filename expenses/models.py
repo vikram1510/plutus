@@ -23,7 +23,7 @@ class Expense(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     creator = models.ForeignKey(User, related_name='created_expenses', on_delete=models.DO_NOTHING)
     payer = models.ForeignKey(User, related_name='paid_expenses', on_delete=models.DO_NOTHING)
-    
+
     # updator is the last person to make update to the expense - updator = creator if it was just created - this helps for generating activities
     updator = models.ForeignKey(User, related_name='updated_expenses', on_delete=models.DO_NOTHING)
     description = models.CharField(max_length=50)
