@@ -1,4 +1,4 @@
-# pylint: disable=protected-access,broad-except
+# pylint: protected-access, broad-except, no-self-use, inconsistent-return-statements
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveDestroyAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,7 +18,6 @@ Invitation = get_invitation_model()
 User = get_user_model()
 
 class RegisterView(APIView):
-
 
     def _handle_invitation(self, user_data, invite_key):
         '''
@@ -74,9 +73,11 @@ class LoginView(APIView):
 
 
 class UserList(ListAPIView):
+
     serializer_class = NestedUserSerializer
 
     def get_queryset(self):
+
         params = self.request.GET
         if not params:
             return User.objects.all()
@@ -94,8 +95,8 @@ class UserList(ListAPIView):
             return User.objects.filter(email=email)
 
 
-
 class GroupFriendsIndexCreate(ListCreateAPIView):
+    
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -104,7 +105,7 @@ class GroupFriendsIndexCreate(ListCreateAPIView):
             return self.request.user.groups.all()
         elif url_name == 'friends_index':
             return self.request.user.friends.all()
-
+            
     def get_serializer_class(self):
         url_name = resolve(self.request.path_info).url_name
         if url_name == 'groups_index':
@@ -112,7 +113,9 @@ class GroupFriendsIndexCreate(ListCreateAPIView):
         elif url_name == 'friends_index':
             return FriendSerializer
 
+
 class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
+    
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
 
@@ -120,13 +123,15 @@ class GroupShowUpdateDelete(RetrieveUpdateDestroyAPIView):
         queryset = Group.objects.get(pk=kwargs.get('pk'))
         serializer = GroupSerializer(queryset)
         return Response(serializer.data)
-
+    
     def get_queryset(self):
         return self.request.user.admin_groups.all()
 
 
 class FriendShowDelete(RetrieveDestroyAPIView):
+    
     permission_classes = (IsAuthenticated,)
     serializer_class = FriendSerializer
+    
     def get_queryset(self):
         return self.request.user.friends.all()

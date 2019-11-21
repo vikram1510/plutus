@@ -1,15 +1,12 @@
 #pylint: disable=no-member,arguments-differ
 import uuid
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAcceptable, NotAuthenticated
-from django.db.models import Sum, Q
 from django.contrib.auth import get_user_model
-from .models import Expense, Comment, Ledger, Activity, UserInvolvedActivity, Split
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer, NestedSplitSerializer, NestedExpenseSerializer
-from jwt_auth.serializers import NestedUserSerializer
+from .models import Expense, Activity
+from .serializers import ListExpenseSerializer, CreateUpdateExpenseSerializer, ListCommentSerializer, CreateCommentSerializer
 from . import totals_utils
 from .activity_utils import human_readable_activity_2
 

@@ -1,13 +1,10 @@
 # pylint: disable=no-member, arguments-differ
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from jwt_auth.serializers import NestedUserSerializer
 
 from .utils import upsert_expense
-
-# ensure this import from other app is before our own .models import
-from jwt_auth.serializers import NestedUserSerializer
-from .models import Expense, Split, Comment, Activity
+from .models import Expense, Split, Comment
 
 User = get_user_model()
 

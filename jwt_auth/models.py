@@ -3,12 +3,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 
 
-
 # Create your models here.
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     profile_image = models.CharField(max_length=500, blank=True)
     friends = models.ManyToManyField('self', related_name='friends', blank=True)
+    email = models.EmailField(unique=True, db_index=True)
 
     def to_dict(self, include_names=False):
         basic_detail = {
