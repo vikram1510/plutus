@@ -17,6 +17,7 @@ django-environ = "*"
 pusher = "*"
 django-invitations = "*"
 django-allauth = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.7"
